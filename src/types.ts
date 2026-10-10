@@ -67,3 +67,43 @@ export type Chunk = {
   vector?: number[];
 };
 export type SearchResult = Omit<Chunk, 'vector'> & { score: number };
+export type IntentRecord = {
+  id: string;
+  status: string;
+  payload: TransferInput;
+  bankReference: string | null;
+  operationId: string | null;
+  error: string | null;
+  createdAt: string;
+  conversationId: string | null;
+  runId: string | null;
+};
+export type Reconciliation = {
+  intentId: string;
+  reference: string | null;
+  amountCents: number;
+  appStatus: string;
+  bankStatus: 'completed' | 'not_found' | 'unverified';
+  operation: Operation | null;
+  finding: string | null;
+  fixable: boolean;
+};
+export type CaseDetail = {
+  incident: {
+    id: string;
+    user_id: string;
+    conversation_id: string;
+    summary: string;
+    status: string;
+    created_at: string;
+  };
+  customer: Person | undefined;
+  lastMessage: { id: string; role: string; content: string; created_at: string } | undefined;
+  history: { id: string; role: string; content: string; created_at: string }[];
+  events: { id: string; kind: string; data: unknown; created_at: string }[];
+  intents: IntentRecord[];
+  bank: { accounts: Account[]; operations: Operation[] } | null;
+  bankError: string | null;
+  reconciliation: Reconciliation[];
+  gaps: string[];
+};
