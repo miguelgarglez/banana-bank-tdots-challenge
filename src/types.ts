@@ -25,6 +25,15 @@ export type Operation = TransferInput & {
   createdAt: string;
   status: 'completed';
 };
+export type TransferProposal = {
+  fromAccountId: string;
+  fromLabel: string;
+  toAccountId: string;
+  toName: string | null;
+  toLabel: string | null;
+  amountCents: number;
+  concept: string;
+};
 export type DispatchResult =
   | { status: 'completed'; operation: Operation }
   | { status: 'unknown'; reference: string; error: string };

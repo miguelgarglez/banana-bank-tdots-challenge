@@ -261,6 +261,7 @@ export default function Home() {
             ? 'Review the proposal to confirm the transfer.'
             : result.error || 'The operation is still pending.',
       );
+      if (result.status === 'requires_confirmation') setTab('overview');
       await refresh(g);
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
@@ -723,8 +724,19 @@ export default function Home() {
                   {dashboard.approvals.map((a: AnyRecord) => (
                     <div key={a.id}>
                       <p>
-                        <strong>{money(a.payload.amountCents)}</strong> · {a.payload.fromAccountId}{' '}
-                        → {a.payload.toAccountId}
+                        <strong>{money(a.payload.amountCents)}</strong> ·{' '}
+                        {dashboard.accounts?.find(
+                          (x: AnyRecord) => x.id === a.payload.fromAccountId,
+                        )?.label || a.payload.fromAccountId}{' '}
+                        →{' '}
+                        {(() => {
+                          const contact = dashboard.contacts?.find(
+                            (x: AnyRecord) => x.id === a.payload.toAccountId,
+                          );
+                          return contact
+                            ? `${contact.name} · ${contact.label}`
+                            : a.payload.toAccountId;
+                        })()}
                       </p>
                       <p>{a.payload.concept}</p>
                       <button className="primary-button" onClick={() => confirm(a.id)}>

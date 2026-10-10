@@ -32,13 +32,22 @@ export const toolDefinitions: FunctionTool[] = [
   {
     type: 'function',
     name: 'transfer_money',
-    description: 'Send a transfer between simulator accounts. Amounts are integer cents.',
+    description:
+      'Propose a transfer between simulator accounts. Returns a proposal that the customer must confirm before any money moves. Amounts are integer cents.',
     parameters: object({
       fromAccountId: string,
       toAccountId: string,
       amountCents: { type: 'integer' },
       concept: string,
     }),
+    strict: true,
+  },
+  {
+    type: 'function',
+    name: 'confirm_transfer',
+    description:
+      'Execute a transfer proposal after the customer has explicitly confirmed its exact summary in a later message.',
+    parameters: object({ approvalId: string }),
     strict: true,
   },
   {
@@ -78,6 +87,19 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
       case 'transfer_money':
         result = await transferMoney(ctx, args);
         break;
+      case 'confirm_transfer': {
+        const { approvalId } = z.object({ approvalId: z.string() }).parse(args);
+        const approval = appDb()
+          .prepare('SELECT * FROM approvals WHERE id=? AND user_id=?')
+          .get(approvalId, ctx.userId) as { intent_id: string; payload: string } | undefined;
+        result = approval
+          ? await transferMoney(
+              { ...ctx, intentId: approval.intent_id, approvalId },
+              JSON.parse(approval.payload),
+            )
+          : { status: 'failed', error: 'Proposal not found.' };
+        break;
+      }
       case 'operation_status':
         result = await bankRequest(
           ctx.userId,

@@ -112,6 +112,7 @@ async function handler(request: Request, context: RouteContext) {
         .object({
           name: z.enum([
             'transfer_money',
+            'confirm_transfer',
             'request_human',
             'operation_status',
             'list_accounts',

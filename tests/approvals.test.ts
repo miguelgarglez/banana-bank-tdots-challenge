@@ -34,8 +34,7 @@ const operations = () =>
   bankDb().prepare("SELECT * FROM operations WHERE concept='Test'").all() as any[];
 const approval = (id: string) =>
   appDb().prepare('SELECT * FROM approvals WHERE id=?').get(id) as any;
-const intent = (id: string) =>
-  appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
+const intent = (id: string) => appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
 let bank: ChildProcess;
 before(async () => {
   bank = spawn(process.execPath, ['--import', 'tsx', 'simulator/server.ts'], {
@@ -99,10 +98,13 @@ test('a proposal does not confirm altered details', async () => {
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
-  const result = await authorizeTransfer(ctx(intentId, 'lucia', { approvalId: proposal.approvalId }), {
-    ...input,
-    amountCents: 1200,
-  });
+  const result = await authorizeTransfer(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
+    {
+      ...input,
+      amountCents: 1200,
+    },
+  );
   assert.equal(result?.status, 'failed');
   assert.match((result as any).error, /does not match/);
   assert.equal(operations().length, 0);
