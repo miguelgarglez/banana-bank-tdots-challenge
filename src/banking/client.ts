@@ -34,7 +34,12 @@ export async function bankRequest<T>(
   } catch {
     throw new BankError(504, 'No response received from the bank.');
   }
-  const data = await response.json();
+  let data: any;
+  try {
+    data = await response.json();
+  } catch {
+    throw new BankError(502, 'Unreadable bank response.');
+  }
   if (!response.ok) throw new BankError(response.status, data.error || 'Bank service error.');
   return data as T;
 }
