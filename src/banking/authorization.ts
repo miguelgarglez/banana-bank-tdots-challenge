@@ -107,11 +107,34 @@ export async function authorizeTransfer(
     const message = db
       .prepare("SELECT content FROM messages WHERE run_id=? AND role='user'")
       .get(ctx.runId) as { content: string } | undefined;
-    const normalized = (message?.content || '').toUpperCase().replace(/[\s-]/g, '');
-    if (!normalized.includes(confirmationCode(ctx.approvalId)))
+    const code = confirmationCode(ctx.approvalId).toLowerCase();
+    const words = (message?.content || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9áéíóúñü]+/g, ' ')
+      .split(' ')
+      .filter(Boolean);
+    let found = false;
+    for (let i = 0; i < words.length && !found; i++) {
+      let acc = '';
+      for (let j = i; j < words.length; j++) {
+        acc += words[j];
+        if (acc === code) {
+          words.splice(i, j - i + 1);
+          found = true;
+          break;
+        }
+        if (acc.length >= code.length || !code.startsWith(acc)) break;
+      }
+    }
+    const allowed = new Set(
+      'confirm confirmo confirmar confirmed confirmation yes si sí ok okay code código codigo the el la es is please por favor autorizo authorize approve apruebo transfer transferencia de this esta esto'.split(
+        ' ',
+      ),
+    );
+    if (!found || words.some((w) => !allowed.has(w)))
       return fail(
         'code_required',
-        'Ask the customer to reply with the confirmation code shown in the proposal.',
+        'Ask the customer to reply with only the confirmation code (for example: confirm 7F3A2B).',
       );
   }
   const consumed = db

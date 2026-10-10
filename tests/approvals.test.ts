@@ -185,6 +185,61 @@ test('a proposal confirms by message only with its code', async () => {
   assert.equal(done.status, 'completed');
   assert.equal(operations().length, 1);
 });
+test('message confirmation requires only the code', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const conversationId = randomUUID();
+  appDb()
+    .prepare('INSERT INTO conversations VALUES(?,?,?,?)')
+    .run(conversationId, 'lucia', 'strict code', new Date().toISOString());
+  const confirmViaMessage = async (intentId: string, approvalId: string, content: string) => {
+    const runId = randomUUID();
+    appDb()
+      .prepare('INSERT INTO messages VALUES(?,?,?,?,?,?)')
+      .run(randomUUID(), conversationId, 'user', content, new Date().toISOString(), runId);
+    return transferMoney(
+      ctx(intentId, 'lucia', {
+        conversationId,
+        runId,
+        approvalId,
+        confirmedBy: 'message',
+      }),
+      input,
+    );
+  };
+  const intentId = randomUUID();
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  const code = confirmationCode(proposal.approvalId);
+  const denied = (await confirmViaMessage(
+    intentId,
+    proposal.approvalId,
+    `no confirmes ${code}`,
+  )) as any;
+  assert.equal(denied.status, 'failed');
+  assert.equal(denied.code, 'code_required');
+  const example = (await confirmViaMessage(
+    intentId,
+    proposal.approvalId,
+    `the code ${code} was an example`,
+  )) as any;
+  assert.equal(example.status, 'failed');
+  assert.equal(example.code, 'code_required');
+  assert.equal(operations().length, 0);
+  assert.equal(approval(proposal.approvalId).consumed_at, null);
+  const bare = (await confirmViaMessage(intentId, proposal.approvalId, code)) as any;
+  assert.equal(bare.status, 'completed');
+  assert.equal(operations().length, 1);
+  const second = randomUUID();
+  const p2 = (await transferMoney(ctx(second), input)) as any;
+  const split = (await confirmViaMessage(
+    second,
+    p2.approvalId,
+    `confirm ${confirmationCode(p2.approvalId).toLowerCase().replace(/(...)/g, '$1-')}`,
+  )) as any;
+  assert.equal(split.status, 'completed');
+  assert.equal(operations().length, 2);
+});
 test('a consumed proposal on a failed intent reports already used', async () => {
   seedBank();
   resetApp();

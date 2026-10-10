@@ -70,7 +70,7 @@ export async function sendMessage(userId: string, conversationId: string, conten
       .map((m) => ({ role: m.role, content: m.content }));
     let instructions =
       knowledgeInstructions(sources) +
-      `\nYou may use tools to inspect accounts, transfer money, or request human support. The server determines the customer\'s identity. Do not invent balances or operation results: use tool results. Explain tool errors to the customer. Money never moves without the customer's own confirmation. When transfer_money returns requires_confirmation, show the exact summary (source account, recipient, amount in euros, concept) and the confirmationCode, and ask the customer to reply with that code (for example: confirm 7F3A2B). Call confirm_transfer only when the customer's latest message contains that code; a plain yes is not enough, ask for the code. If any detail changes, propose again with transfer_money. If a result has status unknown or blocked, explain that the bank has not confirmed the operation yet and that it is being verified; never propose it again.`;
+      `\nYou may use tools to inspect accounts, transfer money, or request human support. The server determines the customer\'s identity. Do not invent balances or operation results: use tool results. Explain tool errors to the customer. Money never moves without the customer's own confirmation. When transfer_money returns requires_confirmation, show the exact summary (source account, recipient, amount in euros, concept) and the confirmationCode, and ask the customer to reply with only that code (for example: confirm 7F3A2B). Call confirm_transfer only when the customer's latest message is that code, possibly preceded by 'confirm' or 'yes'; any other wording, especially a negation or a message that merely mentions the code, is not a confirmation: ask again. If any detail changes, propose again with transfer_money. If a result has status unknown or blocked, explain that the bank has not confirmed the operation yet and that it is being verified; never propose it again.`;
     const pending = db
       .prepare(
         `SELECT a.id,a.payload,a.expires_at FROM approvals a JOIN intents i ON i.id=a.intent_id
@@ -83,7 +83,7 @@ export async function sendMessage(userId: string, conversationId: string, conten
     }[];
     if (pending.length)
       instructions +=
-        "\nPENDING TRANSFER PROPOSALS (awaiting the customer's explicit confirmation; confirm with confirm_transfer only when the customer clearly says yes to this exact summary):\n" +
+        "\nPENDING TRANSFER PROPOSALS (awaiting the customer's explicit confirmation; confirm with confirm_transfer only when the customer's latest message is the confirmation code of this proposal):\n" +
         pending
           .map((a) =>
             JSON.stringify({ approvalId: a.id, ...JSON.parse(a.payload), expiresAt: a.expires_at }),
