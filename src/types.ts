@@ -25,6 +25,9 @@ export type Operation = TransferInput & {
   createdAt: string;
   status: 'completed';
 };
+export type DispatchResult =
+  | { status: 'completed'; operation: Operation }
+  | { status: 'unknown'; reference: string; error: string };
 export type ToolContext = {
   userId: string;
   conversationId: string | null;

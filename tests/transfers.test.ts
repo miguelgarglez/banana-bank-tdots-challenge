@@ -35,8 +35,7 @@ const balance = (id: string) =>
       balanceCents: number;
     }
   ).balanceCents;
-const intent = (id: string) =>
-  appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
+const intent = (id: string) => appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
 let bank: ChildProcess;
 before(async () => {
   bank = spawn(process.execPath, ['--import', 'tsx', 'simulator/server.ts'], {

@@ -41,18 +41,36 @@ export async function transferMoney(ctx: ToolContext, args: unknown): Promise<Ac
   db.prepare('UPDATE intents SET status=? WHERE id=?').run('processing', ctx.intentId);
   recordEvent(ctx, 'transfer.started', { status: 'processing', input, intentId: ctx.intentId });
   try {
-    const operation = await dispatchTransfer(ctx, input);
-    db.prepare('UPDATE intents SET status=?,operation_id=?,error=NULL WHERE id=?').run(
-      'completed',
-      operation.id,
-      ctx.intentId,
-    );
+    const result = await dispatchTransfer(ctx, input);
+    if (result.status === 'unknown') {
+      db.prepare('UPDATE intents SET status=?,bank_reference=?,error=? WHERE id=?').run(
+        'unknown',
+        result.reference,
+        result.error,
+        ctx.intentId,
+      );
+      recordEvent(ctx, 'transfer.unknown', {
+        status: 'unknown',
+        reference: result.reference,
+        error: result.error,
+        intentId: ctx.intentId,
+      });
+      return {
+        status: 'unknown',
+        reference: result.reference,
+        intentId: ctx.intentId,
+        error: result.error,
+      };
+    }
+    db.prepare(
+      'UPDATE intents SET status=?,operation_id=?,bank_reference=?,error=NULL WHERE id=?',
+    ).run('completed', result.operation.id, result.operation.reference, ctx.intentId);
     recordEvent(ctx, 'transfer.completed', {
       status: 'completed',
-      operation,
+      operation: result.operation,
       intentId: ctx.intentId,
     });
-    return { status: 'completed', operation, intentId: ctx.intentId };
+    return { status: 'completed', operation: result.operation, intentId: ctx.intentId };
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Transfer error';
     db.prepare('UPDATE intents SET status=?,error=? WHERE id=?').run(
