@@ -54,6 +54,7 @@ export function useBananaApp() {
     setDocument(null);
     setDocs([]);
     setSources(null);
+    setQuery('');
     setError('');
     setNotice('');
     setBusy(false);
@@ -278,9 +279,9 @@ export function useBananaApp() {
       if (g !== generation.current) return;
       setNotice(`Index updated: ${r.documents} documents, ${r.chunks} excerpts.`);
     } catch (e) {
-      setError((e as Error).message);
+      if (g === generation.current) setError((e as Error).message);
     } finally {
-      setBusy(false);
+      if (g === generation.current) setBusy(false);
     }
   }
   async function searchDocs() {
@@ -290,9 +291,9 @@ export function useBananaApp() {
       const result = await api('search', { query });
       if (g === generation.current) setSources(result.sources);
     } catch (e) {
-      setError((e as Error).message);
+      if (g === generation.current) setError((e as Error).message);
     } finally {
-      setBusy(false);
+      if (g === generation.current) setBusy(false);
     }
   }
   async function openDocument(id: string) {

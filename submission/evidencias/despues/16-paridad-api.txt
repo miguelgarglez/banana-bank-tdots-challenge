@@ -22,3 +22,14 @@ GET /api/incidents/case-lucia (marta) : IDENTICAL
 == Tests ==
 npm test: 55 pass / 0 fail (incluye tests/api.test.ts: router aislado + contrato HTTP)
 typecheck: OK · prettier: OK
+
+=== Tras revisión 3 (router 401-antes-404, segmentos vacíos, guards del hook) ===
+capture                      size ref       size new          diff px
+lucia-chat-dinner.png        1440x1103    1440x1103             0 OK
+lucia-document-open.png      1440x1076    1440x1076             0 OK
+lucia-documents.png          1440x1076    1440x1076             0 OK
+lucia-overview.png           1440x1158    1440x1158             0 OK
+lucia-transfers.png          1440x909     1440x909              0 OK
+marta-case-lucia.png         1440x2266    1440x2266             0 OK
+marta-cases.png              1440x2266    1440x2266             0 OK
+marta-documents.png          1440x1076    1440x1076             0 OK

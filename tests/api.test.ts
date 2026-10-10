@@ -51,11 +51,14 @@ test('router matches patterns, params and literal-before-param order', async () 
     'conversations/abc/messages',
     r,
   );
-  assert.equal(res.status, 404);
+  assert.equal(res.status, 401);
 });
 
-test('router returns 404, 401 and 403 with exact messages', async () => {
+test('router returns 401 before 404, 403 with exact messages', async () => {
   let res = await call('GET', 'no-such-route');
+  assert.equal(res.status, 401);
+  assert.deepEqual(await res.json(), { error: 'Select a person to continue.' });
+  res = await call('GET', 'no-such-route', { cookie: cookie('lucia') });
   assert.equal(res.status, 404);
   assert.deepEqual(await res.json(), { error: 'Route not found.' });
   res = await call('GET', 'dashboard');
@@ -135,4 +138,18 @@ test('HTTP contract through the real handler', async () => {
   const missing = await get(['nope/nothing'], cookie('lucia'));
   assert.equal(missing.status, 404);
   assert.deepEqual(await missing.json(), { error: 'Route not found.' });
+});
+
+test('edge cases: anonymous 401, empty segment, extra segment', async () => {
+  let res = await call('GET', 'no-such');
+  assert.equal(res.status, 401);
+  assert.deepEqual(await res.json(), { error: 'Select a person to continue.' });
+
+  res = await call('GET', 'documents/', { cookie: cookie('lucia') });
+  assert.equal(res.status, 200);
+  assert.ok(Array.isArray((await res.json()).documents));
+
+  res = await call('GET', 'conversations/x/extra', { cookie: cookie('lucia') });
+  assert.equal(res.status, 404);
+  assert.deepEqual(await res.json(), { error: 'Route not found.' });
 });

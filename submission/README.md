@@ -48,7 +48,7 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 
 ## Refactor sin cambio de comportamiento
 
-- API: `app/api/[...path]/route.ts` pasa de 270 líneas de `if` a un despachador de 11 líneas sobre una tabla de rutas por dominio (`src/api/router.ts`, `src/api/{session,dashboard,conversations,actions,operator,documents}.ts`), con la misma autenticación, roles, códigos y textos de error.
+- API: `app/api/[...path]/route.ts` pasa de 270 líneas de `if` a un despachador de 11 líneas sobre una tabla de rutas por dominio (`src/api/router.ts`, `src/api/{session,dashboard,conversations,actions,operator,documents}.ts`), con la misma autenticación, roles, códigos y textos de error. Único cambio deliberado: las rutas casan por longitud exacta; antes un segmento sobrante se ignoraba por el emparejamiento por prefijo.
 - Tokens de diseño: todos los colores y radios de la hoja de estilos salen de variables con nombre por rol (`app/styles/tokens.css`), sin cambio visual.
 - Vista: `app/page.tsx` (1.200 líneas) partido en componentes por pestaña (`app/components/`), un hook con el estado y las acciones (`app/hooks/useBananaApp.ts`) y una hoja de estilos por componente (`app/styles/`).
 

@@ -37,14 +37,17 @@ function match(pattern: string, path: string): Record<string, string> | null {
   if (p.length !== s.length) return null;
   const params: Record<string, string> = {};
   for (let i = 0; i < p.length; i++) {
-    if (p[i].startsWith(':')) params[p[i].slice(1)] = s[i];
-    else if (p[i] !== s[i]) return null;
+    if (p[i].startsWith(':')) {
+      if (!s[i]) return null;
+      params[p[i].slice(1)] = s[i];
+    } else if (p[i] !== s[i]) return null;
   }
   return params;
 }
 
 export async function dispatch(request: Request, path: string, routes: Route[]) {
   try {
+    path = path.split('/').filter(Boolean).join('/');
     if (request.method === 'POST') sameOrigin(request);
     for (const route of routes) {
       if (route.method !== 'ANY' && route.method !== request.method) continue;
@@ -64,6 +67,7 @@ export async function dispatch(request: Request, path: string, routes: Route[]) 
         json,
       });
     }
+    actor(request);
     throw new HttpError(404, 'Route not found.');
   } catch (e) {
     if (e instanceof MissingOpenAIKeyError)
