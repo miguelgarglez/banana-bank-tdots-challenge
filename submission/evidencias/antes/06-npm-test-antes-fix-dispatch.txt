@@ -1,0 +1,107 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ reset reproduces consistent accounts and transactions (6.889791ms)
+✔ a transfer debits and credits without creating money (0.823416ms)
+✔ the bank guarantees idempotency by actor and reference (1.203583ms)
+✔ different intents with the same payload remain separate transfers (2.045458ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (1.260291ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.009583ms)
+✔ a failure before commit does not move money (0.784041ms)
+✔ a lost response preserves a single queryable effect (0.7805ms)
+✔ intermittent scenarios repeat with the same seed (6.277083ms)
+✔ the application seed preserves reproducible histories and index (153.951667ms)
+✔ the signed session determines the actor and rejects forged identities (2.796042ms)
+✔ corpus originals exist and have unique sources (6.52725ms)
+✔ search without an API key returns actionable configuration guidance (93.269875ms)
+✖ lost-response: one transfer commits exactly once (291.099042ms)
+✖ slow-response: one transfer commits exactly once (1407.967458ms)
+✔ reject-before: retry reuses the same reference (6.768708ms)
+✖ read-unavailable: unknown status resolves on replay (6.9795ms)
+✖ intermittent seed 17: three transfers complete with three operations (9.938708ms)
+✔ insufficient funds fail without new operations (2.812375ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 15
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7030.997625
+
+✖ failing tests:
+
+test at tests/transfers.test.ts:1:2225
+✖ lost-response: one transfer commits exactly once (291.099042ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:65:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:2225
+✖ slow-response: one transfer commits exactly once (1407.967458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:65:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:3016
+✖ read-unavailable: unknown status resolves on replay (6.9795ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'unknown'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:84:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'unknown',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:3584
+✖ intermittent seed 17: three transfers complete with three operations (9.938708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  4 !== 3
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:101:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4,
+    expected: 3,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

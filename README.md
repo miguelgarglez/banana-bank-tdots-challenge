@@ -2,6 +2,14 @@
 
 Banana Bank is a fictional bank with an AI assistant. You receive a working application with customer history and room for improvement. The challenge has two parts: assess and improve readiness for a Monday launch, then design and implement a useful, differentiating improvement to the agent or its agentic workflow. Read the [challenge brief](docs/challenge.md) ([PDF](docs/challenge.pdf)), investigate the product, and submit demonstrable improvements in a ZIP containing the complete project.
 
+## What changed in this submission
+
+- **Idempotent transfers (Part 1).** A lost or slow bank response no longer duplicates money: one stable `bank_reference` per intent, ledger lookup before any retry, `unknown` (not `failed`) for unverifiable outcomes, later resolution via `resolveIntent`, and blocking of equivalent proposals/confirmations while an operation stays unverified.
+- **Server-verified confirmation (Part 1).** `authorizeTransfer` is the single money gate: proposals expire, carry a six-character code, and confirm either by panel click or by a customer message that is only the code — a "yes" or a negation mentioning the code moves nothing.
+- **Grounded agent (Part 1).** Scope-limited prompt with citations, paragraph-aware chunking with full metadata, validity filtering and per-document caps in search. The bundled `fixtures/embeddings/index.json.gz` is already regenerated with the new chunker.
+- **Operator copilot (Part 2).** Case view with conversation, agent activity, intents and bank-ledger reconciliation; one-click reconcile and close; strict-schema evidence-bound briefs.
+- **Tests:** 51 automated tests plus `npm run typecheck` and Prettier checks, all green. Full explanation (Spanish) in `submission/README.md`; before/after reproductions, chats, and screenshots in `submission/evidencias/`.
+
 ## Before you start
 
 Read the challenge brief and **preserve your AI sessions from your first interaction**. Verify that you can export or retain the complete conversation in your chosen tool before starting work; see [AI session exports](#ai-session-exports). Download or clone the starter using the access arrangements in your invitation. A fork is optional; the deliverable is a ZIP.

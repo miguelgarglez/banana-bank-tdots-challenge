@@ -1,0 +1,63 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ a transfer proposal does not move money (276.573167ms)
+✔ confirming a proposal completes it exactly once (7.812584ms)
+✔ a completed intent replays instead of charging again (9.638458ms)
+✔ a proposal does not confirm altered details (3.15875ms)
+✔ an expired proposal is rejected (2.384875ms)
+✔ an expired approval stays rejected on every attempt (2.821209ms)
+✔ re-proposing the same intent returns its active approval (2.908042ms)
+✔ a proposal confirms by message only with its code (6.436959ms)
+✔ message confirmation requires only the code (9.096333ms)
+✔ a consumed proposal on a failed intent reports already used (4.657042ms)
+✔ a proposal cannot be confirmed by another person (2.935416ms)
+✔ an unknown transfer can be confirmed again to resolution (4.113917ms)
+✔ an expired approval over an unknown intent still confirms (3.577167ms)
+✔ an unresolved equivalent blocks confirmation of a second proposal (8.179875ms)
+✔ a processing intent blocks an equivalent proposal (2.48975ms)
+✔ an identical proposal is blocked while another is unverified (7.292958ms)
+✔ an unreadable response body is an ambiguous bank error (29.478375ms)
+✔ an unreadable error body keeps the HTTP status (6.557792ms)
+✔ no response at all is a timeout (3.382583ms)
+✔ reset reproduces consistent accounts and transactions (9.952084ms)
+✔ a transfer debits and credits without creating money (2.0045ms)
+✔ the bank guarantees idempotency by actor and reference (2.89875ms)
+✔ different intents with the same payload remain separate transfers (4.154667ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (1.047708ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.297167ms)
+✔ a failure before commit does not move money (0.805ms)
+✔ a lost response preserves a single queryable effect (0.771875ms)
+✔ intermittent scenarios repeat with the same seed (8.82375ms)
+✔ the application seed preserves reproducible histories and index (181.179542ms)
+✔ the signed session determines the actor and rejects forged identities (1.307333ms)
+✔ corpus originals exist and have unique sources (7.110084ms)
+✔ search without an API key returns actionable configuration guidance (105.005417ms)
+✔ case detail shows conversation, intents and the ledger discrepancy (330.201416ms)
+✔ customers cannot read case details (43.418125ms)
+✔ reconciling an intent fixes the app record once (46.992291ms)
+✔ closing a case with a fixable discrepancy is rejected (50.006333ms)
+✔ telemetry records full tool output (48.442542ms)
+✔ operation_status resolves an unknown intent with a single lookup (41.941209ms)
+✔ a down bank marks every intent unverified with a gap (45.348167ms)
+✔ every chunk carries document metadata and starts with the title (2.109125ms)
+✔ different documents never share a chunk text (0.845125ms)
+✔ diversify caps results per document preserving order (0.441709ms)
+✔ isCurrent filters archived and future documents (0.063875ms)
+✔ lost-response: one transfer commits exactly once (283.993209ms)
+✔ slow-response: one transfer commits exactly once (1407.9165ms)
+✔ reject-before: retry reuses the same reference (9.723625ms)
+✔ read-unavailable: unknown resolves against the ledger without re-sending (6.413084ms)
+✔ a completed intent replays its recorded operation (4.775334ms)
+✔ intermittent seed 17: three transfers complete with three operations (10.693375ms)
+✔ insufficient funds fail without new operations (3.606833ms)
+✔ unknown stays unknown while the bank is down (6.724ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7023.10725

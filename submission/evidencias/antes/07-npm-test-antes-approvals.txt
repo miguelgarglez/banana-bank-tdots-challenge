@@ -1,0 +1,312 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✖ a transfer proposal does not move money (272.818541ms)
+✖ confirming a proposal completes it exactly once (5.141458ms)
+✖ a consumed proposal cannot be used again (6.532083ms)
+✖ a proposal does not confirm altered details (4.254917ms)
+✖ an expired proposal is rejected (3.0165ms)
+✖ confirmation in the same run as the proposal is rejected (2.788334ms)
+✖ a proposal cannot be confirmed by another person (2.316875ms)
+✖ an unknown transfer can be confirmed again to resolution (3.086292ms)
+✔ reset reproduces consistent accounts and transactions (11.455291ms)
+✔ a transfer debits and credits without creating money (0.939ms)
+✔ the bank guarantees idempotency by actor and reference (1.127125ms)
+✔ different intents with the same payload remain separate transfers (0.949ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (3.357417ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.080208ms)
+✔ a failure before commit does not move money (0.768709ms)
+✔ a lost response preserves a single queryable effect (0.738708ms)
+✔ intermittent scenarios repeat with the same seed (4.019291ms)
+✔ the application seed preserves reproducible histories and index (152.436709ms)
+✔ the signed session determines the actor and rejects forged identities (2.178417ms)
+✔ corpus originals exist and have unique sources (6.199ms)
+✔ search without an API key returns actionable configuration guidance (67.890709ms)
+✖ lost-response: one transfer commits exactly once (282.863458ms)
+✖ slow-response: one transfer commits exactly once (1410.12275ms)
+✖ reject-before: retry reuses the same reference (7.302ms)
+✖ read-unavailable: unknown status resolves on replay (6.37125ms)
+✖ intermittent seed 17: three transfers complete with three operations (3.4445ms)
+✖ insufficient funds fail without new operations (2.520916ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 13
+ℹ fail 14
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6971.537375
+
+✖ failing tests:
+
+test at tests/approvals.test.ts:1:2470
+✖ a transfer proposal does not move money (272.818541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'requires_confirmation'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:61:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:2966
+✖ confirming a proposal completes it exactly once (5.141458ms)
+  TypeError: Cannot read properties of undefined (reading 'consumed_at')
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:80:41)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7)
+
+test at tests/approvals.test.ts:1:3424
+✖ a consumed proposal cannot be used again (6.532083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'failed'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:93:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:3890
+✖ a proposal does not confirm altered details (4.254917ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'failed'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:106:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:4309
+✖ an expired proposal is rejected (3.0165ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'failed'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:122:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:4846
+✖ confirmation in the same run as the proposal is rejected (2.788334ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'failed'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:134:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:5246
+✖ a proposal cannot be confirmed by another person (2.316875ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /not found/. Input:
+  
+  'Unknown tool.'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:149:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Unknown tool.',
+    expected: /not found/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests/approvals.test.ts:1:5649
+✖ an unknown transfer can be confirmed again to resolution (3.086292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unknown'
+  - 'requires_confirmation'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/approvals.test.ts:157:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unknown',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:2547
+✖ lost-response: one transfer commits exactly once (282.863458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'requires_confirmation'
+  
+      at transferConfirmed (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:33:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:72:20)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:2547
+✖ slow-response: one transfer commits exactly once (1410.12275ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'requires_confirmation'
+  
+      at transferConfirmed (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:33:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:72:20)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:3003
+✖ reject-before: retry reuses the same reference (7.302ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'requires_confirmation'
+  
+      at transferConfirmed (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:33:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:83:18)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:3340
+✖ read-unavailable: unknown status resolves on replay (6.37125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'unknown'
+  
+      at TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:97:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'unknown',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:4046
+✖ intermittent seed 17: three transfers complete with three operations (3.4445ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'completed'
+  - 'requires_confirmation'
+  
+      at transferConfirmed (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:33:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:114:20)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'completed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transfers.test.ts:1:4414
+✖ insufficient funds fail without new operations (2.520916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'failed'
+  - 'requires_confirmation'
+  
+      at transferConfirmed (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:33:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate/tests/transfers.test.ts:124:18)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'failed',
+    expected: 'requires_confirmation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

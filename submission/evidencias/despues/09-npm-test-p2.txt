@@ -1,0 +1,50 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ a transfer proposal does not move money (277.452709ms)
+✔ confirming a proposal completes it exactly once (9.402291ms)
+✔ a consumed proposal cannot be used again (8.027792ms)
+✔ a proposal does not confirm altered details (2.769917ms)
+✔ an expired proposal is rejected (2.177291ms)
+✔ confirmation in the same run as the proposal is rejected (1.898084ms)
+✔ a proposal cannot be confirmed by another person (2.156ms)
+✔ an unknown transfer can be confirmed again to resolution (5.995875ms)
+✔ identical pending proposals in a conversation are deduplicated (4.65925ms)
+✔ a new proposal after confirmation is a separate approval (3.923333ms)
+✔ reset reproduces consistent accounts and transactions (12.09875ms)
+✔ a transfer debits and credits without creating money (0.817625ms)
+✔ the bank guarantees idempotency by actor and reference (1.031417ms)
+✔ different intents with the same payload remain separate transfers (0.784166ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (0.840208ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.290542ms)
+✔ a failure before commit does not move money (0.907583ms)
+✔ a lost response preserves a single queryable effect (0.795459ms)
+✔ intermittent scenarios repeat with the same seed (8.597042ms)
+✔ the application seed preserves reproducible histories and index (178.059875ms)
+✔ the signed session determines the actor and rejects forged identities (1.658042ms)
+✔ corpus originals exist and have unique sources (4.890625ms)
+✔ search without an API key returns actionable configuration guidance (74.326916ms)
+✔ case detail shows conversation, intents and the ledger discrepancy (333.544541ms)
+✔ customers cannot read case details (46.300625ms)
+✔ reconciling an intent fixes the app record once (46.495292ms)
+✔ closing a case records the event (42.179916ms)
+✔ telemetry records full tool output (43.467166ms)
+✔ a down bank marks every intent unverified with a gap (49.493125ms)
+✔ every chunk carries document metadata and starts with the title (1.618208ms)
+✔ different documents never share a chunk text (0.705584ms)
+✔ isCurrent filters archived and future documents (0.077792ms)
+✔ lost-response: one transfer commits exactly once (284.360292ms)
+✔ slow-response: one transfer commits exactly once (1406.181833ms)
+✔ reject-before: retry reuses the same reference (4.395708ms)
+✔ read-unavailable: unknown status resolves on replay (5.2735ms)
+✔ intermittent seed 17: three transfers complete with three operations (8.453709ms)
+✔ insufficient funds fail without new operations (3.182167ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6894.020042

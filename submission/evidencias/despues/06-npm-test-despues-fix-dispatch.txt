@@ -1,0 +1,31 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ reset reproduces consistent accounts and transactions (7.51075ms)
+✔ a transfer debits and credits without creating money (1.023542ms)
+✔ the bank guarantees idempotency by actor and reference (1.324083ms)
+✔ different intents with the same payload remain separate transfers (1.873084ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (1.614333ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.789667ms)
+✔ a failure before commit does not move money (1.01ms)
+✔ a lost response preserves a single queryable effect (0.928834ms)
+✔ intermittent scenarios repeat with the same seed (5.021291ms)
+✔ the application seed preserves reproducible histories and index (176.041084ms)
+✔ the signed session determines the actor and rejects forged identities (2.788875ms)
+✔ corpus originals exist and have unique sources (6.560958ms)
+✔ search without an API key returns actionable configuration guidance (92.353667ms)
+✔ lost-response: one transfer commits exactly once (285.29125ms)
+✔ slow-response: one transfer commits exactly once (1409.538083ms)
+✔ reject-before: retry reuses the same reference (6.040667ms)
+✔ read-unavailable: unknown status resolves on replay (4.8505ms)
+✔ intermittent seed 17: three transfers complete with three operations (5.296833ms)
+✔ insufficient funds fail without new operations (2.116875ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6965.067417

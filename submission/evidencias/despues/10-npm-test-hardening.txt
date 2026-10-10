@@ -1,0 +1,56 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ a transfer proposal does not move money (270.245958ms)
+✔ confirming a proposal completes it exactly once (7.729875ms)
+✔ a completed intent replays instead of charging again (5.210125ms)
+✔ a proposal does not confirm altered details (2.783041ms)
+✔ an expired proposal is rejected (2.112708ms)
+✔ a proposal confirms by message only with its code (4.63475ms)
+✔ a consumed proposal on a failed intent reports already used (3.55825ms)
+✔ a proposal cannot be confirmed by another person (2.387208ms)
+✔ an unknown transfer can be confirmed again to resolution (5.99ms)
+✔ an expired approval over an unknown intent still confirms (5.60425ms)
+✔ an identical proposal is blocked while another is unverified (7.494167ms)
+✔ an unreadable response body is an ambiguous bank error (23.725458ms)
+✔ no response at all is a timeout (4.764375ms)
+✔ reset reproduces consistent accounts and transactions (7.798792ms)
+✔ a transfer debits and credits without creating money (0.872208ms)
+✔ the bank guarantees idempotency by actor and reference (1.132875ms)
+✔ different intents with the same payload remain separate transfers (0.846ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (6.273625ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (2.836833ms)
+✔ a failure before commit does not move money (0.914125ms)
+✔ a lost response preserves a single queryable effect (0.767917ms)
+✔ intermittent scenarios repeat with the same seed (4.0585ms)
+✔ the application seed preserves reproducible histories and index (186.097625ms)
+✔ the signed session determines the actor and rejects forged identities (1.288458ms)
+✔ corpus originals exist and have unique sources (5.017917ms)
+✔ search without an API key returns actionable configuration guidance (71.860625ms)
+✔ case detail shows conversation, intents and the ledger discrepancy (325.877ms)
+✔ customers cannot read case details (43.887292ms)
+✔ reconciling an intent fixes the app record once (44.463833ms)
+✔ closing a case with a fixable discrepancy is rejected (46.788083ms)
+✔ telemetry records full tool output (40.321083ms)
+✔ a down bank marks every intent unverified with a gap (41.889041ms)
+✔ every chunk carries document metadata and starts with the title (3.906ms)
+✔ different documents never share a chunk text (0.414709ms)
+✔ diversify caps results per document preserving order (0.386084ms)
+✔ isCurrent filters archived and future documents (0.060292ms)
+✔ lost-response: one transfer commits exactly once (281.106416ms)
+✔ slow-response: one transfer commits exactly once (1408.3745ms)
+✔ reject-before: retry reuses the same reference (7.6795ms)
+✔ read-unavailable: unknown resolves against the ledger without re-sending (6.536167ms)
+✔ a completed intent replays its recorded operation (5.0205ms)
+✔ intermittent seed 17: three transfers complete with three operations (8.926167ms)
+✔ insufficient funds fail without new operations (3.16325ms)
+✔ unknown stays unknown while the bank is down (6.547875ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6891.450917

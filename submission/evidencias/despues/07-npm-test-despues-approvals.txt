@@ -1,0 +1,41 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ a transfer proposal does not move money (270.968958ms)
+✔ confirming a proposal completes it exactly once (7.902167ms)
+✔ a consumed proposal cannot be used again (4.709625ms)
+✔ a proposal does not confirm altered details (2.136667ms)
+✔ an expired proposal is rejected (3.421667ms)
+✔ confirmation in the same run as the proposal is rejected (1.784458ms)
+✔ a proposal cannot be confirmed by another person (2.48925ms)
+✔ an unknown transfer can be confirmed again to resolution (4.200208ms)
+✔ identical pending proposals in a conversation are deduplicated (2.236208ms)
+✔ a new proposal after confirmation is a separate approval (3.736875ms)
+✔ reset reproduces consistent accounts and transactions (6.650708ms)
+✔ a transfer debits and credits without creating money (0.782042ms)
+✔ the bank guarantees idempotency by actor and reference (1.416666ms)
+✔ different intents with the same payload remain separate transfers (0.973709ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (0.832083ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (1.257291ms)
+✔ a failure before commit does not move money (1.120625ms)
+✔ a lost response preserves a single queryable effect (1.257417ms)
+✔ intermittent scenarios repeat with the same seed (5.178167ms)
+✔ the application seed preserves reproducible histories and index (139.235334ms)
+✔ the signed session determines the actor and rejects forged identities (1.3405ms)
+✔ corpus originals exist and have unique sources (6.167125ms)
+✔ search without an API key returns actionable configuration guidance (61.008334ms)
+✔ lost-response: one transfer commits exactly once (276.767959ms)
+✔ slow-response: one transfer commits exactly once (1407.726042ms)
+✔ reject-before: retry reuses the same reference (8.803917ms)
+✔ read-unavailable: unknown status resolves on replay (5.704958ms)
+✔ intermittent seed 17: three transfers complete with three operations (8.336375ms)
+✔ insufficient funds fail without new operations (3.702334ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6933.539416

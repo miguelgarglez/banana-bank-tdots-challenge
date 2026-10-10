@@ -1,0 +1,47 @@
+
+> challenge-banana-candidate@1.0.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ a transfer proposal does not move money (275.916334ms)
+✔ confirming a proposal completes it exactly once (8.776833ms)
+✔ a consumed proposal cannot be used again (6.663541ms)
+✔ a proposal does not confirm altered details (2.279708ms)
+✔ an expired proposal is rejected (3.671458ms)
+✔ confirmation in the same run as the proposal is rejected (2.138583ms)
+✔ a proposal cannot be confirmed by another person (2.467042ms)
+✔ an unknown transfer can be confirmed again to resolution (4.728792ms)
+✔ identical pending proposals in a conversation are deduplicated (2.262917ms)
+✔ a new proposal after confirmation is a separate approval (3.708ms)
+✔ reset reproduces consistent accounts and transactions (12.820417ms)
+✔ a transfer debits and credits without creating money (0.849875ms)
+✔ the bank guarantees idempotency by actor and reference (1.06525ms)
+✔ different intents with the same payload remain separate transfers (0.835458ms)
+✔ insufficient funds and another holder's account leave the ledger unchanged (0.803708ms)
+✔ non-integer amounts, negative amounts, and invalid destinations are rejected (0.927417ms)
+✔ a failure before commit does not move money (1.4795ms)
+✔ a lost response preserves a single queryable effect (0.837916ms)
+✔ intermittent scenarios repeat with the same seed (8.303209ms)
+✔ the application seed preserves reproducible histories and index (150.524042ms)
+✔ the signed session determines the actor and rejects forged identities (1.518208ms)
+✔ corpus originals exist and have unique sources (6.217208ms)
+✔ search without an API key returns actionable configuration guidance (94.532375ms)
+✔ case detail shows conversation, intents and the ledger discrepancy (315.513542ms)
+✔ customers cannot read case details (36.482041ms)
+✔ reconciling an intent fixes the app record once (41.3655ms)
+✔ closing a case records the event (34.239584ms)
+✔ telemetry records full tool output (33.504125ms)
+✔ a down bank marks every intent unverified with a gap (36.876375ms)
+✔ lost-response: one transfer commits exactly once (282.283084ms)
+✔ slow-response: one transfer commits exactly once (1410.87325ms)
+✔ reject-before: retry reuses the same reference (7.672833ms)
+✔ read-unavailable: unknown status resolves on replay (7.869791ms)
+✔ intermittent seed 17: three transfers complete with three operations (8.571666ms)
+✔ insufficient funds fail without new operations (4.634791ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6967.252708
