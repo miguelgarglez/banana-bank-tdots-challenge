@@ -103,6 +103,28 @@ test('telemetry records full tool output', async () => {
   assert.ok(data.output.accounts.length > 0);
   assert.equal(typeof data.durationMs, 'number');
 });
+test('operation_status resolves an unknown intent with a single lookup', async () => {
+  seedBank();
+  setScenario('normal');
+  seedApp();
+  appDb()
+    .prepare(
+      "UPDATE intents SET status='unknown',operation_id=NULL WHERE id='intent-historic-lucia'",
+    )
+    .run();
+  const result = (await runTool(
+    'operation_status',
+    { reference: 'ref-historic-lucia' },
+    ctx('lucia'),
+  )) as any;
+  assert.equal(result.status, 'completed');
+  assert.equal(result.intentStatus, 'completed');
+  const row = appDb()
+    .prepare('SELECT status,operation_id FROM intents WHERE id=?')
+    .get('intent-historic-lucia') as any;
+  assert.equal(row.status, 'completed');
+  assert.equal(row.operation_id, 'op-historic-lucia');
+});
 test('a down bank marks every intent unverified with a gap', async () => {
   seedBank();
   seedApp();

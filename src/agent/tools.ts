@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { FunctionTool } from 'openai/resources/responses/responses';
-import { bankRequest } from '../banking/client';
+import { bankRequest, BankError } from '../banking/client';
 import { transferMoney } from '../banking/actions';
 import { resolveIntent } from '../banking/resolve';
 import { searchDocuments } from '../retrieval/search';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
-import type { ToolContext } from '../types';
+import type { Operation, ToolContext } from '../types';
 const object = (properties: Record<string, unknown>) => ({
   type: 'object',
   properties,
@@ -109,13 +109,29 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
       }
       case 'operation_status': {
         const reference = z.object({ reference: z.string() }).parse(args).reference;
-        result = await bankRequest(ctx.userId, `/v1/operations/${encodeURIComponent(reference)}`);
         const pending = appDb()
           .prepare(
-            "SELECT id FROM intents WHERE user_id=? AND bank_reference=? AND status='unknown'",
+            "SELECT id FROM intents WHERE user_id=? AND bank_reference=? AND status IN ('unknown','processing')",
           )
           .get(ctx.userId, reference) as { id: string } | undefined;
-        if (pending) result = await resolveIntent(ctx.userId, pending.id);
+        let operation: Operation;
+        try {
+          operation = await bankRequest<Operation>(
+            ctx.userId,
+            `/v1/operations/${encodeURIComponent(reference)}`,
+          );
+        } catch (e) {
+          if (e instanceof BankError && e.status === 404 && pending) {
+            const resolved = await resolveIntent(ctx.userId, pending.id);
+            result = { ...resolved, intentStatus: resolved.status };
+            break;
+          }
+          throw e;
+        }
+        if (pending) {
+          const resolved = await resolveIntent(ctx.userId, pending.id, operation);
+          result = { ...resolved, intentStatus: resolved.status };
+        } else result = operation;
         break;
       }
       case 'request_human': {

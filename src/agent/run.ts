@@ -45,10 +45,29 @@ export async function sendMessage(userId: string, conversationId: string, conten
     now,
     runId,
   );
+  const resolvedOps: Record<string, unknown>[] = [];
   for (const i of db
-    .prepare("SELECT id FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'")
-    .all(userId, conversationId) as { id: string }[])
-    await resolveIntent(userId, i.id);
+    .prepare(
+      "SELECT id,bank_reference,payload FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'",
+    )
+    .all(userId, conversationId) as {
+    id: string;
+    bank_reference: string | null;
+    payload: string;
+  }[]) {
+    const resolved = await resolveIntent(userId, i.id);
+    if (resolved.status === 'completed' || resolved.status === 'failed') {
+      const p = JSON.parse(i.payload);
+      resolvedOps.push({
+        intentId: i.id,
+        status: resolved.status,
+        reference: i.bank_reference,
+        amountCents: p.amountCents,
+        toAccountId: p.toAccountId,
+        concept: p.concept,
+      });
+    }
+  }
   const unconfirmed = db
     .prepare(
       "SELECT id,bank_reference,payload FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'",
@@ -104,6 +123,10 @@ export async function sendMessage(userId: string, conversationId: string, conten
             });
           })
           .join('\n');
+    if (resolvedOps.length)
+      instructions +=
+        '\nOPERATIONS RESOLVED SINCE THE LAST MESSAGE (tell the customer; never propose them again):\n' +
+        resolvedOps.map((o) => JSON.stringify(o)).join('\n');
     let answer = 'I could not finish this request. Try again or ask for human support.';
     for (let round = 0; round < 7; round++) {
       const response = await openai().responses.create({
