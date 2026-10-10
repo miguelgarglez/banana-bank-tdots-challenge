@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de las sesiones de IA · Banana Bank</title>
+    <link rel="stylesheet" href="viewer.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Registro de las sesiones de IA · Banana Bank · Miguel García González</h1>
+      <span id="global-stats"></span>
+      <input
+        id="search"
+        type="search"
+        placeholder="Buscar en la sesión abierta…"
+        aria-label="Buscar"
+      />
+      <span id="search-status"></span>
+      <span class="legend" id="legend"></span>
+    </header>
+    <main>
+      <aside id="left">
+        <h2>Cadena de trabajo</h2>
+        <div id="timeline" role="list"></div>
+        <div id="session-list"></div>
+      </aside>
+      <section id="center">
+        <div id="toolbar">
+          <button id="fit">Ajustar</button>
+          <label><input type="checkbox" id="f-thinking" checked /> thinking</label>
+          <label><input type="checkbox" id="f-tool_result" checked /> tool_result</label>
+          <label><input type="checkbox" id="f-system" /> system</label>
+        </div>
+        <svg id="graph" role="img" aria-label="Grafo de la sesión"></svg>
+      </section>
+      <aside id="right">
+        <div id="detail-head"><div id="detail-empty">Selecciona una sesión y un nodo.</div></div>
+        <div id="detail-nav" hidden>
+          <button id="nav-parent">← Padre</button>
+          <button id="nav-child">Hijo →</button>
+          <button id="copy-link">Copiar enlace</button>
+        </div>
+        <div id="detail-body"></div>
+      </aside>
+    </main>
+    <footer>
+      Datos generados con build-sessions-viewer.mjs a partir de los exports originales en
+      ../ai-sessions/; nada se resume ni se edita.
+    </footer>
+    <script src="vendor/d3.v7.min.js"></script>
+    <script src="data/index.js"></script>
+    <script src="viewer.js"></script>
+  </body>
+</html>

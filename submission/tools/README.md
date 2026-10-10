@@ -14,3 +14,5 @@ Visual-parity and live-flow tools used to verify the P3 refactor (no behavior ch
 5. `node functional.mjs` — live flow: Lucía transfer + confirmation, Marta brief +
    reconciliation; restores Lucía's fixture state afterwards.
 6. `tokenize-css.py` — the script used to inventory and tokenize CSS literals.
+7. `node build-sessions-viewer.mjs ../ai-sessions ../ai-sessions-viewer` — regenerate
+   the interactive session viewer data from the AI session exports.
