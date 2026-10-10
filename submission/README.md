@@ -76,6 +76,6 @@ Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capt
 
 ## Terminado, verificado y pendiente
 
-- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 55 pruebas, build de producción, vídeo de demostración de 5:54.
+- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 55 pruebas, build de producción, vídeo de demostración de 6:12.
 - Límites conocidos: la confirmación por chat exige que el mensaje sea solo el código (con "confirm" o "yes" opcionales); cualquier otra redacción se rechaza y el agente vuelve a pedir el código. El bloqueo de operaciones equivalentes compara cuenta origen, destino e importe mientras exista una operación sin resolver; dos intenciones legítimas idénticas sí pueden ejecutarse una vez resuelta la primera. El copiloto reduce pero no elimina el riesgo de que el modelo califique como hecho algo escrito por el cliente; por eso la interfaz separa lo verificado por el ledger (reconciliación, calculada en código) de lo redactado por el modelo.
 - Pendiente (fuera de alcance por tiempo): búsqueda vectorial fuera de memoria para corpus grandes.
