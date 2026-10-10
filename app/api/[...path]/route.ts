@@ -7,7 +7,7 @@ import { bankRequest, BankError } from '../../../src/banking/client';
 import { transferMoney } from '../../../src/banking/actions';
 import { sendMessage, answerWithEvidence } from '../../../src/agent/run';
 import { runTool } from '../../../src/agent/tools';
-import { caseDetail } from '../../../src/operator/view';
+import { caseDetail, reconcileIntent, closeCase } from '../../../src/operator/view';
 import { documents, readDocument, ingest } from '../../../src/ingestion/pipeline';
 import { searchDocuments } from '../../../src/retrieval/search';
 import { MissingOpenAIKeyError } from '../../../src/retrieval/embeddings';
@@ -159,6 +159,12 @@ async function handler(request: Request, context: RouteContext) {
       if (current.role !== 'operator') throw new HttpError(403, 'Operator role required.');
       if (!path[1])
         return json(db.prepare('SELECT * FROM incidents ORDER BY created_at DESC').all());
+      if (path[2] === 'reconcile' && request.method === 'POST') {
+        const { intentId } = z.object({ intentId: z.string() }).parse(await request.json());
+        return json(await reconcileIntent(current.id, path[1], intentId));
+      }
+      if (path[2] === 'close' && request.method === 'POST')
+        return json(await closeCase(current.id, path[1]));
       return json(await caseDetail(current.id, path[1]));
     }
     if (path[0] === 'documents') {
