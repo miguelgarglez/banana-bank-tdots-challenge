@@ -6,6 +6,22 @@ import type { Chunk, SearchResult } from '../types';
 export function isCurrent(chunk: Pick<Chunk, 'validFrom' | 'validTo'>, date = referenceDate) {
   return (!chunk.validFrom || chunk.validFrom <= date) && (!chunk.validTo || chunk.validTo >= date);
 }
+export function diversify<T extends { documentId: string }>(
+  ranked: T[],
+  limit: number,
+  perDocument = 2,
+): T[] {
+  const counts = new Map<string, number>(),
+    result: T[] = [];
+  for (const item of ranked) {
+    const count = counts.get(item.documentId) || 0;
+    if (count >= perDocument) continue;
+    counts.set(item.documentId, count + 1);
+    result.push(item);
+    if (result.length >= limit) break;
+  }
+  return result;
+}
 export async function searchDocuments(
   query: string,
   role = 'customer',
@@ -18,7 +34,7 @@ export async function searchDocuments(
   if (meta.value !== config.embeddingModel)
     throw new Error('The model does not match the index. Re-ingest the documents.');
   const [queryVector] = await embedTexts([query]);
-  return allChunks()
+  const ranked = allChunks()
     .filter(
       (c) => (role === 'operator' || c.audience === 'public') && (includeArchived || isCurrent(c)),
     )
@@ -28,6 +44,6 @@ export async function searchDocuments(
       const score = vector!.reduce((sum, v, i) => sum + v * queryVector[i], 0);
       return { ...c, score };
     })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit);
+    .sort((a, b) => b.score - a.score);
+  return diversify(ranked, limit);
 }

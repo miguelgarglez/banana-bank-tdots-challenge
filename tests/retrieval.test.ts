@@ -8,7 +8,7 @@ process.env.DATA_DIR = temp;
 process.env.BANK_DATA_DIR = temp;
 const { documents, readDocument } = await import('../src/ingestion/pipeline');
 const { chunkDocument } = await import('../src/ingestion/chunker');
-const { isCurrent } = await import('../src/retrieval/search');
+const { isCurrent, diversify } = await import('../src/retrieval/search');
 const doc = (id: string) => documents().find((d) => d.id === id)!;
 test('every chunk carries document metadata and starts with the title', () => {
   const d = doc('aurora-fees-2026');
@@ -34,6 +34,28 @@ test('different documents never share a chunk text', () => {
     (c) => c.text,
   );
   assert.ok(b.every((text) => !a.has(text)));
+});
+test('diversify caps results per document preserving order', () => {
+  const ranked = [
+    { documentId: 'a', score: 10 },
+    { documentId: 'a', score: 9 },
+    { documentId: 'b', score: 8 },
+    { documentId: 'a', score: 7 },
+    { documentId: 'c', score: 6 },
+    { documentId: 'b', score: 5 },
+    { documentId: 'a', score: 4 },
+  ];
+  const result = diversify(ranked, 5);
+  assert.deepEqual(
+    result.map((x) => x.documentId),
+    ['a', 'a', 'b', 'c', 'b'],
+  );
+  assert.deepEqual(
+    result.map((x) => x.score),
+    [10, 9, 8, 6, 5],
+  );
+  for (const id of ['a', 'b', 'c'])
+    assert.ok(result.filter((x) => x.documentId === id).length <= 2);
 });
 test('isCurrent filters archived and future documents', () => {
   assert.equal(isCurrent({ validFrom: '2026-01-01', validTo: '2026-08-31' }), false);
