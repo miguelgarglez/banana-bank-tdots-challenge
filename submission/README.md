@@ -2,7 +2,7 @@
 
 - Fecha de entrega: 12 de octubre de 2026.
 - Arranque: ver `README.md` en la raíz (`npm ci`, `npm run setup`, editar `.env.local` con `OPENAI_API_KEY`, `npm run doctor`, `npm run dev`, abrir http://127.0.0.1:3000). No hace falta nada más que lo que pide el starter. El índice de documentos incluido (`fixtures/embeddings/index.json.gz`) ya está regenerado con el nuevo chunker, así que no es necesario ejecutar `npm run ingest`.
-- Comprobaciones: `npm test` (51 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
+- Comprobaciones: `npm test` (55 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
 - El simulador (`simulator/`) no se ha tocado. La aplicación sigue hablando con el banco solo por su API HTTP firmada.
 
 ## Cómo probar en dos minutos
@@ -46,6 +46,14 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 
 **Archivos.** `src/operator/view.ts` (vista del caso, reconciliación, acciones), `src/operator/copilot.ts` (informe), `src/telemetry.ts` (ahora guarda argumentos y resultados completos), `app/page.tsx` (panel del caso).
 
+## Refactor sin cambio de comportamiento
+
+- API: `app/api/[...path]/route.ts` pasa de 270 líneas de `if` a un despachador de 11 líneas sobre una tabla de rutas por dominio (`src/api/router.ts`, `src/api/{session,dashboard,conversations,actions,operator,documents}.ts`), con la misma autenticación, roles, códigos y textos de error.
+- Tokens de diseño: todos los colores y radios de la hoja de estilos salen de variables con nombre por rol (`app/styles/tokens.css`), sin cambio visual.
+- Vista: `app/page.tsx` (1.200 líneas) partido en componentes por pestaña (`app/components/`), un hook con el estado y las acciones (`app/hooks/useBananaApp.ts`) y una hoja de estilos por componente (`app/styles/`).
+
+Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capturas a 1440 px, comparación píxel a píxel con Pillow): 0 píxeles de diferencia en los tres pasos, además de las 55 pruebas, el typecheck y un flujo funcional automatizado. Evidencias: `submission/evidencias/despues/16-paridad-api.txt` y `17-paridad-tokens-y-componentes.txt`.
+
 ## Método de trabajo y verificación
 
 - Primero reproduje cada fallo por API o en el navegador y guardé la prueba en `evidencias/antes/`. Cada arreglo lleva una prueba automatizada que falla antes y pasa después (los commits locales siguen ese orden: test, luego fix) y la misma reproducción repetida en `evidencias/despues/`.
@@ -62,10 +70,11 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 - `submission/evidencias/revision/`: prompts e informes de las dos revisiones independientes.
 - `submission/ai-sessions/`: exports originales y completos de todas las sesiones de IA, generados con un exportador propio que recorre las bases de datos locales de cada herramienta: `manifest.json` (todas las sesiones en orden de inicio, con agente, id, cwd y hora), `devin/<sesión>/nodes.jsonl` (cada nodo de la sesión principal de Devin y de sus ramas de subagentes, verbatim), `codex/<rollout>.jsonl` (los dos rollouts de Codex usados como revisor independiente, byte a byte) y `cursor/<chat>/` (los dos chats de Cursor con Grok, byte a byte más los mensajes decodificados). Además, `devin-atif-righteous-nest.json`: export oficial ATIF de la sesión principal de Devin (`devin -r righteous-nest --export`).
 - `submission/video/`: guion del vídeo, capturas usadas y la composición HyperFrames con la que se renderizó `demo.mp4` (voz en off generada con OpenAI TTS a partir del guion).
+- `submission/tools/`: herramienta de paridad visual y flujo funcional (Playwright) usados para verificar el refactor.
 - `submission/PLAN.md`: plan de trabajo y prioridades tal como lo seguí.
 
 ## Terminado, verificado y pendiente
 
-- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 51 pruebas, build de producción, vídeo de demostración de 5:54.
+- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 55 pruebas, build de producción, vídeo de demostración de 5:54.
 - Límites conocidos: la confirmación por chat exige que el mensaje sea solo el código (con "confirm" o "yes" opcionales); cualquier otra redacción se rechaza y el agente vuelve a pedir el código. El bloqueo de operaciones equivalentes compara cuenta origen, destino e importe mientras exista una operación sin resolver; dos intenciones legítimas idénticas sí pueden ejecutarse una vez resuelta la primera. El copiloto reduce pero no elimina el riesgo de que el modelo califique como hecho algo escrito por el cliente; por eso la interfaz separa lo verificado por el ledger (reconciliación, calculada en código) de lo redactado por el modelo.
-- Pendiente (fuera de alcance por tiempo): partir `app/page.tsx` en componentes y extraer tokens de diseño; búsqueda vectorial fuera de memoria para corpus grandes.
+- Pendiente (fuera de alcance por tiempo): búsqueda vectorial fuera de memoria para corpus grandes.

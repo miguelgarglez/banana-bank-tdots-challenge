@@ -8,7 +8,8 @@ Banana Bank is a fictional bank with an AI assistant. You receive a working appl
 - **Server-verified confirmation (Part 1).** `authorizeTransfer` is the single money gate: proposals expire, carry a six-character code, and confirm either by panel click or by a customer message that is only the code — a "yes" or a negation mentioning the code moves nothing.
 - **Grounded agent (Part 1).** Scope-limited prompt with citations, paragraph-aware chunking with full metadata, validity filtering and per-document caps in search. The bundled `fixtures/embeddings/index.json.gz` is already regenerated with the new chunker.
 - **Operator copilot (Part 2).** Case view with conversation, agent activity, intents and bank-ledger reconciliation; one-click reconcile and close; strict-schema evidence-bound briefs.
-- **Tests:** 51 automated tests plus `npm run typecheck` and Prettier checks, all green. Full explanation (Spanish) in `submission/README.md`; before/after reproductions, chats, and screenshots in `submission/evidencias/`.
+- **Refactor (no behavior change).** Route table + per-domain API handlers, role-based design tokens, per-tab components and per-component stylesheets; verified with pixel-parity screenshots.
+- **Tests:** 55 automated tests plus `npm run typecheck` and Prettier checks, all green. Full explanation (Spanish) in `submission/README.md`; before/after reproductions, chats, and screenshots in `submission/evidencias/`.
 
 ## Before you start
 

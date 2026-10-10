@@ -1,0 +1,1 @@
+{"name":"parity-tools","private":true,"type":"module","dependencies":{"playwright":"^1.64.0"}}
