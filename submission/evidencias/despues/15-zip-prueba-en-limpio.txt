@@ -1,37 +1,36 @@
-=== npm ci ===
-npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
-npm warn install-scripts
-npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
-=== npm run setup ===
-> node --import tsx scripts/setup.ts
+Prueba en limpio del ZIP de entrega (repetida tras el refactor P3)
+date: 2026-10-10
 
-Created .env.local: set OPENAI_API_KEY to use the assistant.
-{ conversations: 47, incidents: 17, indexLoaded: true }
-Ready. Data in /Users/miguelgarglez/Developer/hackathon-tdots/cleanroom-test/challenge-banana-candidate/.data. Run npm run dev.
-=== npm test ===
-ℹ tests 51
-ℹ suites 0
-ℹ pass 51
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 6970.803833
-=== typecheck ===
+== empaquetado ==
+bash hackathon-tdots/make-zip.sh
+  banana-bank-miguel-garcia-gonzalez.zip: 54M, 328 ficheros, raíz única challenge-banana-candidate/
+  comprobación de rutas prohibidas: OK (sin .env.local, node_modules/, .git/ ni .data/)
 
-Generating route types...
-✓ Types generated successfully
-TYPECHECK-OK
-=== build ===
-└ ƒ /api/[...path]
+== extracción ==
+unzip a /tmp/cleanroom-p3/challenge-banana-candidate
 
+== npm ci ==
+  OK (solo warning de install-scripts de fsevents, normal en macOS)
 
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
+== npm run setup ==
+  Created .env.local: set OPENAI_API_KEY to use the assistant.
+  (clave vacía, sin copiar la real — como exige el test de búsqueda sin clave)
 
-=== dev server smoke (APP_PORT=3100 BANK_PORT=4101) ===
-health: {"ok":true,"keyConfigured":false}
-POST /api/session lucia -> Lucía Martín (customer)
-GET /api/documents (lucia): 68 documentos públicos
-GET /api/incidents/case-lucia (marta): intent-historic-lucia appStatus=failed bankStatus=completed finding + fixable=true
-servidor parado; directorio temporal cleanroom-test borrado
+== npm test ==
+  tests 55 / pass 55 / fail 0
+
+== npm run typecheck ==
+  ✓ Types generated successfully — sin errores
+
+== npm run build ==
+  OK, sin warnings
+
+== arranque ==
+  APP_PORT=3100 BANK_PORT=4101 BANK_URL=http://127.0.0.1:4101 npm run dev
+  GET /api/health -> {"ok":true,...,"keyConfigured":false}
+
+== smoke ==
+  GET /api/documents (sesión lucia)      -> 68 documentos públicos
+  GET /api/incidents/case-lucia (marta)  -> reconciliation[0].fixable = True
+
+Servidor detenido y directorio temporal borrado.
