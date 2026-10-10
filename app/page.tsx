@@ -284,6 +284,12 @@ export default function Home() {
       if (g === generation.current) setError((e as Error).message);
     }
   }
+  const accountLabel = (id: string) =>
+    dashboard?.accounts?.find((x: AnyRecord) => x.id === id)?.label || id;
+  const contactLabel = (id: string) => {
+    const c = dashboard?.contacts?.find((x: AnyRecord) => x.id === id);
+    return c ? `${c.name} · ${c.label}` : id;
+  };
   const operator = current?.role === 'operator';
   const nav = operator
     ? [
@@ -725,18 +731,8 @@ export default function Home() {
                     <div key={a.id}>
                       <p>
                         <strong>{money(a.payload.amountCents)}</strong> ·{' '}
-                        {dashboard.accounts?.find(
-                          (x: AnyRecord) => x.id === a.payload.fromAccountId,
-                        )?.label || a.payload.fromAccountId}{' '}
-                        →{' '}
-                        {(() => {
-                          const contact = dashboard.contacts?.find(
-                            (x: AnyRecord) => x.id === a.payload.toAccountId,
-                          );
-                          return contact
-                            ? `${contact.name} · ${contact.label}`
-                            : a.payload.toAccountId;
-                        })()}
+                        {accountLabel(a.payload.fromAccountId)} →{' '}
+                        {contactLabel(a.payload.toAccountId)}
                       </p>
                       <p>{a.payload.concept}</p>
                       <button className="primary-button" onClick={() => confirm(a.id)}>

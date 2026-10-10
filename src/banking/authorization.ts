@@ -16,6 +16,32 @@ export async function authorizeTransfer(
   if (!ctx.approvalId) {
     const contacts = await bankRequest<(Account & { name?: string })[]>(ctx.userId, '/v1/contacts');
     const to = contacts.find((c) => c.id === input.toAccountId);
+    const proposal = {
+      fromAccountId: from.id,
+      fromLabel: from.label,
+      toAccountId: input.toAccountId,
+      toName: to?.name || null,
+      toLabel: to?.label || null,
+      amountCents: input.amountCents,
+      concept: input.concept,
+    };
+    const existing = db
+      .prepare(
+        `SELECT a.id,a.intent_id,a.expires_at FROM approvals a JOIN intents i ON i.id=a.intent_id
+         WHERE a.user_id=? AND a.payload=? AND a.consumed_at IS NULL AND a.expires_at>? AND i.conversation_id IS ?`,
+      )
+      .get(ctx.userId, JSON.stringify(input), new Date().toISOString(), ctx.conversationId) as
+      { id: string; intent_id: string; expires_at: string } | undefined;
+    if (existing) {
+      db.prepare("UPDATE intents SET status='superseded' WHERE id=?").run(ctx.intentId);
+      return {
+        status: 'requires_confirmation',
+        approvalId: existing.id,
+        intentId: existing.intent_id,
+        expiresAt: existing.expires_at,
+        proposal,
+      };
+    }
     const approvalId = randomUUID(),
       expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     db.prepare('INSERT INTO approvals VALUES(?,?,?,?,?,?)').run(
@@ -38,15 +64,7 @@ export async function authorizeTransfer(
       approvalId,
       intentId: ctx.intentId,
       expiresAt,
-      proposal: {
-        fromAccountId: from.id,
-        fromLabel: from.label,
-        toAccountId: input.toAccountId,
-        toName: to?.name || null,
-        toLabel: to?.label || null,
-        amountCents: input.amountCents,
-        concept: input.concept,
-      },
+      proposal,
     };
   }
   const approval = db.prepare('SELECT * FROM approvals WHERE id=?').get(ctx.approvalId) as

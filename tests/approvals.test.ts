@@ -35,6 +35,7 @@ const operations = () =>
 const approval = (id: string) =>
   appDb().prepare('SELECT * FROM approvals WHERE id=?').get(id) as any;
 const intent = (id: string) => appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
+const resetApp = () => appDb().exec('DELETE FROM approvals; DELETE FROM intents;');
 let bank: ChildProcess;
 before(async () => {
   bank = spawn(process.execPath, ['--import', 'tsx', 'simulator/server.ts'], {
@@ -54,6 +55,7 @@ before(async () => {
 });
 test('a transfer proposal does not move money', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const result = await transferMoney(ctx(intentId), input);
@@ -67,6 +69,7 @@ test('a transfer proposal does not move money', async () => {
 });
 test('confirming a proposal completes it exactly once', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -81,6 +84,7 @@ test('confirming a proposal completes it exactly once', async () => {
 });
 test('a consumed proposal cannot be used again', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -95,6 +99,7 @@ test('a consumed proposal cannot be used again', async () => {
 });
 test('a proposal does not confirm altered details', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -111,6 +116,7 @@ test('a proposal does not confirm altered details', async () => {
 });
 test('an expired proposal is rejected', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -128,6 +134,7 @@ test('an expired proposal is rejected', async () => {
 });
 test('confirmation in the same run as the proposal is rejected', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID(),
     base = ctx(intentId);
@@ -139,6 +146,7 @@ test('confirmation in the same run as the proposal is rejected', async () => {
 });
 test('a proposal cannot be confirmed by another person', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -153,6 +161,7 @@ test('a proposal cannot be confirmed by another person', async () => {
 });
 test('an unknown transfer can be confirmed again to resolution', async () => {
   seedBank();
+  resetApp();
   setScenario('read-unavailable');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -169,6 +178,37 @@ test('an unknown transfer can be confirmed again to resolution', async () => {
   );
   assert.equal(second.status, 'completed');
   assert.equal(operations().length, 1);
+});
+test('identical pending proposals in a conversation are deduplicated', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const conversationId = randomUUID(),
+    first = randomUUID(),
+    second = randomUUID();
+  const a = (await transferMoney(ctx(first, 'lucia', { conversationId }), input)) as any;
+  const b = (await transferMoney(ctx(second, 'lucia', { conversationId }), input)) as any;
+  assert.equal(b.status, 'requires_confirmation');
+  assert.equal(b.approvalId, a.approvalId);
+  assert.equal(b.intentId, a.intentId);
+  assert.equal((appDb().prepare('SELECT COUNT(*) n FROM approvals').get() as { n: number }).n, 1);
+  assert.equal(intent(second).status, 'superseded');
+});
+test('a new proposal after confirmation is a separate approval', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const conversationId = randomUUID(),
+    first = randomUUID();
+  const proposal = (await transferMoney(ctx(first, 'lucia', { conversationId }), input)) as any;
+  const done = await transferMoney(
+    ctx(first, 'lucia', { conversationId, approvalId: proposal.approvalId }),
+    input,
+  );
+  assert.equal(done.status, 'completed');
+  const again = (await transferMoney(ctx(randomUUID(), 'lucia', { conversationId }), input)) as any;
+  assert.equal(again.status, 'requires_confirmation');
+  assert.notEqual(again.approvalId, proposal.approvalId);
 });
 after(async () => {
   bank.kill('SIGTERM');

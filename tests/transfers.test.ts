@@ -45,6 +45,7 @@ const balance = (id: string) =>
     }
   ).balanceCents;
 const intent = (id: string) => appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
+const resetApp = () => appDb().exec('DELETE FROM approvals; DELETE FROM intents;');
 let bank: ChildProcess;
 before(async () => {
   bank = spawn(process.execPath, ['--import', 'tsx', 'simulator/server.ts'], {
@@ -65,6 +66,7 @@ before(async () => {
 for (const scenario of ['lost-response', 'slow-response'] as const)
   test(`${scenario}: one transfer commits exactly once`, async () => {
     seedBank();
+    resetApp();
     setScenario(scenario);
     const intentId = randomUUID(),
       before = balance('acc-lucia');
@@ -77,6 +79,7 @@ for (const scenario of ['lost-response', 'slow-response'] as const)
   });
 test('reject-before: retry reuses the same reference', async () => {
   seedBank();
+  resetApp();
   setScenario('reject-before');
   const intentId = randomUUID();
   const result = await transferConfirmed(intentId, 'lucia');
@@ -86,6 +89,7 @@ test('reject-before: retry reuses the same reference', async () => {
 });
 test('read-unavailable: unknown status resolves on replay', async () => {
   seedBank();
+  resetApp();
   setScenario('read-unavailable');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
@@ -107,6 +111,7 @@ test('read-unavailable: unknown status resolves on replay', async () => {
 });
 test('intermittent seed 17: three transfers complete with three operations', async () => {
   seedBank();
+  resetApp();
   setScenario('intermittent', 17);
   const before = balance('acc-lucia');
   for (let i = 0; i < 3; i++) {
@@ -118,6 +123,7 @@ test('intermittent seed 17: three transfers complete with three operations', asy
 });
 test('insufficient funds fail without new operations', async () => {
   seedBank();
+  resetApp();
   setScenario('normal');
   const intentId = randomUUID();
   const result = await transferConfirmed(intentId, 'diego', {
