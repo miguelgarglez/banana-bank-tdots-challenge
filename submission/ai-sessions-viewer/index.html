@@ -27,12 +27,16 @@
       </aside>
       <section id="center">
         <div id="toolbar">
+          <button id="zoom1">Zoom 1</button>
           <button id="fit">Ajustar</button>
-          <label><input type="checkbox" id="f-thinking" checked /> thinking</label>
+          <label><input type="checkbox" id="f-thinking" /> thinking</label>
           <label><input type="checkbox" id="f-tool_result" checked /> tool_result</label>
           <label><input type="checkbox" id="f-system" /> system</label>
         </div>
+        <div id="chapter-strip"></div>
         <svg id="graph" role="img" aria-label="Grafo de la sesión"></svg>
+        <div id="tooltip" hidden></div>
+        <div id="minimap"><canvas id="minimap-canvas"></canvas></div>
       </section>
       <aside id="right">
         <div id="detail-head"><div id="detail-empty">Selecciona una sesión y un nodo.</div></div>
