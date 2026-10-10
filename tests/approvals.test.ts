@@ -88,10 +88,10 @@ test('a completed intent replays instead of charging again', async () => {
   setScenario('normal');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
-  const first = await transferMoney(
+  const first = (await transferMoney(
     ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
     input,
-  );
+  )) as any;
   const again = (await transferMoney(
     ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
     input,
