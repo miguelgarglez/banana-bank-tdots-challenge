@@ -1,0 +1,24 @@
+P3.1 refactor: route table + per-domain handlers (no behavior change)
+
+== Paridad visual (tools/parity-compare.py parity/ref-p3-0 parity/p3-1) ==
+capture                      size ref       size new          diff px
+lucia-chat-dinner.png        1440x1103    1440x1103             0 OK
+lucia-document-open.png      1440x1076    1440x1076             0 OK
+lucia-documents.png          1440x1076    1440x1076             0 OK
+lucia-overview.png           1440x1158    1440x1158             0 OK
+lucia-transfers.png          1440x909     1440x909              0 OK
+marta-case-lucia.png         1440x2266    1440x2266             0 OK
+marta-cases.png              1440x2266    1440x2266             0 OK
+marta-documents.png          1440x1076    1440x1076             0 OK
+
+La referencia ref-p3-0 se capturó dos veces y comparó entre sí: 0 px (determinista).
+
+== Paridad de JSON (jq -S, antes vs después) ==
+GET /api/health            : IDENTICAL
+GET /api/people            : IDENTICAL
+GET /api/documents (lucia) : IDENTICAL
+GET /api/incidents/case-lucia (marta) : IDENTICAL
+
+== Tests ==
+npm test: 55 pass / 0 fail (incluye tests/api.test.ts: router aislado + contrato HTTP)
+typecheck: OK · prettier: OK
