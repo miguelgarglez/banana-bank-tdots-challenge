@@ -5,36 +5,37 @@ window.__SESSIONS_INDEX = [
   "title": "Hackathon t·Dots Banana Bank: setup, arquitectura y fallos candidatos",
   "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
   "startedAt": "2026-10-10T10:31:38+00:00",
-  "endedAt": "2026-10-10T13:41:39+00:00",
+  "endedAt": "2026-10-10T18:59:12+00:00",
   "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
   "stats": {
-   "nodes": 3483,
+   "nodes": 5497,
    "byKind": {
-    "system": 72,
-    "user": 62,
-    "thinking": 684,
-    "assistant": 374,
-    "tool_call": 1523,
-    "tool_result": 768
+    "system": 93,
+    "user": 114,
+    "thinking": 1118,
+    "assistant": 628,
+    "tool_call": 2350,
+    "tool_result": 1194
    },
    "byTool": {
-    "exec": 642,
-    "skill": 10,
-    "read": 236,
-    "todo_write": 19,
+    "exec": 1142,
+    "skill": 12,
+    "read": 278,
+    "todo_write": 27,
     "grep": 6,
-    "get_output": 27,
+    "get_output": 77,
     "ask_user_question": 2,
-    "sidekick": 28,
-    "write": 97,
-    "edit": 326,
+    "sidekick": 42,
+    "write": 192,
+    "edit": 438,
     "mcp_list_tools": 2,
     "mcp_call_tool": 120,
-    "kill_shell": 6,
-    "write_to_process": 2
+    "kill_shell": 8,
+    "write_to_process": 2,
+    "read_subagent": 2
    },
-   "userTurns": 62,
-   "durationMs": 11413574
+   "userTurns": 114,
+   "durationMs": 30466584
   },
   "role": "principal",
   "file": "data/devin-righteous-nest.js"
@@ -210,6 +211,80 @@ window.__SESSIONS_INDEX = [
   },
   "role": "seguimiento",
   "file": "data/devin-pinto-night.js"
+ },
+ {
+  "id": "01a12708-b169-70a2-987d-301ee23b50b6",
+  "agent": "codex",
+  "title": "revisión Codex 01a12708",
+  "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+  "startedAt": "2026-10-10T18:17:24.264Z",
+  "endedAt": "2026-10-10T18:17:28.815Z",
+  "model": "",
+  "stats": {
+   "nodes": 5,
+   "byKind": {
+    "system": 3,
+    "user": 2
+   },
+   "byTool": {},
+   "userTurns": 2,
+   "durationMs": 260
+  },
+  "role": "revisor independiente · ronda 5",
+  "file": "data/codex-01a12708-b169-70a2-987d-301ee23b50b6.js"
+ },
+ {
+  "id": "01a12708-c8b2-7ef2-8579-28dc0d1e41be",
+  "agent": "codex",
+  "title": "revisión Codex 01a12708",
+  "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+  "startedAt": "2026-10-10T18:17:29.826Z",
+  "endedAt": "2026-10-10T18:17:33.243Z",
+  "model": "",
+  "stats": {
+   "nodes": 5,
+   "byKind": {
+    "system": 3,
+    "user": 2
+   },
+   "byTool": {},
+   "userTurns": 2,
+   "durationMs": 148
+  },
+  "role": "revisor independiente · ronda 6",
+  "file": "data/codex-01a12708-c8b2-7ef2-8579-28dc0d1e41be.js"
+ },
+ {
+  "id": "303aa08e-966e-4010-9a45-7da4ed161f62",
+  "agent": "cursor",
+  "title": "revisión Cursor (Grok) 303aa08e",
+  "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+  "startedAt": "2026-10-10T18:20:34.211Z",
+  "endedAt": "2026-10-10T18:35:04.030Z",
+  "model": "",
+  "stats": {
+   "nodes": 788,
+   "byKind": {
+    "system": 452,
+    "user": 3,
+    "thinking": 63,
+    "assistant": 2,
+    "tool_call": 134,
+    "tool_result": 134
+   },
+   "byTool": {
+    "Shell": 4,
+    "Read": 82,
+    "Glob": 19,
+    "GetDynamicTools": 2,
+    "Grep": 25,
+    "CallDynamicTool": 2
+   },
+   "userTurns": 3,
+   "durationMs": 869819
+  },
+  "role": "revisor independiente · ronda 7",
+  "file": "data/cursor-303aa08e-966e-4010-9a45-7da4ed161f62.js"
  }
 ];
 window.__SESSION_DATA = window.__SESSION_DATA || {};
