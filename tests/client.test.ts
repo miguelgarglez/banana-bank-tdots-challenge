@@ -15,7 +15,7 @@ before(async () => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end('not json');
   });
-  await new Promise((r) => server.listen(4104, '127.0.0.1', r));
+  await new Promise<void>((r) => server.listen(4104, '127.0.0.1', r));
 });
 test('an unreadable response body is an ambiguous bank error', async () => {
   const error = await bankRequest('lucia', '/v1/accounts').then(
