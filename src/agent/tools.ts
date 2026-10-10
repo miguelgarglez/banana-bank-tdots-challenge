@@ -75,6 +75,18 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
         result = {
           accounts: await bankRequest(ctx.userId, '/v1/accounts'),
           contacts: await bankRequest(ctx.userId, '/v1/contacts'),
+          pendingApprovals: (
+            appDb()
+              .prepare(
+                'SELECT id,intent_id,payload,expires_at FROM approvals WHERE user_id=? AND consumed_at IS NULL AND expires_at>?',
+              )
+              .all(ctx.userId, new Date().toISOString()) as {
+              id: string;
+              intent_id: string;
+              payload: string;
+              expires_at: string;
+            }[]
+          ).map((a) => ({ ...a, payload: JSON.parse(a.payload) })),
         };
         break;
       case 'search_documents':
