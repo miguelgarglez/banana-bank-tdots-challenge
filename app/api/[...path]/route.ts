@@ -8,6 +8,7 @@ import { transferMoney } from '../../../src/banking/actions';
 import { sendMessage, answerWithEvidence } from '../../../src/agent/run';
 import { runTool } from '../../../src/agent/tools';
 import { caseDetail, reconcileIntent, closeCase } from '../../../src/operator/view';
+import { caseBrief } from '../../../src/operator/copilot';
 import { documents, readDocument, ingest } from '../../../src/ingestion/pipeline';
 import { searchDocuments } from '../../../src/retrieval/search';
 import { MissingOpenAIKeyError } from '../../../src/retrieval/embeddings';
@@ -165,6 +166,8 @@ async function handler(request: Request, context: RouteContext) {
       }
       if (path[2] === 'close' && request.method === 'POST')
         return json(await closeCase(current.id, path[1]));
+      if (path[2] === 'brief' && request.method === 'POST')
+        return json(await caseBrief(current.id, path[1]));
       return json(await caseDetail(current.id, path[1]));
     }
     if (path[0] === 'documents') {
