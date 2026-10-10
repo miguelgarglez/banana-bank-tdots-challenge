@@ -761,7 +761,9 @@ export default function Home() {
                         {accountLabel(a.payload.fromAccountId)} →{' '}
                         {contactLabel(a.payload.toAccountId)}
                       </p>
-                      <p>{a.payload.concept}</p>
+                      <p>
+                        {a.payload.concept} · Code: <strong>{a.confirmationCode}</strong>
+                      </p>
                       <button className="primary-button" onClick={() => confirm(a.id)}>
                         Confirm these details
                       </button>

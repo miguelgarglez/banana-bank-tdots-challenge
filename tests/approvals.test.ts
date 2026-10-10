@@ -11,7 +11,7 @@ process.env.BANK_DATA_DIR = temp;
 process.env.BANK_PORT = '4102';
 process.env.BANK_URL = 'http://127.0.0.1:4102';
 const { transferMoney } = await import('../src/banking/actions');
-const { authorizeTransfer } = await import('../src/banking/authorization');
+const { authorizeTransfer, confirmationCode } = await import('../src/banking/authorization');
 const { runTool } = await import('../src/agent/tools');
 const { appDb, closeAppDb } = await import('../src/db');
 const { bankDb, closeBankDb } = await import('../simulator/db');
@@ -136,16 +136,79 @@ test('an expired proposal is rejected', async () => {
   assert.equal(operations().length, 0);
   assert.equal(intent(intentId).status, 'expired');
 });
-test('confirmation in the same run as the proposal is rejected', async () => {
+test('a proposal confirms by message only with its code', async () => {
   seedBank();
   resetApp();
   setScenario('normal');
   const intentId = randomUUID(),
-    base = ctx(intentId);
-  const proposal = (await transferMoney(base, input)) as any;
-  const result = await transferMoney({ ...base, approvalId: proposal.approvalId }, input);
-  assert.equal(result.status, 'failed');
-  assert.match((result as any).error, /later message/);
+    conversationId = randomUUID(),
+    runId = randomUUID();
+  appDb()
+    .prepare('INSERT INTO conversations VALUES(?,?,?,?)')
+    .run(conversationId, 'lucia', 'code test', new Date().toISOString());
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  const yesRun = randomUUID();
+  appDb()
+    .prepare('INSERT INTO messages VALUES(?,?,?,?,?,?)')
+    .run(randomUUID(), conversationId, 'user', 'yes', new Date().toISOString(), yesRun);
+  const wrong = await transferMoney(
+    ctx(intentId, 'lucia', {
+      conversationId,
+      runId: yesRun,
+      approvalId: proposal.approvalId,
+      confirmedBy: 'message',
+    }),
+    input,
+  );
+  assert.equal(wrong.status, 'failed');
+  assert.equal((wrong as any).code, 'code_required');
+  assert.equal(operations().length, 0);
+  appDb()
+    .prepare('INSERT INTO messages VALUES(?,?,?,?,?,?)')
+    .run(
+      randomUUID(),
+      conversationId,
+      'user',
+      `confirm ${confirmationCode(proposal.approvalId).toLowerCase()}`,
+      new Date().toISOString(),
+      runId,
+    );
+  const done = await transferMoney(
+    ctx(intentId, 'lucia', {
+      conversationId,
+      runId,
+      approvalId: proposal.approvalId,
+      confirmedBy: 'message',
+    }),
+    input,
+  );
+  assert.equal(done.status, 'completed');
+  assert.equal(operations().length, 1);
+});
+test('a consumed proposal on a failed intent reports already used', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const intentId = randomUUID();
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  appDb()
+    .prepare('UPDATE approvals SET consumed_at=? WHERE id=?')
+    .run(new Date().toISOString(), proposal.approvalId);
+  appDb().prepare("UPDATE intents SET status='failed' WHERE id=?").run(intentId);
+  const again = await authorizeTransfer(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
+    input,
+  );
+  assert.equal(again?.status, 'failed');
+  assert.equal((again as any).code, 'already_used');
+  appDb().prepare("UPDATE intents SET status='awaiting_confirmation' WHERE id=?").run(intentId);
+  appDb().prepare('UPDATE approvals SET consumed_at=NULL WHERE id=?').run(proposal.approvalId);
+  const missing = await authorizeTransfer(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
+    input,
+  );
+  assert.equal(missing?.status, 'failed');
+  assert.equal((missing as any).code, 'channel_unknown');
   assert.equal(operations().length, 0);
 });
 test('a proposal cannot be confirmed by another person', async () => {

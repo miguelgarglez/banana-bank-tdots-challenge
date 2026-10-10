@@ -100,7 +100,7 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
           .get(approvalId, ctx.userId) as { intent_id: string; payload: string } | undefined;
         result = approval
           ? await transferMoney(
-              { ...ctx, intentId: approval.intent_id, approvalId },
+              { ...ctx, intentId: approval.intent_id, approvalId, confirmedBy: 'message' },
               JSON.parse(approval.payload),
             )
           : { status: 'failed', error: 'Proposal not found.' };

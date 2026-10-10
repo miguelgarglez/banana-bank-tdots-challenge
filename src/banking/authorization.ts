@@ -4,7 +4,9 @@ import { HttpError } from '../auth';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
 import type { Account, ActionResult, ToolContext, TransferInput } from '../types';
-const fail = (error: string): ActionResult => ({ status: 'failed', error });
+const fail = (code: string, error: string): ActionResult => ({ status: 'failed', code, error });
+export const confirmationCode = (approvalId: string) =>
+  approvalId.replace(/-/g, '').slice(0, 6).toUpperCase();
 export async function authorizeTransfer(
   ctx: ToolContext,
   input: TransferInput,
@@ -69,6 +71,7 @@ export async function authorizeTransfer(
       approvalId,
       intentId: ctx.intentId,
       expiresAt,
+      confirmationCode: confirmationCode(approvalId),
       proposal,
     };
   }
@@ -85,25 +88,36 @@ export async function authorizeTransfer(
       }
     | undefined;
   if (!approval || approval.user_id !== ctx.userId || approval.intent_id !== ctx.intentId)
-    return fail('Proposal not found.');
+    return fail('not_found', 'Proposal not found.');
   if (approval.payload !== JSON.stringify(input))
-    return fail('The proposal does not match these details.');
-  const intent = db.prepare('SELECT status,run_id FROM intents WHERE id=?').get(ctx.intentId) as
-    { status: string; run_id: string | null } | undefined;
+    return fail('mismatch', 'The proposal does not match these details.');
+  const intent = db.prepare('SELECT status FROM intents WHERE id=?').get(ctx.intentId) as
+    { status: string } | undefined;
   if (
     intent?.status === 'awaiting_confirmation' &&
     approval.expires_at <= new Date().toISOString()
   ) {
     db.prepare("UPDATE intents SET status='expired' WHERE id=?").run(ctx.intentId);
-    return fail('This proposal has expired. Ask for a new one.');
+    return fail('expired', 'This proposal has expired. Ask for a new one.');
   }
   if (approval.consumed_at && intent?.status !== 'unknown')
-    return fail('This proposal was already used.');
-  if (intent?.run_id === ctx.runId)
-    return fail('Confirmation must come from the customer in a later message.');
-  db.prepare('UPDATE approvals SET consumed_at=? WHERE id=?').run(
-    new Date().toISOString(),
-    ctx.approvalId,
-  );
+    return fail('already_used', 'This proposal was already used.');
+  if (!ctx.confirmedBy) return fail('channel_unknown', 'Confirmation channel unknown.');
+  if (ctx.confirmedBy === 'message') {
+    const message = db
+      .prepare("SELECT content FROM messages WHERE run_id=? AND role='user'")
+      .get(ctx.runId) as { content: string } | undefined;
+    const normalized = (message?.content || '').toUpperCase().replace(/[\s-]/g, '');
+    if (!normalized.includes(confirmationCode(ctx.approvalId)))
+      return fail(
+        'code_required',
+        'Ask the customer to reply with the confirmation code shown in the proposal.',
+      );
+  }
+  const consumed = db
+    .prepare('UPDATE approvals SET consumed_at=? WHERE id=? AND consumed_at IS NULL')
+    .run(new Date().toISOString(), ctx.approvalId);
+  if (consumed.changes === 0 && intent?.status !== 'unknown')
+    return fail('already_used', 'This proposal was already used.');
   return null;
 }

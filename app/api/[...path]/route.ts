@@ -5,6 +5,7 @@ import { people, person } from '../../../src/people';
 import { appDb } from '../../../src/db';
 import { bankRequest, BankError } from '../../../src/banking/client';
 import { transferMoney, resolveIntent } from '../../../src/banking/actions';
+import { confirmationCode } from '../../../src/banking/authorization';
 import { sendMessage, answerWithEvidence } from '../../../src/agent/run';
 import { runTool } from '../../../src/agent/tools';
 import { caseDetail, reconcileIntent, closeCase } from '../../../src/operator/view';
@@ -70,7 +71,11 @@ async function handler(request: Request, context: RouteContext) {
             'SELECT * FROM approvals WHERE user_id=? AND consumed_at IS NULL AND expires_at>?',
           )
           .all(current.id, new Date().toISOString()) as any[]
-      ).map((a) => ({ ...a, payload: JSON.parse(a.payload) }));
+      ).map((a) => ({
+        ...a,
+        payload: JSON.parse(a.payload),
+        confirmationCode: confirmationCode(a.id),
+      }));
       const pendingOperations = (
         db
           .prepare(
@@ -168,6 +173,7 @@ async function handler(request: Request, context: RouteContext) {
             runId: randomUUID(),
             intentId: intent.id,
             approvalId: approval.id,
+            confirmedBy: 'click' as const,
           },
           JSON.parse(approval.payload),
         ),
