@@ -21,12 +21,21 @@ const input = {
   amountCents: 1000,
   concept: 'Test',
 };
-const ctx = (intentId: string, userId = 'lucia') => ({
+const ctx = (intentId: string, userId = 'lucia', extra: Record<string, unknown> = {}) => ({
   userId,
   conversationId: null,
   runId: randomUUID(),
   intentId,
+  ...extra,
 });
+async function transferConfirmed(intentId: string, userId: string, args = input) {
+  const proposal = (await transferMoney(ctx(intentId, userId), args)) as any;
+  assert.equal(proposal.status, 'requires_confirmation');
+  return transferMoney(
+    ctx(intentId, userId, { approvalId: proposal.approvalId }),
+    args,
+  ) as Promise<any>;
+}
 const operations = () =>
   bankDb().prepare("SELECT * FROM operations WHERE concept='Test'").all() as any[];
 const balance = (id: string) =>
@@ -35,7 +44,8 @@ const balance = (id: string) =>
       balanceCents: number;
     }
   ).balanceCents;
-const intent = (id: string) => appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
+const intent = (id: string) =>
+  appDb().prepare('SELECT * FROM intents WHERE id=?').get(id) as any;
 let bank: ChildProcess;
 before(async () => {
   bank = spawn(process.execPath, ['--import', 'tsx', 'simulator/server.ts'], {
@@ -59,7 +69,7 @@ for (const scenario of ['lost-response', 'slow-response'] as const)
     setScenario(scenario);
     const intentId = randomUUID(),
       before = balance('acc-lucia');
-    const result = await transferMoney(ctx(intentId), input);
+    const result = await transferConfirmed(intentId, 'lucia');
     assert.equal(result.status, 'completed');
     assert.equal(operations().length, 1);
     assert.equal(balance('acc-lucia'), before - 1000);
@@ -70,7 +80,7 @@ test('reject-before: retry reuses the same reference', async () => {
   seedBank();
   setScenario('reject-before');
   const intentId = randomUUID();
-  const result = await transferMoney(ctx(intentId), input);
+  const result = await transferConfirmed(intentId, 'lucia');
   assert.equal(result.status, 'completed');
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).bank_reference, operations()[0].reference);
@@ -79,12 +89,19 @@ test('read-unavailable: unknown status resolves on replay', async () => {
   seedBank();
   setScenario('read-unavailable');
   const intentId = randomUUID();
-  const first = await transferMoney(ctx(intentId), input);
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  const first = await transferMoney(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
+    input,
+  );
   assert.equal(first.status, 'unknown');
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).status, 'unknown');
   assert.equal(intent(intentId).bank_reference, operations()[0].reference);
-  const second = await transferMoney(ctx(intentId), input);
+  const second = await transferMoney(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
+    input,
+  );
   assert.equal(second.status, 'completed');
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).status, 'completed');
@@ -94,7 +111,7 @@ test('intermittent seed 17: three transfers complete with three operations', asy
   setScenario('intermittent', 17);
   const before = balance('acc-lucia');
   for (let i = 0; i < 3; i++) {
-    const result = await transferMoney(ctx(randomUUID()), input);
+    const result = await transferConfirmed(randomUUID(), 'lucia');
     assert.equal(result.status, 'completed');
   }
   assert.equal(operations().length, 3);
@@ -104,7 +121,7 @@ test('insufficient funds fail without new operations', async () => {
   seedBank();
   setScenario('normal');
   const intentId = randomUUID();
-  const result = await transferMoney(ctx(intentId, 'diego'), {
+  const result = await transferConfirmed(intentId, 'diego', {
     ...input,
     fromAccountId: 'acc-diego',
     amountCents: 10000,
