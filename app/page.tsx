@@ -259,8 +259,7 @@ export default function Home() {
         conversationId,
       });
       if (g !== generation.current) return;
-      if (result.status === 'completed' || result.status === 'failed')
-        manualIntentId.current = null;
+      if (['completed', 'failed', 'blocked'].includes(result.status)) manualIntentId.current = null;
       setNotice(
         result.status === 'completed'
           ? 'Transfer completed. You can check it in your activity.'
@@ -281,6 +280,7 @@ export default function Home() {
     try {
       const result = await api(`approvals/${id}/confirm`, {});
       if (g !== generation.current) return;
+      manualIntentId.current = null;
       setNotice(
         result.status === 'completed'
           ? 'Transfer confirmed and completed.'
