@@ -1,0 +1,7 @@
+Eres un revisor independiente y escéptico. Solo lectura. Proyecto Next.js 16 + TypeScript. Revisa SOLO los tres últimos commits de refactor (`git log -3`, `git diff 3e81cf4 HEAD -- app src`): (1) la API pasó de una cadena de `if` en app/api/[...path]/route.ts a un despachador `src/api/router.ts` con rutas por dominio en `src/api/*.ts`; (2) tokens de diseño en app/styles/tokens.css; (3) app/page.tsx partido en app/components/*, app/hooks/useBananaApp.ts y app/styles/*.css. La promesa es "sin cambio de comportamiento ni de píxeles"; la paridad de píxeles ya se verificó con capturas, así que céntrate en comportamiento y seguridad.
+
+Responde en español, Markdown, breve y concreto:
+A. Cambios de comportamiento observables respecto al código anterior (compara con `git show 3e81cf4:app/api/[...path]/route.ts` y `git show 3e81cf4:app/page.tsx`): orden de comprobaciones (sameOrigin, actor, rol, parseo de body), códigos y textos de error, cabeceras, rutas que antes casaban y ahora no o viceversa (p. ej. métodos no permitidos, rutas con segmentos extra, `conversations/:id` con id vacío), diferencias en la UI (handlers, estado que se reinicia o no al cambiar de persona, efectos). Archivo:línea y escenario.
+B. Regresiones de seguridad: rutas que hayan perdido la comprobación de rol o de propiedad, parámetros de ruta sin validar que antes sí, fuga de datos entre usuarios.
+C. Calidad del refactor: duplicación, props innecesarias, estado que debería vivir en otro sitio, nombres. Máximo 8 puntos.
+D. Veredicto en dos frases.
