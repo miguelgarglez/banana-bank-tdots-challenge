@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { bankRequest } from './client';
-import { resolveIntent } from './resolve';
+import { unresolvedEquivalent } from './resolve';
 import { HttpError } from '../auth';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
@@ -14,26 +14,16 @@ export async function authorizeTransfer(
 ): Promise<ActionResult | null> {
   const db = appDb();
   if (!ctx.approvalId) {
-    const unverified = db
-      .prepare(
-        "SELECT id,bank_reference FROM intents WHERE user_id=? AND payload=? AND status IN ('unknown','processing') AND id!=?",
-      )
-      .all(ctx.userId, JSON.stringify(input), ctx.intentId) as {
-      id: string;
-      bank_reference: string | null;
-    }[];
-    for (const pending of unverified) {
-      const resolved = await resolveIntent(ctx.userId, pending.id);
-      if (resolved.status === 'unknown') {
-        db.prepare("UPDATE intents SET status='blocked' WHERE id=?").run(ctx.intentId);
-        return {
-          status: 'blocked',
-          code: 'pending_verification',
-          intentId: pending.id,
-          reference: pending.bank_reference,
-          error: `An identical transfer is still awaiting the bank's confirmation (reference ${pending.bank_reference}). It will be verified before any new transfer with the same details.`,
-        };
-      }
+    const pending = await unresolvedEquivalent(ctx.userId, input, ctx.intentId);
+    if (pending) {
+      db.prepare("UPDATE intents SET status='blocked' WHERE id=?").run(ctx.intentId);
+      return {
+        status: 'blocked',
+        code: 'pending_verification',
+        intentId: pending.id,
+        reference: pending.bank_reference,
+        error: `An identical transfer is still awaiting the bank's confirmation (reference ${pending.bank_reference}). It will be verified before any new transfer with the same details.`,
+      };
     }
     const accounts = await bankRequest<Account[]>(ctx.userId, '/v1/accounts');
     const from = accounts.find((a) => a.id === input.fromAccountId);
@@ -137,6 +127,12 @@ export async function authorizeTransfer(
         'Ask the customer to reply with only the confirmation code (for example: confirm 7F3A2B).',
       );
   }
+  const pending = await unresolvedEquivalent(ctx.userId, input, ctx.intentId);
+  if (pending)
+    return fail(
+      'pending_verification',
+      `An identical transfer is still awaiting the bank's confirmation (reference ${pending.bank_reference}). It will be verified before any new transfer with the same details.`,
+    );
   const consumed = db
     .prepare('UPDATE approvals SET consumed_at=? WHERE id=? AND consumed_at IS NULL')
     .run(new Date().toISOString(), ctx.approvalId);

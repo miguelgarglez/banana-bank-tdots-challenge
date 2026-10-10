@@ -11,6 +11,7 @@ process.env.BANK_DATA_DIR = temp;
 process.env.BANK_PORT = '4102';
 process.env.BANK_URL = 'http://127.0.0.1:4102';
 const { transferMoney } = await import('../src/banking/actions');
+const { resolveIntent } = await import('../src/banking/resolve');
 const { authorizeTransfer, confirmationCode } = await import('../src/banking/authorization');
 const { runTool } = await import('../src/agent/tools');
 const { appDb, closeAppDb } = await import('../src/db');
@@ -324,6 +325,82 @@ test('an expired approval over an unknown intent still confirms', async () => {
   assert.equal(resolved.status, 'completed');
   assert.notEqual(intent(intentId).status, 'expired');
   assert.equal(operations().length, 1);
+});
+test('an unresolved equivalent blocks confirmation of a second proposal', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const a = randomUUID(),
+    b = randomUUID();
+  const pa = (await transferMoney(ctx(a), input)) as any;
+  const pb = (await transferMoney(ctx(b), input)) as any;
+  assert.notEqual(pa.approvalId, pb.approvalId);
+  setScenario('read-unavailable');
+  const first = await transferMoney(
+    ctx(a, 'lucia', { approvalId: pa.approvalId, confirmedBy: 'click' }),
+    input,
+  );
+  assert.equal(first.status, 'unknown');
+  bankDb().prepare('UPDATE scenario SET read_failures=1 WHERE id=1').run();
+  const blocked = (await transferMoney(
+    ctx(b, 'lucia', { approvalId: pb.approvalId, confirmedBy: 'click' }),
+    input,
+  )) as any;
+  assert.equal(blocked.status, 'failed');
+  assert.equal(blocked.code, 'pending_verification');
+  assert.equal(operations().length, 1);
+  assert.equal(approval(pb.approvalId).consumed_at, null);
+  setScenario('normal');
+  const resolved = await resolveIntent('lucia', a);
+  assert.equal(resolved.status, 'completed');
+  const done = (await transferMoney(
+    ctx(b, 'lucia', { approvalId: pb.approvalId, confirmedBy: 'click' }),
+    input,
+  )) as any;
+  assert.equal(done.status, 'completed');
+  assert.equal(operations().length, 2);
+});
+test('a processing intent blocks an equivalent proposal', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const processing = randomUUID();
+  appDb()
+    .prepare('INSERT INTO intents VALUES(?,?,?,?,?,?,?,?,?,?)')
+    .run(
+      processing,
+      'lucia',
+      null,
+      randomUUID(),
+      JSON.stringify(input),
+      'processing',
+      null,
+      null,
+      null,
+      new Date().toISOString(),
+    );
+  const blocked = (await transferMoney(ctx(randomUUID()), input)) as any;
+  assert.equal(blocked.status, 'blocked');
+  assert.equal(blocked.intentId, processing);
+  appDb().prepare("UPDATE intents SET status='failed' WHERE id=?").run(processing);
+  const stale = randomUUID();
+  appDb()
+    .prepare('INSERT INTO intents VALUES(?,?,?,?,?,?,?,?,?,?)')
+    .run(
+      stale,
+      'lucia',
+      null,
+      randomUUID(),
+      JSON.stringify({ ...input, concept: 'Old' }),
+      'processing',
+      'ref-nonexistent',
+      null,
+      null,
+      new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    );
+  const proposal = (await transferMoney(ctx(randomUUID()), input)) as any;
+  assert.equal(proposal.status, 'requires_confirmation');
+  assert.equal(intent(stale).status, 'failed');
 });
 test('an identical proposal is blocked while another is unverified', async () => {
   seedBank();

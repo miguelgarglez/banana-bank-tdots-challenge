@@ -3,8 +3,12 @@ import { appDb } from '../db';
 import { bankRequest, BankError } from './client';
 import { UNKNOWN_MESSAGE } from './dispatch';
 import { recordEvent } from '../telemetry';
-import type { ActionResult, Operation, ToolContext } from '../types';
-export async function resolveIntent(userId: string, intentId: string): Promise<ActionResult> {
+import type { ActionResult, Operation, ToolContext, TransferInput } from '../types';
+export async function resolveIntent(
+  userId: string,
+  intentId: string,
+  operation?: Operation,
+): Promise<ActionResult> {
   const db = appDb();
   const intent = db
     .prepare('SELECT * FROM intents WHERE id=? AND user_id=?')
@@ -15,10 +19,16 @@ export async function resolveIntent(userId: string, intentId: string): Promise<A
         operation_id: string | null;
         error: string | null;
         conversation_id: string | null;
+        created_at: string;
       }
     | undefined;
-  if (!intent || intent.status !== 'unknown' || !intent.bank_reference)
+  if (
+    !intent ||
+    !['unknown', 'processing'].includes(intent.status) ||
+    (intent.status === 'unknown' && !intent.bank_reference)
+  )
     return { status: intent?.status || 'unknown', intentId };
+  if (!intent.bank_reference) return { status: 'processing', intentId };
   const ctx: ToolContext = {
     userId,
     conversationId: intent.conversation_id,
@@ -26,18 +36,21 @@ export async function resolveIntent(userId: string, intentId: string): Promise<A
     intentId,
   };
   try {
-    const operation = await bankRequest<Operation>(
-      userId,
-      `/v1/operations/${encodeURIComponent(intent.bank_reference)}`,
-    );
+    const found =
+      operation ||
+      (await bankRequest<Operation>(
+        userId,
+        `/v1/operations/${encodeURIComponent(intent.bank_reference)}`,
+      ));
     db.prepare("UPDATE intents SET status='completed',operation_id=?,error=NULL WHERE id=?").run(
-      operation.id,
+      found.id,
       intentId,
     );
-    recordEvent(ctx, 'transfer.resolved', { status: 'completed', operation, intentId });
-    return { status: 'completed', operation, intentId, resolved: true };
+    recordEvent(ctx, 'transfer.resolved', { status: 'completed', operation: found, intentId });
+    return { status: 'completed', operation: found, intentId, resolved: true };
   } catch (e) {
-    if (e instanceof BankError && e.status === 404) {
+    const stale = Date.now() - new Date(intent.created_at).getTime() > 5 * 60 * 1000;
+    if (e instanceof BankError && e.status === 404 && (intent.status === 'unknown' || stale)) {
       db.prepare("UPDATE intents SET status='failed',error=? WHERE id=?").run(
         'The bank has no record of this operation.',
         intentId,
@@ -50,6 +63,7 @@ export async function resolveIntent(userId: string, intentId: string): Promise<A
         resolved: true,
       };
     }
+    if (intent.status === 'processing') return { status: 'processing', intentId };
     return {
       status: 'unknown',
       reference: intent.bank_reference,
@@ -57,4 +71,36 @@ export async function resolveIntent(userId: string, intentId: string): Promise<A
       error: UNKNOWN_MESSAGE,
     };
   }
+}
+export async function unresolvedEquivalent(
+  userId: string,
+  input: TransferInput,
+  excludeIntentId: string,
+): Promise<{ id: string; bank_reference: string | null } | null> {
+  const candidates = appDb()
+    .prepare(
+      "SELECT id,bank_reference,payload FROM intents WHERE user_id=? AND status IN ('unknown','processing') AND id!=?",
+    )
+    .all(userId, excludeIntentId) as {
+    id: string;
+    bank_reference: string | null;
+    payload: string;
+  }[];
+  for (const candidate of candidates) {
+    let payload: TransferInput;
+    try {
+      payload = JSON.parse(candidate.payload);
+    } catch {
+      continue;
+    }
+    if (
+      payload.fromAccountId !== input.fromAccountId ||
+      payload.toAccountId !== input.toAccountId ||
+      payload.amountCents !== input.amountCents
+    )
+      continue;
+    const resolved = await resolveIntent(userId, candidate.id);
+    if (['unknown', 'processing'].includes(String(resolved.status))) return candidate;
+  }
+  return null;
 }
