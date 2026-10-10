@@ -104,7 +104,8 @@ export default function Home() {
     [to, setTo] = useState(''),
     [amount, setAmount] = useState(''),
     [concept, setConcept] = useState('');
-  const activeConversation = useRef<string | null>(null);
+  const activeConversation = useRef<string | null>(null),
+    manualIntentId = useRef<string | null>(null);
   const generation = useRef(0),
     messagesEnd = useRef<HTMLDivElement>(null);
   async function refresh(g = generation.current) {
@@ -245,8 +246,10 @@ export default function Home() {
     setError('');
     setNotice('');
     try {
+      if (!manualIntentId.current) manualIntentId.current = crypto.randomUUID();
       const result = await api('actions', {
         name: 'transfer_money',
+        intentId: manualIntentId.current,
         arguments: {
           fromAccountId: from,
           toAccountId: to,
@@ -256,6 +259,8 @@ export default function Home() {
         conversationId,
       });
       if (g !== generation.current) return;
+      if (result.status === 'completed' || result.status === 'failed')
+        manualIntentId.current = null;
       setNotice(
         result.status === 'completed'
           ? 'Transfer completed. You can check it in your activity.'
@@ -657,7 +662,14 @@ export default function Home() {
                       <h2>Your transfer details</h2>
                       <label>
                         From account
-                        <select value={from} onChange={(e) => setFrom(e.target.value)} required>
+                        <select
+                          value={from}
+                          onChange={(e) => {
+                            manualIntentId.current = null;
+                            setFrom(e.target.value);
+                          }}
+                          required
+                        >
                           {dashboard.accounts?.map((a: AnyRecord) => (
                             <option key={a.id} value={a.id}>
                               {a.label} · {a.id} · {money(a.balanceCents)}
@@ -667,7 +679,14 @@ export default function Home() {
                       </label>
                       <label>
                         Recipient
-                        <select value={to} onChange={(e) => setTo(e.target.value)} required>
+                        <select
+                          value={to}
+                          onChange={(e) => {
+                            manualIntentId.current = null;
+                            setTo(e.target.value);
+                          }}
+                          required
+                        >
                           <option value="">Select an account</option>
                           {dashboard.contacts?.map((a: AnyRecord) => (
                             <option key={a.id} value={a.id}>
@@ -687,7 +706,10 @@ export default function Home() {
                             max="100000"
                             required
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={(e) => {
+                              manualIntentId.current = null;
+                              setAmount(e.target.value);
+                            }}
                             placeholder="0.00"
                           />
                           <span>EUR</span>
@@ -697,7 +719,10 @@ export default function Home() {
                         Description
                         <input
                           value={concept}
-                          onChange={(e) => setConcept(e.target.value)}
+                          onChange={(e) => {
+                            manualIntentId.current = null;
+                            setConcept(e.target.value);
+                          }}
                           placeholder="What is this transfer for?"
                           maxLength={200}
                           required
@@ -777,8 +802,8 @@ export default function Home() {
                             try {
                               const d = await api(`incidents/${c.id}`);
                               if (g === generation.current) {
+                                if (selectedCase?.incident.id !== c.id) setBrief(null);
                                 setSelectedCase(d);
-                                setBrief(null);
                               }
                             } catch (e) {
                               setError((e as Error).message);

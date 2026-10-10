@@ -42,7 +42,7 @@ function reconcile(intents: IntentRecord[], operations: Operation[] | null): Rec
     };
   });
 }
-async function detail(operatorId: string, id: string): Promise<CaseDetail> {
+export async function caseDetail(operatorId: string, id: string): Promise<CaseDetail> {
   if (person(operatorId)?.role !== 'operator') throw new HttpError(403, 'Operator role required.');
   const db = appDb();
   const incident = db.prepare('SELECT * FROM incidents WHERE id=?').get(id) as
@@ -121,11 +121,8 @@ async function detail(operatorId: string, id: string): Promise<CaseDetail> {
     gaps,
   };
 }
-export async function caseDetail(operatorId: string, id: string) {
-  return detail(operatorId, id);
-}
 export async function reconcileIntent(operatorId: string, caseId: string, intentId: string) {
-  const current = await detail(operatorId, caseId);
+  const current = await caseDetail(operatorId, caseId);
   const entry = current.reconciliation.find((r) => r.intentId === intentId);
   if (!entry) throw new HttpError(404, 'Intent not found.');
   if (!entry.fixable || !entry.operation)
@@ -151,10 +148,10 @@ export async function reconcileIntent(operatorId: string, caseId: string, intent
     }),
     new Date().toISOString(),
   );
-  return detail(operatorId, caseId);
+  return caseDetail(operatorId, caseId);
 }
 export async function closeCase(operatorId: string, caseId: string) {
-  const current = await detail(operatorId, caseId);
+  const current = await caseDetail(operatorId, caseId);
   const db = appDb();
   db.prepare("UPDATE incidents SET status='closed' WHERE id=?").run(caseId);
   db.prepare('INSERT INTO events VALUES(?,?,?,?,?,?,?)').run(
@@ -166,5 +163,5 @@ export async function closeCase(operatorId: string, caseId: string) {
     JSON.stringify({ by: operatorId }),
     new Date().toISOString(),
   );
-  return detail(operatorId, caseId);
+  return caseDetail(operatorId, caseId);
 }
