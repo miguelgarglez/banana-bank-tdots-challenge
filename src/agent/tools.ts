@@ -26,7 +26,13 @@ export const toolDefinitions: FunctionTool[] = [
     type: 'function',
     name: 'search_documents',
     description: "Search the bank's documentation for policies and procedures.",
-    parameters: object({ query: string }),
+    parameters: object({
+      query: string,
+      includeArchived: {
+        type: 'boolean',
+        description: 'Set true only when the customer asks about past or historical terms.',
+      },
+    }),
     strict: true,
   },
   {
@@ -77,13 +83,13 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
           contacts: await bankRequest(ctx.userId, '/v1/contacts'),
         };
         break;
-      case 'search_documents':
-        result = {
-          sources: await searchDocuments(
-            z.object({ query: z.string().max(2000) }).parse(args).query,
-          ),
-        };
+      case 'search_documents': {
+        const { query, includeArchived } = z
+          .object({ query: z.string().max(2000), includeArchived: z.boolean() })
+          .parse(args);
+        result = { sources: await searchDocuments(query, 'customer', 5, includeArchived) };
         break;
+      }
       case 'transfer_money':
         result = await transferMoney(ctx, args);
         break;

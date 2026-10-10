@@ -218,7 +218,9 @@ async function handler(request: Request, context: RouteContext) {
       const { query } = z
         .object({ query: z.string().min(1).max(2000) })
         .parse(await request.json());
-      return json({ sources: await searchDocuments(query, current.role) });
+      return json({
+        sources: await searchDocuments(query, current.role, 5, current.role === 'operator'),
+      });
     }
     if (route === 'ingestion' && request.method === 'POST') {
       if (current.role !== 'operator') throw new HttpError(403, 'Operator role required.');
