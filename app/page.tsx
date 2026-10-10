@@ -112,6 +112,11 @@ export default function Home() {
     const data = await api('dashboard');
     if (g !== generation.current) return;
     setDashboard(data);
+    if (
+      manualIntentId.current &&
+      !data.approvals?.some((a: AnyRecord) => a.intent_id === manualIntentId.current)
+    )
+      manualIntentId.current = null;
     if (data.accounts?.length)
       setFrom((v) => (data.accounts.some((a: AnyRecord) => a.id === v) ? v : data.accounts[0].id));
   }
