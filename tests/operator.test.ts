@@ -80,9 +80,12 @@ test('reconciling an intent fixes the app record once', async () => {
     /Nothing to reconcile/,
   );
 });
-test('closing a case records the event', async () => {
+test('closing a case with a fixable discrepancy is rejected', async () => {
   seedBank();
+  setScenario('normal');
   seedApp();
+  await assert.rejects(() => closeCase('marta', 'case-lucia'), /Reconcile pending discrepancies/);
+  await reconcileIntent('marta', 'case-lucia', 'intent-historic-lucia');
   const detail = await closeCase('marta', 'case-lucia');
   assert.equal(detail.incident.status, 'closed');
   assert.ok(detail.events.some((e) => e.kind === 'case.closed'));

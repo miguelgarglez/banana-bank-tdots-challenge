@@ -10,7 +10,7 @@ process.env.DATA_DIR = temp;
 process.env.BANK_DATA_DIR = temp;
 process.env.BANK_PORT = '4101';
 process.env.BANK_URL = 'http://127.0.0.1:4101';
-const { transferMoney } = await import('../src/banking/actions');
+const { transferMoney, resolveIntent } = await import('../src/banking/actions');
 const { appDb, closeAppDb } = await import('../src/db');
 const { bankDb, closeBankDb } = await import('../simulator/db');
 const { seedBank } = await import('../simulator/seed');
@@ -32,7 +32,7 @@ async function transferConfirmed(intentId: string, userId: string, args = input)
   const proposal = (await transferMoney(ctx(intentId, userId), args)) as any;
   assert.equal(proposal.status, 'requires_confirmation');
   return transferMoney(
-    ctx(intentId, userId, { approvalId: proposal.approvalId }),
+    ctx(intentId, userId, { approvalId: proposal.approvalId, confirmedBy: 'click' }),
     args,
   ) as Promise<any>;
 }
@@ -87,27 +87,46 @@ test('reject-before: retry reuses the same reference', async () => {
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).bank_reference, operations()[0].reference);
 });
-test('read-unavailable: unknown status resolves on replay', async () => {
+test('read-unavailable: unknown resolves against the ledger without re-sending', async () => {
   seedBank();
   resetApp();
   setScenario('read-unavailable');
   const intentId = randomUUID();
   const proposal = (await transferMoney(ctx(intentId), input)) as any;
   const first = await transferMoney(
-    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
     input,
   );
   assert.equal(first.status, 'unknown');
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).status, 'unknown');
   assert.equal(intent(intentId).bank_reference, operations()[0].reference);
-  const second = await transferMoney(
-    ctx(intentId, 'lucia', { approvalId: proposal.approvalId }),
-    input,
-  );
-  assert.equal(second.status, 'completed');
+  const resolved = await resolveIntent('lucia', intentId);
+  assert.equal(resolved.status, 'completed');
   assert.equal(operations().length, 1);
   assert.equal(intent(intentId).status, 'completed');
+  assert.ok(
+    (
+      appDb().prepare("SELECT COUNT(*) n FROM events WHERE kind='transfer.resolved'").get() as {
+        n: number;
+      }
+    ).n > 0,
+  );
+  const replay = await transferMoney(ctx(intentId), input);
+  assert.equal(replay.status, 'completed');
+  assert.equal(operations().length, 1);
+});
+test('a completed intent replays its recorded operation', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const intentId = randomUUID();
+  const first = await transferConfirmed(intentId, 'lucia');
+  const again = (await transferMoney(ctx(intentId), input)) as any;
+  assert.equal(again.status, 'completed');
+  assert.equal(again.replay, true);
+  assert.equal(again.operation.id, first.operation.id);
+  assert.equal(operations().length, 1);
 });
 test('intermittent seed 17: three transfers complete with three operations', async () => {
   seedBank();
@@ -135,13 +154,42 @@ test('insufficient funds fail without new operations', async () => {
   assert.equal(operations().length, 0);
   assert.equal(intent(intentId).status, 'failed');
 });
-after(async () => {
+test('unknown stays unknown while the bank is down', async () => {
+  seedBank();
+  resetApp();
+  const intentId = randomUUID();
+  appDb()
+    .prepare('INSERT INTO intents VALUES(?,?,?,?,?,?,?,?,?,?)')
+    .run(
+      intentId,
+      'lucia',
+      null,
+      randomUUID(),
+      JSON.stringify(input),
+      'unknown',
+      'ref-gone',
+      null,
+      'pending',
+      new Date().toISOString(),
+    );
   bank.kill('SIGTERM');
   await Promise.race([
     new Promise((r) => bank.once('exit', r)),
     new Promise((r) => setTimeout(r, 5000)),
   ]);
-  if (bank.exitCode === null) bank.kill('SIGKILL');
+  const result = await resolveIntent('lucia', intentId);
+  assert.equal(result.status, 'unknown');
+  assert.equal(intent(intentId).status, 'unknown');
+});
+after(async () => {
+  if (bank.exitCode === null) {
+    bank.kill('SIGTERM');
+    await Promise.race([
+      new Promise((r) => bank.once('exit', r)),
+      new Promise((r) => setTimeout(r, 5000)),
+    ]);
+    if (bank.exitCode === null) bank.kill('SIGKILL');
+  }
   closeAppDb();
   closeBankDb();
   fs.rmSync(temp, { recursive: true, force: true });

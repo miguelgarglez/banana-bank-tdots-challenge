@@ -9,11 +9,33 @@ export async function authorizeTransfer(
   ctx: ToolContext,
   input: TransferInput,
 ): Promise<ActionResult | null> {
-  const accounts = await bankRequest<Account[]>(ctx.userId, '/v1/accounts');
-  const from = accounts.find((a) => a.id === input.fromAccountId);
-  if (!from) throw new HttpError(403, 'This account does not belong to this person.');
   const db = appDb();
   if (!ctx.approvalId) {
+    const { resolveIntent } = await import('./actions');
+    const unverified = db
+      .prepare(
+        "SELECT id,bank_reference FROM intents WHERE user_id=? AND payload=? AND status IN ('unknown','processing') AND id!=?",
+      )
+      .all(ctx.userId, JSON.stringify(input), ctx.intentId) as {
+      id: string;
+      bank_reference: string | null;
+    }[];
+    for (const pending of unverified) {
+      const resolved = await resolveIntent(ctx.userId, pending.id);
+      if (resolved.status === 'unknown') {
+        db.prepare("UPDATE intents SET status='blocked' WHERE id=?").run(ctx.intentId);
+        return {
+          status: 'blocked',
+          code: 'pending_verification',
+          intentId: pending.id,
+          reference: pending.bank_reference,
+          error: `An identical transfer is still awaiting the bank's confirmation (reference ${pending.bank_reference}). It will be verified before any new transfer with the same details.`,
+        };
+      }
+    }
+    const accounts = await bankRequest<Account[]>(ctx.userId, '/v1/accounts');
+    const from = accounts.find((a) => a.id === input.fromAccountId);
+    if (!from) throw new HttpError(403, 'This account does not belong to this person.');
     const contacts = await bankRequest<(Account & { name?: string })[]>(ctx.userId, '/v1/contacts');
     const to = contacts.find((c) => c.id === input.toAccountId);
     const proposal = {
@@ -25,23 +47,6 @@ export async function authorizeTransfer(
       amountCents: input.amountCents,
       concept: input.concept,
     };
-    const existing = db
-      .prepare(
-        `SELECT a.id,a.intent_id,a.expires_at FROM approvals a JOIN intents i ON i.id=a.intent_id
-         WHERE a.user_id=? AND a.payload=? AND a.consumed_at IS NULL AND a.expires_at>? AND i.conversation_id IS ?`,
-      )
-      .get(ctx.userId, JSON.stringify(input), new Date().toISOString(), ctx.conversationId) as
-      { id: string; intent_id: string; expires_at: string } | undefined;
-    if (existing) {
-      db.prepare("UPDATE intents SET status='superseded' WHERE id=?").run(ctx.intentId);
-      return {
-        status: 'requires_confirmation',
-        approvalId: existing.id,
-        intentId: existing.intent_id,
-        expiresAt: existing.expires_at,
-        proposal,
-      };
-    }
     const approvalId = randomUUID(),
       expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     db.prepare('INSERT INTO approvals VALUES(?,?,?,?,?,?)').run(
@@ -67,6 +72,9 @@ export async function authorizeTransfer(
       proposal,
     };
   }
+  const accounts = await bankRequest<Account[]>(ctx.userId, '/v1/accounts');
+  if (!accounts.some((a) => a.id === input.fromAccountId))
+    throw new HttpError(403, 'This account does not belong to this person.');
   const approval = db.prepare('SELECT * FROM approvals WHERE id=?').get(ctx.approvalId) as
     | {
         user_id: string;
@@ -82,7 +90,10 @@ export async function authorizeTransfer(
     return fail('The proposal does not match these details.');
   const intent = db.prepare('SELECT status,run_id FROM intents WHERE id=?').get(ctx.intentId) as
     { status: string; run_id: string | null } | undefined;
-  if (approval.expires_at <= new Date().toISOString()) {
+  if (
+    intent?.status === 'awaiting_confirmation' &&
+    approval.expires_at <= new Date().toISOString()
+  ) {
     db.prepare("UPDATE intents SET status='expired' WHERE id=?").run(ctx.intentId);
     return fail('This proposal has expired. Ask for a new one.');
   }

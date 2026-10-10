@@ -20,11 +20,7 @@ function reconcile(intents: IntentRecord[], operations: Operation[] | null): Rec
         : 'not_found';
     let finding: string | null = null,
       fixable = false;
-    if (
-      ['failed', 'unknown', 'processing', 'created'].includes(intent.status) &&
-      bankStatus === 'completed' &&
-      operation
-    ) {
+    if (intent.status !== 'completed' && bankStatus === 'completed' && operation) {
       finding = `App recorded ${intent.status}; the bank ledger shows a completed operation (${operation.reference}, ${eur(operation.amountCents)}, ${operation.createdAt}).`;
       fixable = true;
     } else if (intent.status === 'completed' && bankStatus === 'not_found') {
@@ -152,6 +148,8 @@ export async function reconcileIntent(operatorId: string, caseId: string, intent
 }
 export async function closeCase(operatorId: string, caseId: string) {
   const current = await caseDetail(operatorId, caseId);
+  if (current.reconciliation.some((r) => r.fixable))
+    throw new HttpError(409, 'Reconcile pending discrepancies before closing.');
   const db = appDb();
   db.prepare("UPDATE incidents SET status='closed' WHERE id=?").run(caseId);
   db.prepare('INSERT INTO events VALUES(?,?,?,?,?,?,?)').run(

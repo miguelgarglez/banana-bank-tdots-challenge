@@ -4,7 +4,7 @@ import { actor, sessionToken, sameOrigin, HttpError } from '../../../src/auth';
 import { people, person } from '../../../src/people';
 import { appDb } from '../../../src/db';
 import { bankRequest, BankError } from '../../../src/banking/client';
-import { transferMoney } from '../../../src/banking/actions';
+import { transferMoney, resolveIntent } from '../../../src/banking/actions';
 import { sendMessage, answerWithEvidence } from '../../../src/agent/run';
 import { runTool } from '../../../src/agent/tools';
 import { caseDetail, reconcileIntent, closeCase } from '../../../src/operator/view';
@@ -55,6 +55,10 @@ async function handler(request: Request, context: RouteContext) {
         return json({
           incidents: db.prepare('SELECT * FROM incidents ORDER BY created_at DESC').all(),
         });
+      for (const i of db
+        .prepare("SELECT id FROM intents WHERE user_id=? AND status='unknown'")
+        .all(current.id) as { id: string }[])
+        await resolveIntent(current.id, i.id);
       const [accounts, movements, contacts] = await Promise.all([
         bankRequest(current.id, '/v1/accounts'),
         bankRequest(current.id, '/v1/movements'),
@@ -67,7 +71,20 @@ async function handler(request: Request, context: RouteContext) {
           )
           .all(current.id, new Date().toISOString()) as any[]
       ).map((a) => ({ ...a, payload: JSON.parse(a.payload) }));
-      return json({ accounts, movements, contacts, approvals });
+      const pendingOperations = (
+        db
+          .prepare(
+            "SELECT id,bank_reference,payload,error,created_at FROM intents WHERE user_id=? AND status='unknown'",
+          )
+          .all(current.id) as any[]
+      ).map((i) => ({
+        intentId: i.id,
+        reference: i.bank_reference,
+        payload: JSON.parse(i.payload),
+        createdAt: i.created_at,
+        error: i.error,
+      }));
+      return json({ accounts, movements, contacts, approvals, pendingOperations });
     }
     if (route === 'conversations') {
       if (current.role !== 'customer')

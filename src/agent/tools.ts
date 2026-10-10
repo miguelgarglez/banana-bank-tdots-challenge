@@ -106,12 +106,20 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
           : { status: 'failed', error: 'Proposal not found.' };
         break;
       }
-      case 'operation_status':
-        result = await bankRequest(
-          ctx.userId,
-          `/v1/operations/${encodeURIComponent(z.object({ reference: z.string() }).parse(args).reference)}`,
-        );
+      case 'operation_status': {
+        const reference = z.object({ reference: z.string() }).parse(args).reference;
+        result = await bankRequest(ctx.userId, `/v1/operations/${encodeURIComponent(reference)}`);
+        const pending = appDb()
+          .prepare(
+            "SELECT id FROM intents WHERE user_id=? AND bank_reference=? AND status='unknown'",
+          )
+          .get(ctx.userId, reference) as { id: string } | undefined;
+        if (pending) {
+          const { resolveIntent } = await import('../banking/actions');
+          result = await resolveIntent(ctx.userId, pending.id);
+        }
         break;
+      }
       case 'request_human': {
         if (!ctx.conversationId) throw new Error('A conversation is required to open a case.');
         const { summary } = z.object({ summary: z.string().min(1).max(2000) }).parse(args);

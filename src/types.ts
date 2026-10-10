@@ -43,6 +43,7 @@ export type ToolContext = {
   runId: string;
   intentId: string;
   approvalId?: string;
+  confirmedBy?: 'click' | 'message';
 };
 export type ActionResult = { status: string; [key: string]: unknown };
 export type DocumentRecord = {

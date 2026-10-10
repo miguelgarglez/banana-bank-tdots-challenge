@@ -44,6 +44,20 @@ export async function sendMessage(userId: string, conversationId: string, conten
     now,
     runId,
   );
+  const { resolveIntent } = await import('../banking/actions');
+  for (const i of db
+    .prepare("SELECT id FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'")
+    .all(userId, conversationId) as { id: string }[])
+    await resolveIntent(userId, i.id);
+  const unconfirmed = db
+    .prepare(
+      "SELECT id,bank_reference,payload FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'",
+    )
+    .all(userId, conversationId) as {
+    id: string;
+    bank_reference: string | null;
+    payload: string;
+  }[];
   try {
     const sources = await searchDocuments(content);
     const history = db
@@ -74,6 +88,21 @@ export async function sendMessage(userId: string, conversationId: string, conten
           .map((a) =>
             JSON.stringify({ approvalId: a.id, ...JSON.parse(a.payload), expiresAt: a.expires_at }),
           )
+          .join('\n');
+    if (unconfirmed.length)
+      instructions +=
+        '\nUNCONFIRMED OPERATIONS (the bank has not confirmed these yet; never propose the same transfer again while listed; tell the customer it is being verified):\n' +
+        unconfirmed
+          .map((i) => {
+            const p = JSON.parse(i.payload);
+            return JSON.stringify({
+              intentId: i.id,
+              reference: i.bank_reference,
+              amountCents: p.amountCents,
+              toAccountId: p.toAccountId,
+              concept: p.concept,
+            });
+          })
           .join('\n');
     let answer = 'I could not finish this request. Try again or ask for human support.';
     for (let round = 0; round < 7; round++) {

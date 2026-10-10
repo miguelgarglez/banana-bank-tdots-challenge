@@ -769,6 +769,25 @@ export default function Home() {
                   ))}
                 </section>
               )}
+              {dashboard.pendingOperations?.length > 0 && (
+                <section className="panel approvals">
+                  <h2>Operations awaiting bank confirmation</h2>
+                  {dashboard.pendingOperations.map((o: AnyRecord) => (
+                    <div key={o.intentId}>
+                      <p>
+                        <strong>{money(o.payload.amountCents)}</strong> →{' '}
+                        {contactLabel(o.payload.toAccountId)}
+                      </p>
+                      <p>
+                        {o.payload.concept} · ref {o.reference?.slice(0, 8)}
+                      </p>
+                      <button className="secondary-button" onClick={() => refresh()}>
+                        Check again
+                      </button>
+                    </div>
+                  ))}
+                </section>
+              )}
               {tab === 'overview' && operator && (
                 <>
                   <div className="page-heading">
