@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { FunctionTool } from 'openai/resources/responses/responses';
 import { bankRequest } from '../banking/client';
 import { transferMoney } from '../banking/actions';
+import { resolveIntent } from '../banking/resolve';
 import { searchDocuments } from '../retrieval/search';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
@@ -114,10 +115,7 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
             "SELECT id FROM intents WHERE user_id=? AND bank_reference=? AND status='unknown'",
           )
           .get(ctx.userId, reference) as { id: string } | undefined;
-        if (pending) {
-          const { resolveIntent } = await import('../banking/actions');
-          result = await resolveIntent(ctx.userId, pending.id);
-        }
+        if (pending) result = await resolveIntent(ctx.userId, pending.id);
         break;
       }
       case 'request_human': {

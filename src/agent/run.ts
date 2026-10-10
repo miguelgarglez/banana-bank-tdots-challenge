@@ -5,6 +5,7 @@ import { openai } from '../retrieval/embeddings';
 import { searchDocuments } from '../retrieval/search';
 import { knowledgeInstructions } from './prompt';
 import { toolDefinitions, runTool } from './tools';
+import { resolveIntent } from '../banking/resolve';
 import { appDb } from '../db';
 import { config } from '../config';
 import { HttpError } from '../auth';
@@ -44,7 +45,6 @@ export async function sendMessage(userId: string, conversationId: string, conten
     now,
     runId,
   );
-  const { resolveIntent } = await import('../banking/actions');
   for (const i of db
     .prepare("SELECT id FROM intents WHERE user_id=? AND conversation_id IS ? AND status='unknown'")
     .all(userId, conversationId) as { id: string }[])

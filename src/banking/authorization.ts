@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { bankRequest } from './client';
+import { resolveIntent } from './resolve';
 import { HttpError } from '../auth';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
@@ -13,7 +14,6 @@ export async function authorizeTransfer(
 ): Promise<ActionResult | null> {
   const db = appDb();
   if (!ctx.approvalId) {
-    const { resolveIntent } = await import('./actions');
     const unverified = db
       .prepare(
         "SELECT id,bank_reference FROM intents WHERE user_id=? AND payload=? AND status IN ('unknown','processing') AND id!=?",
