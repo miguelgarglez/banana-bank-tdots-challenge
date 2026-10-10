@@ -1,0 +1,290 @@
+@media (min-width: 1600px) {
+  main {
+    padding-top: 50px;
+  }
+}
+@media (max-width: 1150px) {
+  .sidebar {
+    width: 205px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .main-shell {
+    margin-left: 205px;
+    width: calc(100% - 205px);
+  }
+  main {
+    padding: 30px 26px;
+  }
+  .topbar {
+    padding: 0 26px;
+  }
+  .balance {
+    font-size: 25px;
+  }
+  .account-card,
+  .assistant-card {
+    padding: 20px;
+  }
+  .account-grid {
+    gap: 12px;
+  }
+  .dashboard-bottom {
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+  }
+  h1 {
+    font-size: 33px;
+  }
+  .operator-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .transfer-layout {
+    gap: 28px;
+  }
+  footer {
+    margin: 0 26px;
+  }
+}
+@media (max-width: 850px) {
+  .sidebar {
+    width: 175px;
+    padding: 24px 10px;
+  }
+  .brand {
+    font-size: 28px;
+  }
+  .brand-symbol {
+    width: 31px;
+    height: 33px;
+    font-size: 28px;
+  }
+  .workspace-label {
+    font-size: 8px;
+  }
+  .nav-item {
+    font-size: 11px;
+    padding: 12px 8px;
+    gap: 8px;
+  }
+  .main-shell {
+    margin-left: 175px;
+    width: calc(100% - 175px);
+  }
+  .account-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .assistant-card {
+    grid-column: 1/-1;
+    min-height: 130px;
+  }
+  .assistant-card h2 br {
+    display: none;
+  }
+  .assistant-card p {
+    max-width: none;
+  }
+  .assistant-card h2 {
+    font-size: 22px;
+  }
+  .assistant-card .sparkle {
+    float: right;
+  }
+  .dashboard-bottom,
+  .operator-grid,
+  .documents-layout {
+    grid-template-columns: 1fr;
+  }
+  .transfer-layout {
+    grid-template-columns: 1fr;
+  }
+  .transfer-note {
+    display: none;
+  }
+  .date-chip,
+  .demo-label {
+    display: none;
+  }
+  .topbar {
+    height: 70px;
+  }
+  .breadcrumb {
+    font-size: 10px;
+  }
+  .persona-control select {
+    max-width: 165px;
+  }
+  .page-heading {
+    align-items: flex-start;
+  }
+  h1 {
+    font-size: 29px;
+  }
+  .right-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .chat-panel .messages {
+    height: 420px;
+  }
+  .case-detail {
+    min-height: 240px;
+  }
+}
+@media (max-width: 600px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    padding: 12px 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    font-size: 25px;
+  }
+  .brand-symbol {
+    height: 28px;
+    width: 27px;
+    font-size: 23px;
+  }
+  .workspace-label,
+  .history-heading,
+  .conversation-list,
+  .sidebar-bottom {
+    display: none;
+  }
+  .sidebar nav {
+    display: flex;
+    margin-top: 13px;
+    gap: 3px;
+  }
+  .nav-item {
+    margin: 0;
+    justify-content: center;
+    font-size: 10px;
+    padding: 10px 7px;
+    gap: 5px;
+  }
+  .nav-item svg {
+    width: 15px;
+  }
+  .ai-badge {
+    display: none;
+  }
+  .app-shell {
+    display: block;
+  }
+  .main-shell {
+    margin: 0;
+    width: 100%;
+  }
+  .topbar {
+    height: 60px;
+    padding: 0 17px;
+  }
+  .breadcrumb {
+    font-size: 9px;
+  }
+  .persona-control {
+    gap: 5px;
+  }
+  .persona-control select {
+    font-size: 10px;
+    max-width: 155px;
+  }
+  main {
+    padding: 25px 17px;
+  }
+  .page-heading {
+    gap: 10px;
+  }
+  .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.1px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .page-heading p {
+    font-size: 11px;
+  }
+  .account-grid {
+    gap: 10px;
+  }
+  .account-card {
+    padding: 16px;
+    min-height: 200px;
+  }
+  .account-top {
+    font-size: 11px;
+  }
+  .balance {
+    font-size: 23px;
+  }
+  .account-bottom {
+    font-size: 8px;
+    gap: 4px;
+  }
+  .balance-label {
+    font-size: 7px;
+  }
+  .right-stack {
+    grid-template-columns: 1fr;
+  }
+  .compact {
+    display: block;
+  }
+  .compact .secondary-button {
+    margin-top: 15px;
+  }
+  .chat-header {
+    padding: 16px;
+  }
+  .messages {
+    padding: 17px 12px;
+    height: 410px;
+  }
+  .bubble {
+    max-width: 90%;
+    font-size: 11px;
+  }
+  .composer {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  .case-count {
+    display: none;
+  }
+  .document-list {
+    max-height: 320px;
+  }
+  .search-form {
+    gap: 8px;
+  }
+  .search-form > .primary-button {
+    padding: 10px;
+  }
+  .search-form > svg {
+    display: none;
+  }
+  .transfer-form {
+    padding: 20px;
+  }
+  .transfer-layout {
+    display: block;
+  }
+  footer {
+    margin: 0 17px;
+    font-size: 15px;
+  }
+  footer span {
+    font-size: 8px;
+    max-width: 160px;
+  }
+  footer span:last-child {
+    display: none;
+  }
+  .alert {
+    font-size: 11px;
+  }
+}

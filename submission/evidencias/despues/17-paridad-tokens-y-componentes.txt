@@ -1,0 +1,72 @@
+P3.2 + P3.3 parity & functional verification
+date: 2026-10-10T17:00:37Z
+
+=== P3.2 design tokens: tools/parity-compare.py parity/ref-p3-0 parity/p3-2 ===
+capture                      size ref       size new          diff px
+lucia-chat-dinner.png        1440x1103    1440x1103             0 OK
+lucia-document-open.png      1440x1076    1440x1076             0 OK
+lucia-documents.png          1440x1076    1440x1076             0 OK
+lucia-overview.png           1440x1158    1440x1158             0 OK
+lucia-transfers.png          1440x909     1440x909              0 OK
+marta-case-lucia.png         1440x2266    1440x2266             0 OK
+marta-cases.png              1440x2266    1440x2266             0 OK
+marta-documents.png          1440x1076    1440x1076             0 OK
+
+=== P3.3 component+CSS split: tools/parity-compare.py parity/ref-p3-0 parity/p3-3-final4 ===
+capture                      size ref       size new          diff px
+lucia-chat-dinner.png        1440x1103    1440x1103             0 OK
+lucia-document-open.png      1440x1076    1440x1076             0 OK
+lucia-documents.png          1440x1076    1440x1076             0 OK
+lucia-overview.png           1440x1158    1440x1158             0 OK
+lucia-transfers.png          1440x909     1440x909              0 OK
+marta-case-lucia.png         1440x2266    1440x2266             0 OK
+marta-cases.png              1440x2266    1440x2266             0 OK
+marta-documents.png          1440x1076    1440x1076             0 OK
+
+=== token audit: literals outside :root ===
+none (all color literals live in tokens.css :root)
+
+=== npm test ===
+✔ insufficient funds fail without new operations (4.767ms)
+ℹ tests 55
+ℹ pass 55
+ℹ fail 0
+=== npm run typecheck ===
+
+> challenge-banana-candidate@1.0.0 typecheck
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+typecheck-ok
+
+=== functional flow (tools/functional.mjs, live UI on :3000) ===
+pre-state: failed
+
+OK lucia overview
+OK proposal panel with code visible
+OK transfer confirmed and completed
+OK marta case open
+OK brief drafted
+OK reconciled
+restored: intent-historic-lucia|failed
+
+FUNCTIONAL FLOW OK
+
+=== P3.3 notes ===
+- globals.css is now 11 ordered @import lines into app/styles/*.
+- Rule reorderings required to keep the cascade identical:
+  .eyebrow was consolidated (the shared group rule
+  ".workspace-label,.eyebrow,.history-heading,.demo-label" originally set
+  font-size:10px before the 9px override; .eyebrow was removed from that group
+  and its effective values merged into the base.css rule).
+  .muted/.case-empty stay in operator.css at their original position: hoisting
+  them to base.css made .case-empty h2 lose the tie against .case-detail h2
+  (equal specificity) and changed the empty-state heading 21px -> 25px.
+- parity.mjs normalizer extended: intent-historic-lucia forced to 'completed'
+  (the state ref-p3-0 was captured in) and extra copilot.brief events removed,
+  so the functional flow's side effects don't pollute captures.
+- functional.mjs (tools/) ran the live UI flow: Lucia transfer -> proposal
+  panel -> confirm -> "Transfer confirmed and completed."; Marta -> case ->
+  Draft a brief -> "Copy reply" -> Apply reconciliation -> intent.reconciled.
+  Lucia's intent restored to 'failed' afterwards.

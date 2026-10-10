@@ -1,0 +1,102 @@
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 9px 8px 18px;
+  border: 1px solid var(--color-search-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  margin-bottom: 24px;
+}
+.search-form svg {
+  color: var(--color-search-icon);
+  flex-shrink: 0;
+}
+.search-form input {
+  border: 0;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+}
+.documents-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 22px;
+}
+.document-list {
+  max-height: 620px;
+  overflow: auto;
+  padding: 20px;
+}
+.document-list button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  width: 100%;
+  text-align: left;
+  padding: 14px 7px;
+  border-top: 1px solid var(--color-doc-item);
+  color: var(--color-doc-item-text);
+}
+.document-list button.selected {
+  background: var(--color-doc-item-active);
+}
+.document-list button > svg {
+  width: 17px;
+  flex-shrink: 0;
+}
+.document-list strong {
+  display: block;
+  font-size: 11px;
+  color: var(--color-doc-title);
+  font-weight: 500;
+}
+.document-list small {
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+}
+.document-list button > span:last-child {
+  margin-left: auto;
+}
+.document-reader {
+  min-width: 0;
+  max-height: 620px;
+  overflow: auto;
+}
+.document-reader pre {
+  font: 12px/1.9 var(--font);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--color-reader-text);
+}
+.document-reader h2 {
+  font-size: 24px;
+}
+.search-results {
+  margin-bottom: 25px;
+}
+.search-results article {
+  padding: 18px 22px;
+  border: 1px solid var(--color-result-border);
+  border-radius: 9px;
+  background: var(--color-result-bg);
+  margin-bottom: 12px;
+}
+.search-results h3 {
+  margin: 9px 0 2px;
+}
+.search-results small {
+  font-size: 9px;
+  color: var(--color-result-meta);
+}
+.search-results p {
+  font-size: 11px;
+  white-space: pre-wrap;
+  margin: 10px 0 0;
+}
+.search-results .subtle-tag {
+  float: right;
+}

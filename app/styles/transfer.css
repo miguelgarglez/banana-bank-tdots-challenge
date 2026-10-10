@@ -1,0 +1,66 @@
+.transfer-layout {
+  display: grid;
+  grid-template-columns: minmax(350px, 550px) 1fr;
+  gap: 50px;
+}
+.transfer-form {
+  padding: 30px;
+}
+.transfer-form h2 {
+  margin-bottom: 25px;
+  font-size: 20px;
+}
+label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-label);
+  margin-bottom: 20px;
+}
+label input,
+label select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--color-select-border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  background: white;
+  color: var(--color-select-text);
+  font-size: 12px;
+}
+.amount-input {
+  position: relative;
+}
+.amount-input input {
+  font-size: 26px;
+}
+.amount-input span {
+  position: absolute;
+  right: 17px;
+  top: 16px;
+  font-size: 11px;
+  color: var(--color-unit);
+}
+.transfer-form .primary-button {
+  width: 100%;
+  margin-top: 5px;
+}
+.transfer-note {
+  padding-top: 35px;
+  color: var(--color-transfer-note);
+}
+.transfer-note > svg {
+  margin-bottom: 25px;
+  width: 32px;
+  height: 32px;
+}
+.transfer-note h2 {
+  font-size: 28px;
+  line-height: 1.3;
+}
+.transfer-note p {
+  font-size: 12px;
+  max-width: 275px;
+  line-height: 1.8;
+}

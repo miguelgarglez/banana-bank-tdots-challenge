@@ -1,0 +1,60 @@
+.main-shell {
+  margin-left: 238px;
+  width: calc(100% - 238px);
+}
+.topbar {
+  height: 85px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 43px;
+  background: var(--color-chrome);
+}
+.breadcrumb {
+  font-size: 12px;
+  color: var(--color-breadcrumb);
+}
+.breadcrumb span {
+  margin: 0 13px;
+  color: var(--color-breadcrumb-sep);
+}
+.persona-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.demo-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: var(--radius-pill);
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--color-control);
+}
+.avatar.small {
+  width: 30px;
+  height: 30px;
+  font-size: 10px;
+}
+.persona-control select {
+  border: 0;
+  background: transparent;
+  color: var(--color-control);
+  font-size: 12px;
+  max-width: 240px;
+  padding-right: 5px;
+}
+main {
+  padding: 38px 43px 50px;
+  min-height: calc(100vh - 152px);
+  max-width: 1600px;
+  margin: auto;
+}
