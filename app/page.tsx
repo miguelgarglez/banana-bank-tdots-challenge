@@ -99,6 +99,7 @@ export default function Home() {
     [query, setQuery] = useState(''),
     [sources, setSources] = useState<AnyRecord[] | null>(null);
   const [selectedCase, setSelectedCase] = useState<AnyRecord | null>(null),
+    [brief, setBrief] = useState<AnyRecord | null>(null),
     [from, setFrom] = useState(''),
     [to, setTo] = useState(''),
     [amount, setAmount] = useState(''),
@@ -122,6 +123,7 @@ export default function Home() {
     setConversationId(null);
     setMessages([]);
     setSelectedCase(null);
+    setBrief(null);
     setDocument(null);
     setDocs([]);
     setSources(null);
@@ -774,7 +776,10 @@ export default function Home() {
                             const g = generation.current;
                             try {
                               const d = await api(`incidents/${c.id}`);
-                              if (g === generation.current) setSelectedCase(d);
+                              if (g === generation.current) {
+                                setSelectedCase(d);
+                                setBrief(null);
+                              }
                             } catch (e) {
                               setError((e as Error).message);
                             }
@@ -809,9 +814,138 @@ export default function Home() {
                               ? 'Resolved'
                               : 'Awaiting support'}
                           </span>
+                          {selectedCase.incident.status === 'open' && (
+                            <button
+                              className="secondary-button"
+                              disabled={busy}
+                              onClick={async () => {
+                                const g = generation.current;
+                                try {
+                                  const d = await api(
+                                    `incidents/${selectedCase.incident.id}/close`,
+                                    {},
+                                  );
+                                  if (g === generation.current) {
+                                    setSelectedCase(d);
+                                    await refresh(g);
+                                  }
+                                } catch (e) {
+                                  setError((e as Error).message);
+                                }
+                              }}
+                            >
+                              Close case
+                            </button>
+                          )}
                           <h3>Latest message</h3>
                           <blockquote>{selectedCase.lastMessage?.content}</blockquote>
                           <p className="muted">Received {date(selectedCase.incident.created_at)}</p>
+                          {selectedCase.reconciliation?.length > 0 && (
+                            <>
+                              <h3>Reconciliation</h3>
+                              {selectedCase.reconciliation.map((r: AnyRecord) => (
+                                <div className="reconciliation-row" key={r.intentId}>
+                                  <div className="evidence-row">
+                                    {money(r.amountCents)} · {r.appStatus} → {r.bankStatus}
+                                    <small>
+                                      {r.reference
+                                        ? `${r.reference.slice(0, 13)}…`
+                                        : 'no reference'}
+                                    </small>
+                                  </div>
+                                  {r.finding && <p className="finding">{r.finding}</p>}
+                                  {r.fixable && (
+                                    <button
+                                      className="primary-button"
+                                      disabled={busy}
+                                      onClick={async () => {
+                                        const g = generation.current;
+                                        try {
+                                          const d = await api(
+                                            `incidents/${selectedCase.incident.id}/reconcile`,
+                                            { intentId: r.intentId },
+                                          );
+                                          if (g === generation.current) setSelectedCase(d);
+                                        } catch (e) {
+                                          setError((e as Error).message);
+                                        }
+                                      }}
+                                    >
+                                      Apply reconciliation
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                            </>
+                          )}
+                          <h3>Copilot</h3>
+                          <button
+                            className="secondary-button"
+                            disabled={busy}
+                            onClick={async () => {
+                              const g = generation.current;
+                              setBusy(true);
+                              try {
+                                const d = await api(
+                                  `incidents/${selectedCase.incident.id}/brief`,
+                                  {},
+                                );
+                                if (g === generation.current) setBrief(d.brief);
+                              } catch (e) {
+                                if (g === generation.current) setError((e as Error).message);
+                              } finally {
+                                if (g === generation.current) setBusy(false);
+                              }
+                            }}
+                          >
+                            {busy ? 'Thinking…' : 'Draft a brief'}
+                          </button>
+                          {brief && (
+                            <div className="brief">
+                              <p>{brief.summary}</p>
+                              {(
+                                [
+                                  ['Verified facts', brief.verifiedFacts],
+                                  ['Pending checks', brief.pendingChecks],
+                                  ['Discrepancies', brief.discrepancies],
+                                  ['Suggested actions', brief.suggestedActions],
+                                ] as const
+                              ).map(
+                                ([label, items]) =>
+                                  items?.length > 0 && (
+                                    <div key={label}>
+                                      <h4>{label}</h4>
+                                      <ul>
+                                        {items.map((item: string) => (
+                                          <li key={item}>{item}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  ),
+                              )}
+                              {brief.draftReply && (
+                                <>
+                                  <h4>Draft reply</h4>
+                                  <textarea readOnly rows={6} value={brief.draftReply} />
+                                  <button
+                                    className="text-button"
+                                    onClick={() => navigator.clipboard.writeText(brief.draftReply)}
+                                  >
+                                    Copy reply
+                                  </button>
+                                </>
+                              )}
+                              {brief.sources?.length > 0 && (
+                                <p>
+                                  {brief.sources.map((s: string) => (
+                                    <span className="subtle-tag" key={s}>
+                                      {s}
+                                    </span>
+                                  ))}
+                                </p>
+                              )}
+                            </div>
+                          )}
                           {selectedCase.history?.length > 0 && (
                             <>
                               <h3>Conversation</h3>
@@ -846,7 +980,11 @@ export default function Home() {
                               ))}
                             </>
                           )}
-                          {selectedCase.gaps && <p className="muted">{selectedCase.gaps}</p>}
+                          {selectedCase.gaps?.map((gap: string) => (
+                            <p className="muted" key={gap}>
+                              {gap}
+                            </p>
+                          ))}
                         </>
                       ) : (
                         <div className="case-empty">

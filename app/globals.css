@@ -1385,3 +1385,36 @@ label select {
     font-size: 11px;
   }
 }
+.reconciliation-row {
+  margin-bottom: 12px;
+}
+.reconciliation-row .primary-button {
+  margin-top: 6px;
+}
+.finding {
+  font-size: 12.5px;
+  color: #8a6d1a;
+  margin: 4px 0 0;
+}
+.brief {
+  margin: 12px 0 20px;
+}
+.brief h4 {
+  margin: 12px 0 4px;
+  font-size: 13px;
+}
+.brief ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+.brief textarea {
+  width: 100%;
+  margin: 4px 0 6px;
+  font: inherit;
+  font-size: 13px;
+  padding: 10px;
+  border: 1px solid #d8dce8;
+  border-radius: 10px;
+  resize: vertical;
+}
