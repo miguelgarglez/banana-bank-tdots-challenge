@@ -38,6 +38,7 @@ export async function bankRequest<T>(
   try {
     data = await response.json();
   } catch {
+    if (!response.ok) throw new BankError(response.status, 'Bank service error (unreadable body).');
     throw new BankError(502, 'Unreadable bank response.');
   }
   if (!response.ok) throw new BankError(response.status, data.error || 'Bank service error.');
