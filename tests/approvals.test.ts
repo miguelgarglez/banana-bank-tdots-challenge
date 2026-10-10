@@ -137,6 +137,37 @@ test('an expired proposal is rejected', async () => {
   assert.equal(operations().length, 0);
   assert.equal(intent(intentId).status, 'expired');
 });
+test('an expired approval stays rejected on every attempt', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const intentId = randomUUID();
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  appDb()
+    .prepare('UPDATE approvals SET expires_at=? WHERE id=?')
+    .run('2000-01-01T00:00:00.000Z', proposal.approvalId);
+  for (let i = 0; i < 2; i++) {
+    const result = await transferMoney(
+      ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
+      input,
+    );
+    assert.equal(result.status, 'failed');
+    assert.equal((result as any).code, 'expired');
+  }
+  assert.equal(intent(intentId).status, 'expired');
+  assert.equal(operations().length, 0);
+});
+test('re-proposing the same intent returns its active approval', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const intentId = randomUUID();
+  const first = (await transferMoney(ctx(intentId), input)) as any;
+  const second = (await transferMoney(ctx(intentId), input)) as any;
+  assert.equal(second.status, 'requires_confirmation');
+  assert.equal(second.approvalId, first.approvalId);
+  assert.equal((appDb().prepare('SELECT COUNT(*) n FROM approvals').get() as { n: number }).n, 1);
+});
 test('a proposal confirms by message only with its code', async () => {
   seedBank();
   resetApp();

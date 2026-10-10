@@ -39,6 +39,21 @@ export async function authorizeTransfer(
       amountCents: input.amountCents,
       concept: input.concept,
     };
+    const active = db
+      .prepare(
+        'SELECT id,expires_at FROM approvals WHERE intent_id=? AND consumed_at IS NULL AND expires_at>?',
+      )
+      .get(ctx.intentId, new Date().toISOString()) as
+      { id: string; expires_at: string } | undefined;
+    if (active)
+      return {
+        status: 'requires_confirmation',
+        approvalId: active.id,
+        intentId: ctx.intentId,
+        expiresAt: active.expires_at,
+        confirmationCode: confirmationCode(active.id),
+        proposal,
+      };
     const approvalId = randomUUID(),
       expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     db.prepare('INSERT INTO approvals VALUES(?,?,?,?,?,?)').run(
@@ -83,11 +98,9 @@ export async function authorizeTransfer(
     return fail('mismatch', 'The proposal does not match these details.');
   const intent = db.prepare('SELECT status FROM intents WHERE id=?').get(ctx.intentId) as
     { status: string } | undefined;
-  if (
-    intent?.status === 'awaiting_confirmation' &&
-    approval.expires_at <= new Date().toISOString()
-  ) {
-    db.prepare("UPDATE intents SET status='expired' WHERE id=?").run(ctx.intentId);
+  if (intent?.status !== 'unknown' && approval.expires_at <= new Date().toISOString()) {
+    if (intent?.status === 'awaiting_confirmation')
+      db.prepare("UPDATE intents SET status='expired' WHERE id=?").run(ctx.intentId);
     return fail('expired', 'This proposal has expired. Ask for a new one.');
   }
   if (approval.consumed_at && intent?.status !== 'unknown')
