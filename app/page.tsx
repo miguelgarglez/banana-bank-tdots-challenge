@@ -872,6 +872,7 @@ export default function Home() {
                                     {},
                                   );
                                   if (g === generation.current) {
+                                    setBrief(null);
                                     setSelectedCase(d);
                                     await refresh(g);
                                   }
@@ -911,7 +912,10 @@ export default function Home() {
                                             `incidents/${selectedCase.incident.id}/reconcile`,
                                             { intentId: r.intentId },
                                           );
-                                          if (g === generation.current) setSelectedCase(d);
+                                          if (g === generation.current) {
+                                            setBrief(null);
+                                            setSelectedCase(d);
+                                          }
                                         } catch (e) {
                                           setError((e as Error).message);
                                         }
@@ -929,14 +933,12 @@ export default function Home() {
                             className="secondary-button"
                             disabled={busy}
                             onClick={async () => {
-                              const g = generation.current;
+                              const g = generation.current,
+                                caseId = selectedCase.incident.id;
                               setBusy(true);
                               try {
-                                const d = await api(
-                                  `incidents/${selectedCase.incident.id}/brief`,
-                                  {},
-                                );
-                                if (g === generation.current) setBrief(d.brief);
+                                const d = await api(`incidents/${caseId}/brief`, {});
+                                if (g === generation.current) setBrief({ ...d.brief, caseId });
                               } catch (e) {
                                 if (g === generation.current) setError((e as Error).message);
                               } finally {
@@ -946,7 +948,7 @@ export default function Home() {
                           >
                             {busy ? 'Thinking…' : 'Draft a brief'}
                           </button>
-                          {brief && (
+                          {brief && brief.caseId === selectedCase.incident.id && (
                             <div className="brief">
                               <p>{brief.summary}</p>
                               {(
