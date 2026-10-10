@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute; inset: 0;
+          background: #f8f6ef;
+          font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+        .e04-panel { position: absolute; inset: 0; }
+        .e04-view {
+          position: absolute; left: 0; right: 0; top: 0; bottom: 150px;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .e04-imgwrap {
+          position: relative; width: 1700px; height: 880px; overflow: hidden;
+          border-radius: 16px; box-shadow: 0 20px 50px rgba(31,61,53,0.22);
+          border: 1px solid #e3e1d8; background: #fff;
+        }
+        .e04-imgwrap img { position: absolute; left: 0; top: 0; display: block; }
+        .e04-band {
+          position: absolute; left: 0; right: 0; bottom: 0; height: 150px;
+          background: rgba(248,246,239,0.92);
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          padding: 16px 80px; gap: 10px; border-top: 1px solid #e3e1d8;
+        }
+        .e04-cap { font-size: 30px; font-weight: 700; color: #1f3d35; line-height: 1.3; text-align: center; }
+        .e04-note { font-size: 26px; color: #5d6b66; line-height: 1.35; text-align: center; }
+      </style>
+      <div id="root" data-composition-id="e04" data-width="1920" data-height="1080">
+        <div class="e04-panel" id="e04-p1">
+          <div class="e04-view"><div class="e04-imgwrap"><img data-layout-allow-overflow id="e04-s1" src="assets/img/02-chat-propuesta-codigo.png" style="width:1440px;" /></div></div>
+          <div class="e04-band">
+            <div class="e04-cap">ANTES: "Send 5 euros to Bruno" → transferencia ejecutada en el mismo turno</div>
+            <div class="e04-note">AHORA: resumen + código · el servidor verifica el mensaje · "yes" no basta</div>
+          </div>
+        </div>
+        <div class="e04-panel" id="e04-p2" style="opacity:0;">
+          <div class="e04-view"><div class="e04-imgwrap"><img data-layout-allow-overflow id="e04-s2" src="assets/img/03-chat-yes-rechazado.png" style="width:1440px;" /></div></div>
+          <div class="e04-band">
+            <div class="e04-cap">"yes" no basta</div>
+            <div class="e04-note">El mensaje tiene que ser el código, y nada más. El servidor lo verifica, no el modelo.</div>
+          </div>
+        </div>
+        <div class="e04-panel" id="e04-p3" style="opacity:0;">
+          <div class="e04-view"><div class="e04-imgwrap"><img data-layout-allow-overflow id="e04-s3" src="assets/img/04-chat-confirmado.png" style="width:1440px;" /></div></div>
+          <div class="e04-band">
+            <div class="e04-cap">El código correcto ejecuta una sola operación</div>
+          </div>
+        </div>
+        <div class="e04-panel" id="e04-p4" style="opacity:0;">
+          <div class="e04-view"><div class="e04-imgwrap"><img data-layout-allow-overflow id="e04-s4" src="assets/img/06-overview-propuesta-pendiente.png" style="width:1440px;" /></div></div>
+          <div class="e04-band">
+            <div class="e04-cap">El panel muestra la propuesta pendiente y su código</div>
+            <div class="e04-note">El botón de confirmar es la otra vía; las dos consumen la propuesta una sola vez.</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        // container 1700x880; image transformOrigin 0 0; x = 850 - cx*scale, y = 440 - cy*scale
+        tl.fromTo("#e04-p1", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
+        tl.fromTo("#e04-s1",
+          { x: 130, y: -10, scale: 1, transformOrigin: "0 0" },
+          { x: -442, y: -434, scale: 1.9, duration: 2, ease: "power2.inOut" }, 2);
+        tl.to("#e04-p1", { opacity: 0, duration: 0.4 }, 13.6);
+        tl.fromTo("#e04-p2", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 14);
+        tl.fromTo("#e04-s2",
+          { x: 130, y: -10, scale: 1, transformOrigin: "0 0" },
+          { x: -746, y: -700, scale: 1.9, duration: 2, ease: "power2.inOut" }, 15);
+        tl.to("#e04-p2", { opacity: 0, duration: 0.4 }, 25.6);
+        tl.fromTo("#e04-p3", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 26);
+        tl.fromTo("#e04-s3",
+          { x: 130, y: -10, scale: 1, transformOrigin: "0 0" },
+          { x: -578, y: -861, scale: 1.7, duration: 2, ease: "power2.inOut" }, 27);
+        tl.to("#e04-p3", { opacity: 0, duration: 0.4 }, 37.6);
+        tl.fromTo("#e04-p4", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 38);
+        tl.fromTo("#e04-s4",
+          { x: 130, y: 0, scale: 1, transformOrigin: "0 0" },
+          { x: -302, y: -1592, scale: 1.6, duration: 9, ease: "power1.inOut" }, 39);
+        tl.to("#e04-p4", { opacity: 0, duration: 0.4 }, 51.32);
+        window.__timelines["e04"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

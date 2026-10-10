@@ -1,0 +1,37 @@
+=== npm ci ===
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+=== npm run setup ===
+> node --import tsx scripts/setup.ts
+
+Created .env.local: set OPENAI_API_KEY to use the assistant.
+{ conversations: 47, incidents: 17, indexLoaded: true }
+Ready. Data in /Users/miguelgarglez/Developer/hackathon-tdots/cleanroom-test/challenge-banana-candidate/.data. Run npm run dev.
+=== npm test ===
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6970.803833
+=== typecheck ===
+
+Generating route types...
+✓ Types generated successfully
+TYPECHECK-OK
+=== build ===
+└ ƒ /api/[...path]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+=== dev server smoke (APP_PORT=3100 BANK_PORT=4101) ===
+health: {"ok":true,"keyConfigured":false}
+POST /api/session lucia -> Lucía Martín (customer)
+GET /api/documents (lucia): 68 documentos públicos
+GET /api/incidents/case-lucia (marta): intent-historic-lucia appStatus=failed bankStatus=completed finding + fixable=true
+servidor parado; directorio temporal cleanroom-test borrado

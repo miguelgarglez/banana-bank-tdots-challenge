@@ -52,6 +52,7 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 - Dos rondas de revisión independiente con otros modelos (Codex GPT y Cursor con Grok), con los informes íntegros en `submission/evidencias/revision/`. Encontraron defectos reales (confirmación dependiente del modelo, estado `unknown` que podía duplicar al reproponer, caducidad que reactivaba aprobaciones, cuerpo ilegible tratado como rechazo, informe del copiloto bajo otro caso) y todos están corregidos y cubiertos por pruebas.
 - Verificación en navegador con Playwright y conversaciones reales con el modelo `gpt-6-luna`; los textos exactos están en las evidencias.
 - Sesiones de IA completas en `submission/ai-sessions/` (ver abajo).
+- Trazabilidad: todos los agentes trabajaron con su directorio dentro del proyecto (Devin como agente principal con un subagente de implementación; Codex y Cursor solo como revisores de solo lectura). Las sesiones exportadas muestran el razonamiento, las órdenes ejecutadas y los resultados tal cual ocurrieron.
 
 ## Materiales incluidos
 
@@ -59,11 +60,12 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 - `submission/demo.mp4`: vídeo de demostración de ambas partes.
 - `submission/evidencias/antes/`, `submission/evidencias/despues/`: reproducciones, salidas de `npm test`, capturas y conversaciones.
 - `submission/evidencias/revision/`: prompts e informes de las dos revisiones independientes.
-- `submission/ai-sessions/`: exports originales y completos de todas las sesiones de IA (Devin, incluidas las ramas de subagentes; Codex; Cursor) con `manifest.json`, más el export oficial ATIF de la sesión principal de Devin.
+- `submission/ai-sessions/`: exports originales y completos de todas las sesiones de IA, generados con un exportador propio que recorre las bases de datos locales de cada herramienta: `manifest.json` (todas las sesiones en orden de inicio, con agente, id, cwd y hora), `devin/<sesión>/nodes.jsonl` (cada nodo de la sesión principal de Devin y de sus ramas de subagentes, verbatim), `codex/<rollout>.jsonl` (los dos rollouts de Codex usados como revisor independiente, byte a byte) y `cursor/<chat>/` (los dos chats de Cursor con Grok, byte a byte más los mensajes decodificados). Además, `devin-atif-righteous-nest.json`: export oficial ATIF de la sesión principal de Devin (`devin -r righteous-nest --export`).
+- `submission/video/`: guion del vídeo, capturas usadas y la composición HyperFrames con la que se renderizó `demo.mp4` (voz en off generada con OpenAI TTS a partir del guion).
 - `submission/PLAN.md`: plan de trabajo y prioridades tal como lo seguí.
 
 ## Terminado, verificado y pendiente
 
-- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 51 pruebas, build de producción.
+- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 51 pruebas, build de producción, vídeo de demostración de 5:54.
 - Límites conocidos: la confirmación por chat exige que el mensaje sea solo el código (con "confirm" o "yes" opcionales); cualquier otra redacción se rechaza y el agente vuelve a pedir el código. El bloqueo de operaciones equivalentes compara cuenta origen, destino e importe mientras exista una operación sin resolver; dos intenciones legítimas idénticas sí pueden ejecutarse una vez resuelta la primera. El copiloto reduce pero no elimina el riesgo de que el modelo califique como hecho algo escrito por el cliente; por eso la interfaz separa lo verificado por el ledger (reconciliación, calculada en código) de lo redactado por el modelo.
 - Pendiente (fuera de alcance por tiempo): partir `app/page.tsx` en componentes y extraer tokens de diseño; búsqueda vectorial fuera de memoria para corpus grandes.

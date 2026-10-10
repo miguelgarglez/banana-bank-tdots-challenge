@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute; inset: 0;
+          background: #f8f6ef;
+          font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+        #e03-antes, #e03-flow { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #e03-tag {
+          position: absolute; top: 60px; left: 90px;
+          font-size: 26px; font-weight: 800; letter-spacing: 0.12em;
+          color: #a03a2a; background: #fbe9e4; padding: 10px 22px; border-radius: 10px;
+        }
+        .e03-big {
+          font-size: 78px; font-weight: 800; color: #1f3d35; margin: 18px 0;
+          letter-spacing: -0.02em;
+        }
+        .e03-big span { color: #a03a2a; }
+        #e03-small { font-size: 28px; color: #5d6b66; margin-top: 26px; }
+        #e03-flow h2 { font-size: 42px; color: #1f3d35; margin-bottom: 40px; letter-spacing: -0.02em; }
+        #e03-diagram { position: relative; width: 1700px; height: 560px; }
+        .e03-node {
+          position: absolute; background: #fff; border: 2px solid #e3e1d8; border-radius: 16px;
+          display: flex; align-items: center; justify-content: center; text-align: center;
+          font-size: 26px; color: #1d2a26; padding: 14px 20px; font-weight: 600; line-height: 1.25;
+          box-shadow: 0 10px 24px rgba(31,61,53,0.08);
+        }
+        #e03-n1 { left: 0; top: 200px; width: 340px; height: 120px; background: #f5d94b; border-color: #f5d94b; color: #1f3d35; }
+        #e03-n2 { left: 480px; top: 200px; width: 300px; height: 140px; background: #1f3d35; color: #f8f6ef; }
+        #e03-n3 { left: 920px; top: 200px; width: 330px; height: 120px; }
+        #e03-n4 { left: 1390px; top: 20px; width: 300px; height: 110px; border-color: #4c7a5f; background: #e4ecd6; }
+        #e03-n5 { left: 1390px; top: 205px; width: 300px; height: 110px; }
+        #e03-n6 { left: 1390px; top: 390px; width: 300px; height: 130px; }
+        .e03-arr { position: absolute; font-size: 44px; color: #1f3d35; }
+        #e03-a1 { left: 370px; top: 235px; }
+        #e03-a2 { left: 810px; top: 235px; }
+        #e03-a3 { left: 1290px; top: 50px; }
+        #e03-a4 { left: 1290px; top: 235px; }
+        #e03-a5 { left: 1290px; top: 425px; }
+        #e03-src { position: absolute; bottom: 50px; left: 90px; font-size: 26px; color: #5d6b66; }
+      </style>
+      <div id="root" data-composition-id="e03" data-width="1920" data-height="1080">
+        <div id="e03-antes">
+          <div id="e03-tag">ANTES</div>
+          <div class="e03-big">Orden: 10 €</div>
+          <div class="e03-big">Cobrado: <span>20 €</span></div>
+          <div class="e03-big">Operaciones en el banco: <span>2</span></div>
+          <div id="e03-small">La app mostró una sola operación completada</div>
+        </div>
+        <div id="e03-flow" style="opacity: 0;">
+          <h2>Después: una referencia estable por intención</h2>
+          <div id="e03-diagram">
+            <div class="e03-node" id="e03-n1">POST /v1/transfers<br /><span style="font-size:22px;">referencia estable</span></div>
+            <div class="e03-arr" id="e03-a1">→</div>
+            <div class="e03-node" id="e03-n2">¿5xx o timeout?</div>
+            <div class="e03-arr" id="e03-a2">→</div>
+            <div class="e03-node" id="e03-n3">GET /v1/operations/:ref</div>
+            <div class="e03-arr" id="e03-a3">↗</div>
+            <div class="e03-arr" id="e03-a4">→</div>
+            <div class="e03-arr" id="e03-a5">↘</div>
+            <div class="e03-node" id="e03-n4">200: completada</div>
+            <div class="e03-node" id="e03-n5">404: reintentar con la misma referencia</div>
+            <div class="e03-node" id="e03-n6">otro error: estado unknown, se verifica después</div>
+          </div>
+          <div id="e03-src">src/banking/dispatch.ts · src/banking/resolve.ts</div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        const antes = document.querySelector("#e03-antes");
+        const flow = document.querySelector("#e03-flow");
+        tl.fromTo(antes, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
+        tl.fromTo(["#e03-antes .e03-big"], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.8, ease: "power2.out" }, 0.5);
+        tl.fromTo("#e03-small", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 3.2);
+        tl.to(antes, { opacity: 0, duration: 0.6 }, 24);
+        tl.fromTo(flow, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 24.4);
+        tl.fromTo(["#e03-n1", "#e03-a1", "#e03-n2", "#e03-a2", "#e03-n3"],
+          { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.25, ease: "power2.out" }, 25);
+        tl.fromTo(["#e03-a3", "#e03-n4"], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.2 }, 29);
+        tl.fromTo(["#e03-a4", "#e03-n5"], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.2 }, 32);
+        tl.fromTo(["#e03-a5", "#e03-n6"], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.2 }, 35);
+        tl.fromTo("#e03-src", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 37);
+        tl.to(flow, { opacity: 0, duration: 0.4 }, 62.6);
+        window.__timelines["e03"] = tl;
+      </script>
+    </template>
+  </body>
+</html>
