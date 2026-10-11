@@ -151,7 +151,7 @@ test('the application seed preserves reproducible histories and index', () => {
     0,
   );
   const chunks = allChunks();
-  assert.ok(chunks.length > 300);
+  assert.ok(chunks.length >= 80);
   assert.ok(chunks.every((c) => c.vector?.length === 1536));
   seedApp();
   assert.deepEqual(allChunks(), chunks);
@@ -181,11 +181,11 @@ test('the signed session determines the actor and rejects forged identities', ()
 });
 test('corpus originals exist and have unique sources', () => {
   const docs = documents();
-  assert.equal(docs.length, 80);
-  assert.equal(new Set(docs.map((d) => d.id)).size, 80);
+  assert.equal(docs.length, 46);
+  assert.equal(new Set(docs.map((d) => d.id)).size, 46);
   assert.ok(docs.some((d) => d.audience === 'internal'));
   assert.ok(docs.some((d) => d.validTo));
-  assert.ok(docs.every((d) => readDocument(d).length > 1000));
+  assert.ok(docs.every((d) => readDocument(d).length > 300));
 });
 test('search without an API key returns actionable configuration guidance', async () => {
   seedApp();

@@ -2,7 +2,7 @@
 
 - Fecha de entrega: 12 de octubre de 2026.
 - Arranque: ver `README.md` en la raíz (`npm ci`, `npm run setup`, editar `.env.local` con `OPENAI_API_KEY`, `npm run doctor`, `npm run dev`, abrir http://127.0.0.1:3000). No hace falta nada más que lo que pide el starter. El índice de documentos incluido (`fixtures/embeddings/index.json.gz`) ya está regenerado con el nuevo chunker, así que no es necesario ejecutar `npm run ingest`.
-- Comprobaciones: `npm test` (57 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
+- Comprobaciones: `npm test` (66 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
 - El simulador (`simulator/`) no se ha tocado. La aplicación sigue hablando con el banco solo por su API HTTP firmada.
 
 ## Cómo probar en dos minutos
@@ -29,7 +29,7 @@
 ### 3. El agente se salía del ámbito bancario y la búsqueda mezclaba versiones (medio)
 
 - **Síntomas.** El asistente escribía código Python a petición de un cliente (`evidencias/antes/05-fuera-de-alcance-python.png`). El prompt pedía "rellenar con prácticas bancarias comunes y dar una estimación". El chunker cortaba cada 650 caracteres sin mirar párrafos, solo el primer chunk de cada documento llevaba título, versión y vigencia, y los párrafos de plantilla idénticos en los 80 documentos producían chunks con el mismo vector. La búsqueda no filtraba documentos caducados.
-- **Arreglo.** Prompt con alcance explícito, respuestas solo desde la evidencia recuperada con citas `[documento vN]`, rechazo de lo que no es Banana Bank, tratamiento de los extractos históricos como pasados (`src/agent/prompt.ts`). Chunker por párrafos con el título del documento en cada chunk y metadatos completos (`src/ingestion/chunker.ts`, 435 chunks únicos). La búsqueda excluye por defecto los documentos fuera de vigencia a la fecha de referencia y limita a dos chunks por documento; los operadores y la tool con `includeArchived` ven el archivo (`src/retrieval/search.ts`).
+- **Arreglo.** Prompt con alcance explícito, respuestas solo desde la evidencia recuperada con citas `[documento vN]`, rechazo de lo que no es Banana Bank, tratamiento de los extractos históricos como pasados (`src/agent/prompt.ts`). Chunker por párrafos con el título del documento en cada chunk y metadatos completos (`src/ingestion/chunker.ts`, 88 chunks únicos). La búsqueda excluye por defecto los documentos fuera de vigencia a la fecha de referencia y limita a dos chunks por documento; los operadores y la tool con `includeArchived` ven el archivo (`src/retrieval/search.ts`).
 - **Evidencia.** `evidencias/despues/04-sondeo-rag.md` (Python rechazado en una frase, hipoteca sin inventar y sin abrir caso, comisión Aurora histórica 8 € frente a actual 6 € con citas), `tests/retrieval.test.ts`.
 
 ### Lo que no he tocado
@@ -46,13 +46,15 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 
 **Archivos.** `src/operator/view.ts` (vista del caso, reconciliación, acciones), `src/operator/copilot.ts` (informe), `src/telemetry.ts` (ahora guarda argumentos y resultados completos), `app/page.tsx` (panel del caso).
 
+**Corpus saneado.** El corpus de partida traía 80 documentos pero solo unos pocos textos: 24 frases de plantilla idénticas repetidas en todos, las fichas de fees/conditions/operations por producto eran la misma página, y había archivos duplicados y procedimientos de una sola frase. Se reescribió el corpus en 46 documentos distintos (8 tarifas vigentes por producto, 8 versiones de archivo, 8 avisos en CSV, 20 FAQ, una guía de contexto en HTML y un manual de procedimientos interno), se arregló el lector de HTML y CSV de la ingesta para conservar encabezados y párrafos en Markdown y se regeneró el índice: **80 → 46 documentos, 435 → 88 chunks, 24 → 0 frases compartidas por todos** (la única oración común que queda es la nota legal «Banana Bank is a simulated bank…», redactada a propósito). Las cinco preguntas de control del asistente responden con las cifras correctas y sus citas (`evidencias/despues/23-corpus-saneado.md`).
+
 ## Refactor sin cambio de comportamiento
 
 - API: `app/api/[...path]/route.ts` pasa de 270 líneas de `if` a un despachador de 11 líneas sobre una tabla de rutas por dominio (`src/api/router.ts`, `src/api/{session,dashboard,conversations,actions,operator,documents}.ts`), con la misma autenticación, roles, códigos y textos de error. Único cambio deliberado: las rutas casan por longitud exacta; antes un segmento sobrante se ignoraba por el emparejamiento por prefijo.
 - Tokens de diseño: todos los colores y radios de la hoja de estilos salen de variables con nombre por rol (`app/styles/tokens.css`), sin cambio visual.
 - Vista: `app/page.tsx` (1.200 líneas) partido en componentes por pestaña (`app/components/`), un hook con el estado y las acciones (`app/hooks/useBananaApp.ts`) y una hoja de estilos por componente (`app/styles/`).
 
-Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capturas a 1440 px, comparación píxel a píxel con Pillow): 0 píxeles de diferencia en los tres pasos, además de las 57 pruebas, el typecheck y un flujo funcional automatizado. Evidencias: `submission/evidencias/despues/16-paridad-api.txt` y `17-paridad-tokens-y-componentes.txt`.
+Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capturas a 1440 px, comparación píxel a píxel con Pillow): 0 píxeles de diferencia en los tres pasos, además de las 66 pruebas, el typecheck y un flujo funcional automatizado. Evidencias: `submission/evidencias/despues/16-paridad-api.txt` y `17-paridad-tokens-y-componentes.txt`.
 
 ## Pulido de interfaz y movimiento
 
@@ -86,6 +88,6 @@ Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capt
 
 ## Terminado, verificado y pendiente
 
-- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 57 pruebas, build de producción, vídeo de demostración de 6:12.
+- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 66 pruebas, build de producción, vídeo de demostración de 6:12.
 - Límites conocidos: la confirmación por chat exige que el mensaje sea solo el código (con "confirm" o "yes" opcionales); cualquier otra redacción se rechaza y el agente vuelve a pedir el código. El bloqueo de operaciones equivalentes compara cuenta origen, destino e importe mientras exista una operación sin resolver; dos intenciones legítimas idénticas sí pueden ejecutarse una vez resuelta la primera. El copiloto reduce pero no elimina el riesgo de que el modelo califique como hecho algo escrito por el cliente; por eso la interfaz separa lo verificado por el ledger (reconciliación, calculada en código) de lo redactado por el modelo.
 - Pendiente (fuera de alcance por tiempo): búsqueda vectorial fuera de memoria para corpus grandes.

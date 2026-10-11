@@ -1,27 +1,25 @@
-# Aurora · current fees
+# Aurora · fees and conditions
 
-Document aurora-fees-2026. Version 2. Effective from 2026-09-01. Audience: customers.
+Document aurora-fees-2026. Version 2. Effective from 2026-09-01. Audience: customers. Banana Bank is a simulated bank: this document describes only the policies of the test environment, in euros. Balances and movements come from the customer's bank ledger, never from this document.
 
-This document belongs to the fictional Banana Bank. It describes only the policies of this test environment. Dates and versions are part of the applicable policy: an archived copy does not replace the current version. The identifier makes it possible to locate the original source and check a customer support answer.
+## Fees
 
-## Scope and questions
+The Aurora account monthly fee is EUR 6. It is fully waived (EUR 0) only when BOTH requirements are met in the same calendar month: a salary payment of at least EUR 1,200 and three settled card purchases. If either requirement is missing, the fee is EUR 6. A transfer from your own account does not count as a salary payment.
 
-Aurora · current fees applies to the specified product or process, inside the simulator and in euros. Personal balances and transactions come from the customer's bank ledger; commercial documentation does not contain a customer's current balance. Identify the product and the relevant date before answering a policy question. Ask for clarification when either is unclear. An example does not change a policy or create authorization to move money.
+Standard internal transfers between simulator accounts have no fee. This is separate from the monthly account fee.
 
-## Terms and exceptions
+## Conditions
 
-The Aurora account monthly fee is EUR 6. It is fully waived (EUR 0) only when BOTH requirements are met in the same month: a salary payment of at least EUR 1,200 and three settled card purchases. If either requirement is missing, the fee is EUR 6. A transfer from your own account does not count as a salary payment.
+The limit per transfer is EUR 100,000, subject to available funds and authorization. Negative amounts and fractions smaller than one cent are not allowed. Foreign-currency operations are not available in this application. The recipient must be another simulator account, identified by its account and holder; a customer cannot send money from another person's account.
 
-Standard internal transfers between simulator accounts have no fee. The limit per transfer is EUR 100,000. Foreign-currency operations are not available in this application. Asking for information or a simulation does not authorize a transfer. Every transfer requires a summary of its source, destination, amount, and description, followed by the account holder's explicit confirmation of that summary.
+Similar product names do not make fees, limits or waivers interchangeable: the terms above apply only to Aurora.
 
-## Applying the policy
+## Operations
 
-Read the terms above together with their exceptions. Similar product names do not make their fees, limits, or waivers interchangeable. A future effective date does not make a policy valid today. If no published policy answers a question, support should explain what information is missing and offer a verifiable next step. The team can open a support case for an operator to review the source and the relevant account.
+Asking for information or a simulation does not authorize a transfer. Every transfer requires a summary of its source, destination, amount and description, followed by the account holder's explicit confirmation of that exact summary. Changing any of those details invalidates the previous confirmation.
 
-## Evidence and changes
+If the bank does not answer in time, the operation may still have been recorded. Support checks the operation by its reference before repeating anything; a new attempt for the same intent keeps the same reference.
 
-The stable reference for this document is aurora-fees-2026; its version is 2. Later changes are published with an effective date. Archived information remains available to investigate past questions, but must be identified as historical. Combining amounts from different versions can lead a customer to make an incorrect decision. When citing terms, preserve the connection to their source and scope.
+## Changes
 
-## Support and continuity
-
-When a customer requests human review, they should be able to explain the context without executing an operation again. The transaction ledger is the source of truth for banking effects. A late response or a missing technical acknowledgement does not by itself prove that no money moved. The operator must distinguish available facts from information still to be checked and avoid claiming checks that are not supported by evidence.
+This version applies from 2026-09-01 and replaces the amounts in historical copies. The previous fee was EUR 8 per month (see the archived Aurora conditions). A future effective date does not make a policy valid today.

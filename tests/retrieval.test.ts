@@ -63,3 +63,51 @@ test('isCurrent filters archived and future documents', () => {
   assert.equal(isCurrent({ validFrom: null, validTo: null }), true);
   assert.equal(isCurrent({ validFrom: '2027-01-01', validTo: null }), false);
 });
+test('readDocument converts the HTML guide to markdown', () => {
+  const text = readDocument(doc('context-guide-1'));
+  const lines = text.split('\n');
+  assert.ok(lines.includes('# Support guide'));
+  assert.ok(lines.includes('## How to answer'));
+  assert.ok(!text.includes('<'));
+});
+test('readDocument parses the CSV notice into markdown sections', () => {
+  const text = readDocument(doc('notice-aurora'));
+  assert.ok(text.startsWith('# Aurora policy update'));
+  assert.ok(text.includes('\n\n## What changes'));
+});
+test('no document emits "## " outside a line start', () => {
+  for (const d of documents()) {
+    const text = readDocument(d);
+    const bad = text.split('\n').some((l) => l.includes('## ') && !l.startsWith('#'));
+    assert.ok(!bad, `${d.id} has an inline ##`);
+  }
+});
+test('manifest ids are unique and every file exists', () => {
+  const docs = documents();
+  assert.equal(new Set(docs.map((d) => d.id)).size, docs.length);
+  for (const d of docs)
+    assert.ok(fs.existsSync(path.resolve('fixtures/documents', d.file)), d.file);
+});
+test('each product has one current fees-2026 document and one v1 archive', () => {
+  const docs = documents();
+  for (const p of [
+    'aurora',
+    'horizon',
+    'cloud',
+    'travel',
+    'family',
+    'professional',
+    'young',
+    'community',
+  ]) {
+    const current = docs.filter((d) => d.id === `${p}-fees-2026`);
+    assert.equal(current.length, 1, `${p} current fees`);
+    assert.equal(current[0].validTo, null);
+    const archive = docs.filter((d) => d.family === p && d.validTo);
+    assert.ok(archive.length >= 1, `${p} archive`);
+    assert.ok(
+      archive.every((d) => d.version === 1),
+      `${p} archive version`,
+    );
+  }
+});
