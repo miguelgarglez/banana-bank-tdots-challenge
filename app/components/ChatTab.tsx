@@ -1,14 +1,8 @@
 import { useState, type RefObject } from 'react';
 import type { AnyRecord } from '../lib/api';
-import { money } from '../lib/format';
+import { date, money } from '../lib/format';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
-
-const SUGGESTIONS = [
-  'What fees apply to an urgent SEPA transfer?',
-  'Help me write a transfer message',
-  'Why was my last transfer declined?',
-];
 
 export default function ChatTab({
   name,
@@ -44,8 +38,8 @@ export default function ChatTab({
   messagesEnd: RefObject<HTMLDivElement | null>;
   onNew: () => void;
   onOpen: (id: string) => void;
-  onSend: (t: string) => void;
-  onText: (v: string) => void;
+  onSend: (value?: string) => void;
+  onText: (value: string) => void;
 }) {
   const [leaving, setLeaving] = useState<string | null>(null);
   const scoped = approvals?.filter((a) => a.conversationId === conversationId) ?? [];
@@ -55,69 +49,94 @@ export default function ChatTab({
   };
   return (
     <div className="chat-layout">
-      <div className="conversation-picker">
-        <label>Conversation</label>
+      <div className="page-heading compact">
+        <div>
+          <div className="eyebrow">ONE CONVERSATION, PLENTY OF POSSIBILITIES</div>
+          <h1>Your assistant</h1>
+          <p>Ask, plan, and get things done here.</p>
+        </div>
+        <button className="secondary-button" onClick={onNew}>
+          + New conversation
+        </button>
+      </div>
+      <label className="conversation-picker">
+        Conversation
         <select
-          value={conversationId ?? ''}
-          onChange={(e) => {
-            if (e.target.value === 'new') onNew();
-            else if (e.target.value) onOpen(e.target.value);
-          }}
+          aria-label="Conversation"
+          value={conversationId || ''}
+          onChange={(e) => onOpen(e.target.value)}
         >
-          {!conversationId && <option value="">Select…</option>}
+          <option value="">New conversation</option>
           {conversations.map((c) => (
             <option key={c.id} value={c.id}>
               {c.title}
             </option>
           ))}
-          <option value="new">+ New conversation</option>
         </select>
-      </div>
+      </label>
       <section className="chat-panel">
-        <div className="chat-head">
-          <strong>Banana Assistant</strong>
-          <span>
-            <span className="status-dot" /> Available now · checks every transfer with you first
-          </span>
+        <div className="chat-header">
+          <span className="assistant-avatar">✧</span>
+          <div>
+            <strong>Banana Bank assistant</strong>
+            <small>
+              <span className="live-dot" /> Here to help
+            </small>
+          </div>
+          <span className="subtle-tag">{name.split(' ')[0]}</span>
         </div>
         <div className="messages">
-          {!conversationId ? (
-            <div className="case-empty">
-              <Icon name="chat" />
-              <h2>Open a conversation</h2>
-              <p>Pick one from the menu or start a new one.</p>
+          {!messages.length && (
+            <div className="chat-empty">
+              <span className="big-sparkle">✧</span>
+              <h2>What do you need today?</h2>
+              <p>Start with your accounts or a question.</p>
+              <div className="suggestions">
+                {[
+                  'What are the balances of my accounts?',
+                  'When is the Aurora account fee waived?',
+                  'I want to speak to a person',
+                ].map((s) => (
+                  <button key={s} disabled={busy} onClick={() => onSend(s)}>
+                    {s}
+                    <span>↗</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          ) : (
-            <>
-              {messages.length === 0 && !busy && (
-                <>
-                  <div className="assistant-message">Hi {name.split(' ')[0]}! How can I help?</div>
-                  <div className="suggestions">
-                    {SUGGESTIONS.map((s) => (
-                      <button key={s} onClick={() => onSend(s)}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-              {messages.map((m) => (
-                <div className={`message ${m.role}`} key={m.id}>
-                  {m.content}
-                </div>
-              ))}
-              {busy && (
-                <div className="thinking">
-                  <BananaMark size={16} state="loading" />
-                  <i />
-                  <i />
-                  <i />
-                  <span>Checking…</span>
-                </div>
-              )}
-              <div ref={messagesEnd} />
-            </>
           )}
+          {messages.map((m, i) => (
+            <div className={`message ${m.role}`} key={m.id || i}>
+              {m.role === 'assistant' && <span className="message-avatar">✧</span>}
+              <div className="bubble">
+                <div>
+                  {String(m.content)
+                    .split(/(\*\*[^*]+\*\*)/g)
+                    .map((part, j) =>
+                      part.startsWith('**') && part.endsWith('**') ? (
+                        <strong key={j}>{part.slice(2, -2)}</strong>
+                      ) : (
+                        part
+                      ),
+                    )}
+                </div>
+                <small>{date(m.created_at)}</small>
+              </div>
+            </div>
+          ))}
+          {busy && (
+            <div className="message assistant">
+              <span className="message-avatar">✧</span>
+              <div className="thinking">
+                <BananaMark size={16} state="loading" />
+                <i />
+                <i />
+                <i />
+                <span>Checking…</span>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEnd} />
         </div>
         {(scoped.length > 0 || pendingOperations?.length > 0) && (
           <div className="chat-proposals">
@@ -168,25 +187,29 @@ export default function ChatTab({
           className="composer"
           onSubmit={(e) => {
             e.preventDefault();
-            onSend(text);
+            onSend();
           }}
         >
           <textarea
+            aria-label="Message the assistant"
+            placeholder="What can we help with?"
             value={text}
             onChange={(e) => onText(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                onSend(text);
+                onSend();
               }
             }}
-            placeholder={conversationId ? 'Message the assistant…' : 'Open a conversation first'}
-            disabled={!conversationId}
+            rows={2}
           />
-          <button disabled={busy || !conversationId || !text.trim()}>
-            <Icon name="send" />
+          <button aria-label="Send message" disabled={busy || !text.trim()}>
+            <Icon name="arrow" />
           </button>
         </form>
+        <div className="chat-footnote">
+          AI assistant · Check important details before taking action.
+        </div>
       </section>
     </div>
   );
