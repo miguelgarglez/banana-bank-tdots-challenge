@@ -64,7 +64,7 @@ for (const [w, h, name] of [
   await page.locator('.select-trigger[aria-label="Switch person"]').click();
   await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: /^Assistant/ }).click();
+  await page.getByRole('link', { name: /^Assistant/ }).click();
   await page.waitForLoadState('networkidle');
   await page.locator('.select-trigger[aria-label="Conversation"]').click();
   await page
@@ -85,7 +85,7 @@ await page.screenshot({ path: path.join(out, 'chat-empty-1440x900.png'), fullPag
 console.log('captured chat-empty-1440x900.png');
 
 // overview must still scroll the page and show the footer
-await page.getByRole('button', { name: /^Overview/ }).click();
+await page.getByRole('link', { name: /^Overview/ }).click();
 await page.waitForLoadState('networkidle');
 await page.waitForTimeout(600);
 const ov = await page.evaluate(() => ({

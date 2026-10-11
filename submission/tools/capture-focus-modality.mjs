@@ -46,7 +46,7 @@ await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
 await page.waitForLoadState('networkidle');
 
 // Transfers: click amount input -> no ring, border affordance
-await page.getByRole('button', { name: /^Transfers/ }).click();
+await page.getByRole('link', { name: /^Transfers/ }).click();
 await page.waitForSelector('.transfer-card.phase-draft');
 await page.locator('.amount-hero-input input').click();
 await page.waitForTimeout(300);
@@ -64,7 +64,7 @@ console.log('amount tab:', JSON.stringify(await style('.amount-hero-input')));
 await clip(page.locator('.amount-hero-input'), 'amount-tab');
 
 // Chat composer: click -> no ring; Tab -> ring
-await page.getByRole('button', { name: /^Assistant/ }).click();
+await page.getByRole('link', { name: /^Assistant/ }).click();
 await page.waitForSelector('.composer');
 await page.locator('.composer textarea').click();
 await page.waitForTimeout(300);

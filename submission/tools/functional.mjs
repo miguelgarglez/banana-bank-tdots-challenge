@@ -27,7 +27,7 @@ await switchPerson('Lucía');
 await page.waitForSelector('text=Your accounts at a glance');
 log('lucia overview');
 
-await page.click('button.nav-item:has-text("Transfers")');
+await page.click('a.nav-item:has-text("Transfers")');
 const chip = page.locator('.recipient-chip', { hasText: 'Bruno' }).first();
 if (await chip.isVisible().catch(() => false)) await chip.click();
 else await page.locator('.recipient-chip').first().click();

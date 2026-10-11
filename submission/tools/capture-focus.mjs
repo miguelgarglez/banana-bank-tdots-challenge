@@ -30,7 +30,7 @@ async function switchPerson(name) {
   await page.waitForTimeout(300);
 }
 async function nav(label) {
-  await page.getByRole('button', { name: new RegExp(`^${label}`) }).click();
+  await page.getByRole('link', { name: new RegExp(`^${label}`) }).click();
   await page.waitForLoadState('networkidle');
 }
 async function focusField(sel) {

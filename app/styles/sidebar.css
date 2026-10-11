@@ -93,7 +93,7 @@
 .conversation-list {
   overflow: auto;
 }
-.conversation-list button {
+.conversation-list a {
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;

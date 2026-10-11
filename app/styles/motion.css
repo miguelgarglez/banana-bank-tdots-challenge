@@ -67,7 +67,7 @@
 .text-button,
 .nav-item,
 .case-item,
-.conversation-list button,
+.conversation-list a,
 .document-list button,
 .search-form .primary-button,
 .composer button,
@@ -86,7 +86,7 @@
 .text-button:active,
 .nav-item:active,
 .case-item:active,
-.conversation-list button:active,
+.conversation-list a:active,
 .document-list button:active,
 .composer button:active,
 .suggestions button:active {
@@ -95,7 +95,7 @@
 @media (hover: hover) and (pointer: fine) {
   .case-item:hover,
   .document-list button:hover,
-  .conversation-list button:hover,
+  .conversation-list a:hover,
   .suggestions button:hover {
     background: var(--color-nav-hover);
   }
@@ -372,7 +372,7 @@ nav .nav-item.active {
   .text-button,
   .nav-item,
   .case-item,
-  .conversation-list button,
+  .conversation-list a,
   .document-list button,
   .composer button,
   .suggestions button {

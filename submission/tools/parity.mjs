@@ -72,7 +72,7 @@ async function person(name) {
   await page.waitForLoadState('networkidle');
 }
 async function nav(label) {
-  await page.getByRole('button', { name: new RegExp(`^${label}`) }).click();
+  await page.getByRole('link', { name: new RegExp(`^${label}`) }).click();
   await page.waitForLoadState('networkidle');
 }
 async function shot(name) {

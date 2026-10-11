@@ -1,4 +1,7 @@
+'use client';
 import { useLayoutEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import type { AnyRecord } from '../lib/api';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
@@ -6,25 +9,21 @@ import Icon from './Icon';
 export default function Sidebar({
   operator,
   nav,
-  tab,
   conversations,
   conversationId,
-  onNavigate,
   onNew,
-  onOpen,
 }: {
   operator: boolean;
   nav: string[][];
-  tab: string;
   conversations: AnyRecord[];
   conversationId: string | null;
-  onNavigate: (id: string) => void;
   onNew: () => void;
-  onOpen: (id: string) => void;
 }) {
+  const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const logoRef = useRef<HTMLSpanElement>(null);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   useLayoutEffect(() => {
     const active = navRef.current?.querySelector('.nav-item.active');
@@ -37,7 +36,7 @@ export default function Sidebar({
     } else {
       indicator.style.opacity = '0';
     }
-  }, [tab, nav]);
+  }, [pathname, nav]);
 
   return (
     <aside className="sidebar">
@@ -55,16 +54,12 @@ export default function Sidebar({
       <div className="workspace-label">{operator ? 'CUSTOMER SUPPORT' : 'PERSONAL BANKING'}</div>
       <nav ref={navRef}>
         <span className="nav-indicator" ref={indicatorRef} />
-        {nav.map(([id, icon, label]) => (
-          <button
-            key={id}
-            className={`nav-item ${tab === id ? 'active' : ''}`}
-            onClick={() => onNavigate(id)}
-          >
+        {nav.map(([id, icon, label, href]) => (
+          <Link key={id} href={href} className={`nav-item ${isActive(href) ? 'active' : ''}`}>
             <Icon name={icon} />
             {label}
             {id === 'chat' && <span className="ai-badge">AI</span>}
-          </button>
+          </Link>
         ))}
       </nav>
       {!operator && (
@@ -77,14 +72,14 @@ export default function Sidebar({
           </div>
           <div className="conversation-list">
             {conversations.map((c) => (
-              <button
+              <Link
                 key={c.id}
+                href={`/assistant/${c.id}`}
                 className={conversationId === c.id ? 'selected' : ''}
-                onClick={() => onOpen(c.id)}
               >
                 <span className="conversation-dot" />
                 {c.title}
-              </button>
+              </Link>
             ))}
           </div>
         </>

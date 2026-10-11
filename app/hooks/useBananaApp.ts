@@ -1,13 +1,15 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import type { Person } from '../../src/types';
 import { api, type AnyRecord } from '../lib/api';
 import { parseAmount } from '../lib/transfer';
 
 export function useBananaApp() {
+  const router = useRouter();
+  const pathname = usePathname();
   const [people, setPeople] = useState<Person[]>([]),
-    [current, setCurrent] = useState<Person | null>(null),
-    [tab, setTab] = useState('overview');
+    [current, setCurrent] = useState<Person | null>(null);
   const [dashboard, setDashboard] = useState<AnyRecord | null>(null),
     [conversations, setConversations] = useState<AnyRecord[]>([]),
     [conversationId, setConversationId] = useState<string | null>(null),
@@ -40,8 +42,9 @@ export function useBananaApp() {
     if (data.accounts?.length)
       setFrom((v) => (data.accounts.some((a: AnyRecord) => a.id === v) ? v : data.accounts[0].id));
   }
-  async function selectPerson(id: string) {
+  async function selectPerson(id: string, { navigate = true }: { navigate?: boolean } = {}) {
     const g = ++generation.current;
+    const startPath = window.location.pathname;
     setCurrent(null);
     setDashboard(null);
     setConversations([]);
@@ -64,7 +67,6 @@ export function useBananaApp() {
     setConcept('');
     setManualIntentId(null);
     setTransferOutcome(null);
-    setTab('overview');
     try {
       const result = await api('session', { userId: id });
       if (g !== generation.current) return;
@@ -79,6 +81,8 @@ export function useBananaApp() {
         const cs = await api('conversations');
         if (g === generation.current) setConversations(cs);
       }
+      if (navigate && g === generation.current && window.location.pathname === startPath)
+        router.replace(result.person.role === 'operator' ? '/cases' : '/overview');
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
     }
@@ -86,8 +90,8 @@ export function useBananaApp() {
   useEffect(() => {
     api('people').then(setPeople);
     api('session')
-      .then((x) => selectPerson(x.person.id))
-      .catch(() => selectPerson('lucia'));
+      .then((x) => selectPerson(x.person.id, { navigate: false }))
+      .catch(() => selectPerson('lucia', { navigate: false }));
   }, []);
   useEffect(() => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -97,11 +101,13 @@ export function useBananaApp() {
     const t = setTimeout(() => setNotice(''), 6000);
     return () => clearTimeout(t);
   }, [notice]);
-  async function openConversation(id: string) {
+  async function openConversation(
+    id: string,
+    { navigate = true }: { navigate?: boolean } = {},
+  ): Promise<boolean> {
     const g = generation.current;
     activeConversation.current = id;
     setConversationId(id);
-    setTab('chat');
     setMessages([]);
     setError('');
     try {
@@ -109,24 +115,17 @@ export function useBananaApp() {
       if (g === generation.current && activeConversation.current === id) setMessages(c.messages);
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
+      return false;
     }
+    if (navigate && g === generation.current) router.push(`/assistant/${id}`);
+    return true;
   }
-  async function newConversation() {
-    const g = generation.current;
-    try {
-      const c = await api('conversations', {});
-      if (g !== generation.current) return;
-      const cs = await api('conversations');
-      if (g !== generation.current) return;
-      setConversations(cs);
-      activeConversation.current = c.id;
-      setConversationId(c.id);
-      setMessages([]);
-      setTab('chat');
-      setError('');
-    } catch (e) {
-      setError((e as Error).message);
-    }
+  function newConversation() {
+    activeConversation.current = null;
+    setConversationId(null);
+    setMessages([]);
+    setError('');
+    router.push('/assistant');
   }
   async function send(value = text) {
     if (!value.trim() || busy || !current) return;
@@ -142,8 +141,8 @@ export function useBananaApp() {
         id = c.id;
         activeConversation.current = id;
         setConversationId(id);
+        router.replace(`/assistant/${id}`);
       }
-      setTab('chat');
       setMessages((m) => [
         ...m,
         { id: 'pending-user', role: 'user', content: value, created_at: new Date().toISOString() },
@@ -204,9 +203,9 @@ export function useBananaApp() {
       if (g === generation.current) setBusy(false);
     }
   }
-  async function openLibrary() {
+  async function openLibrary({ navigate = true }: { navigate?: boolean } = {}) {
     const g = generation.current;
-    setTab('documents');
+    if (navigate && pathname !== '/documents') router.push('/documents');
     setDocument(null);
     try {
       const result = await api('documents');
@@ -297,16 +296,22 @@ export function useBananaApp() {
     setAmount('');
     setConcept('');
   }
-  async function openCase(id: string) {
+  async function openCase(
+    id: string,
+    { navigate = true }: { navigate?: boolean } = {},
+  ): Promise<boolean> {
     const g = generation.current;
     try {
       const d = await api(`incidents/${id}`);
       if (g === generation.current) {
         if (selectedCase?.incident.id !== id) setBrief(null);
         setSelectedCase(d);
+        if (navigate) router.push(`/cases/${id}`);
       }
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     }
   }
   async function closeCase() {
@@ -318,6 +323,7 @@ export function useBananaApp() {
         setBrief(null);
         setSelectedCase(d);
         await refresh(g);
+        router.push('/cases');
       }
     } catch (e) {
       setError((e as Error).message);
@@ -376,16 +382,20 @@ export function useBananaApp() {
     }
   }
   async function openSource(id: string) {
-    await openLibrary();
     await openDocument(id);
   }
-  async function openDocument(id: string) {
+  async function openDocument(id: string): Promise<boolean> {
     const g = generation.current;
     try {
       const result = await api(`documents/${id}`);
-      if (g === generation.current) setDocument(result);
+      if (g === generation.current) {
+        setDocument(result);
+        if (pathname !== `/documents/${id}`) router.push(`/documents/${id}`);
+      }
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     }
   }
   const resetManual = (fn: (v: string) => void) => (v: string) => {
@@ -401,16 +411,35 @@ export function useBananaApp() {
     return c ? `${c.name} · ${c.label}` : id;
   };
   const operator = current?.role === 'operator';
+  const tab =
+    pathname === '/transfers'
+      ? 'transfer'
+      : pathname.startsWith('/assistant')
+        ? 'chat'
+        : pathname.startsWith('/documents')
+          ? 'documents'
+          : 'overview';
+  function setTab(id: string) {
+    const targets: Record<string, string> = operator
+      ? { overview: '/cases', chat: '/assistant', transfer: '/transfers', documents: '/documents' }
+      : {
+          overview: '/overview',
+          chat: '/assistant',
+          transfer: '/transfers',
+          documents: '/documents',
+        };
+    if (targets[id]) router.push(targets[id]);
+  }
   const nav = operator
     ? [
-        ['overview', 'overview', 'Cases'],
-        ['documents', 'document', 'Documents'],
+        ['overview', 'overview', 'Cases', '/cases'],
+        ['documents', 'document', 'Documents', '/documents'],
       ]
     : [
-        ['overview', 'overview', 'Overview'],
-        ['chat', 'chat', 'Assistant'],
-        ['transfer', 'transfer', 'Transfers'],
-        ['documents', 'document', 'Documents'],
+        ['overview', 'overview', 'Overview', '/overview'],
+        ['chat', 'chat', 'Assistant', '/assistant'],
+        ['transfer', 'transfer', 'Transfers', '/transfers'],
+        ['documents', 'document', 'Documents', '/documents'],
       ];
   return {
     people,

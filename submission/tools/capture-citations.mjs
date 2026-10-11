@@ -63,7 +63,7 @@ try {
   await page.locator('.select-trigger[aria-label="Switch person"]').click();
   await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: /^Assistant/ }).click();
+  await page.getByRole('link', { name: /^Assistant/ }).click();
   await page.waitForLoadState('networkidle');
   await page.locator('.select-trigger[aria-label="Conversation"]').click();
   await page.locator('.select-option', { hasText: 'Citation check' }).first().click();
@@ -98,7 +98,7 @@ try {
   console.log('captured citation-doc-open.png');
 
   // normal conversation: no citation text or chips
-  await page.getByRole('button', { name: /^Assistant/ }).click();
+  await page.getByRole('link', { name: /^Assistant/ }).click();
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(800);
   const coffee = page.locator('.select-option', { hasText: 'Dinner payment' }).first();

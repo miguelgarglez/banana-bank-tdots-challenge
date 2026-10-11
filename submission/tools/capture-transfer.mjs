@@ -32,7 +32,7 @@ await page.goto(BASE, { waitUntil: 'networkidle' });
 await page.locator('.select-trigger[aria-label="Switch person"]').click();
 await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
 await page.waitForLoadState('networkidle');
-await page.getByRole('button', { name: /^Transfers/ }).click();
+await page.getByRole('link', { name: /^Transfers/ }).click();
 await page.waitForSelector('.transfer-card.phase-draft');
 await page.waitForTimeout(500);
 await shot('transfer-draft-empty');
@@ -104,7 +104,7 @@ console.log('captured transfer-done.png');
 // new transfer -> empty draft; overview shows reduced balance
 await page.getByRole('button', { name: 'New transfer' }).click();
 await page.waitForSelector('.transfer-card.phase-draft');
-await page.getByRole('button', { name: /^Overview/ }).click();
+await page.getByRole('link', { name: /^Overview/ }).click();
 await page.waitForLoadState('networkidle');
 await page.waitForTimeout(600);
 const afterBal = balance();

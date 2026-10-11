@@ -57,7 +57,7 @@ try {
   await page.locator('.select-trigger[aria-label="Switch person"]').click();
   await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: /^Assistant/ }).click();
+  await page.getByRole('link', { name: /^Assistant/ }).click();
   await page.getByRole('combobox', { name: 'Conversation' }).click();
   await page.locator('.select-option', { hasText: 'Chat transfer check' }).click();
   await page.waitForSelector('.chat-transfer .transfer-card.phase-draft');
@@ -104,7 +104,7 @@ try {
   await page.locator('.select-trigger[aria-label="Switch person"]').click();
   await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: /^Assistant/ }).click();
+  await page.getByRole('link', { name: /^Assistant/ }).click();
   await page.getByRole('combobox', { name: 'Conversation' }).click();
   await page.locator('.select-option', { hasText: 'Chat transfer check' }).click();
   await page.waitForSelector('.chat-transfer .transfer-card.phase-done');

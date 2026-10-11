@@ -35,7 +35,7 @@ await page.goto(BASE, { waitUntil: 'networkidle' });
 await page.locator('.select-trigger[aria-label="Switch person"]').click();
 await page.locator('.select-option', { hasText: 'Lucía' }).first().click();
 await page.waitForLoadState('networkidle');
-await page.getByRole('button', { name: /^Assistant/ }).click();
+await page.getByRole('link', { name: /^Assistant/ }).click();
 await page.waitForLoadState('networkidle');
 await page.locator('.select-trigger[aria-label="Conversation"]').click();
 await page
