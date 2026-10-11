@@ -69,6 +69,11 @@ export function useBananaApp() {
       if (g !== generation.current) return;
       setCurrent(result.person);
       await refresh(g);
+      api('documents')
+        .then((r) => {
+          if (g === generation.current) setDocs(r.documents);
+        })
+        .catch(() => {});
       if (result.person.role === 'customer') {
         const cs = await api('conversations');
         if (g === generation.current) setConversations(cs);
@@ -316,6 +321,10 @@ export function useBananaApp() {
       if (g === generation.current) setBusy(false);
     }
   }
+  async function openSource(id: string) {
+    await openLibrary();
+    await openDocument(id);
+  }
   async function openDocument(id: string) {
     const g = generation.current;
     try {
@@ -400,5 +409,6 @@ export function useBananaApp() {
     updateIndex,
     searchDocs,
     openDocument,
+    openSource,
   };
 }

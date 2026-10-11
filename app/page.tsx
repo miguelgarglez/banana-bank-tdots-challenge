@@ -72,6 +72,8 @@ export default function Home() {
                   onOpen={app.openConversation}
                   onSend={app.send}
                   onText={app.setText}
+                  docs={app.docs}
+                  onOpenSource={app.openSource}
                 />
               )}
               {app.tab === 'transfer' && !app.operator && (

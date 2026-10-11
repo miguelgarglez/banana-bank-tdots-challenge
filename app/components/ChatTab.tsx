@@ -3,7 +3,7 @@ import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
-import { Markdown } from './Markdown';
+import { Markdown, type Citations } from './Markdown';
 import Select from './Select';
 
 export default function ChatTab({
@@ -23,6 +23,8 @@ export default function ChatTab({
   onOpen,
   onSend,
   onText,
+  docs,
+  onOpenSource,
 }: {
   approvals: AnyRecord[];
   pendingOperations: AnyRecord[];
@@ -40,12 +42,21 @@ export default function ChatTab({
   onOpen: (id: string) => void;
   onSend: (value?: string) => void;
   onText: (value: string) => void;
+  docs: AnyRecord[];
+  onOpenSource: (id: string) => void;
 }) {
   const [leaving, setLeaving] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (text === '' && textareaRef.current) textareaRef.current.style.height = 'auto';
   }, [text]);
+  const citations: Citations = {
+    resolve: (id) => {
+      const d = docs.find((x) => x.id === id);
+      return d ? { title: String(d.title) } : null;
+    },
+    onOpen: onOpenSource,
+  };
   const scoped = approvals?.filter((a) => a.conversationId === conversationId) ?? [];
   const dismiss = (id: string) => {
     setLeaving(id);
@@ -110,7 +121,10 @@ export default function ChatTab({
             <div className={`message ${m.role}`} key={m.id || i}>
               {m.role === 'assistant' && <span className="message-avatar">✧</span>}
               <div className="bubble">
-                <Markdown text={String(m.content)} />
+                <Markdown
+                  text={String(m.content)}
+                  citations={m.role === 'assistant' ? citations : undefined}
+                />
                 <small>{date(m.created_at)}</small>
               </div>
             </div>

@@ -39,3 +39,24 @@ test('raw HTML in the text is escaped', () => {
   assert.ok(!html.includes('<script>'));
   assert.ok(html.includes('&lt;script&gt;'));
 });
+
+test('citations become chips when resolvable, vanish when not, stay raw without resolver', () => {
+  const citations = {
+    resolve: (id: string) =>
+      id === 'faq-human' ? { title: 'Can I ask for human support?' } : null,
+    onOpen: () => {},
+  };
+  const html = renderToStaticMarkup(
+    createElement(Markdown, {
+      text: 'Case opened. [faq-human v2] Also [ghost-doc v1].',
+      citations,
+    }),
+  );
+  assert.ok(html.includes('class="citation"'));
+  assert.ok(html.includes('Can I ask for human support?'));
+  assert.ok(!html.includes('[faq-human v2]'));
+  assert.ok(!html.includes('ghost-doc'));
+  const raw = render('See [faq-human v2].');
+  assert.ok(raw.includes('[faq-human v2]'));
+  assert.ok(!raw.includes('class="citation"'));
+});

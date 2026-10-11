@@ -173,6 +173,32 @@
   font-weight: 600;
   margin: 0;
 }
+.citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  vertical-align: baseline;
+  margin: 0 2px;
+  padding: 1px 8px;
+  border: 1px solid var(--color-suggestion-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-suggestion-bg);
+  color: var(--color-suggestion-text);
+  font: inherit;
+  font-size: 10px;
+  line-height: 1.6;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) ease;
+}
+.citation span {
+  font-size: 9px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .citation:hover {
+    background: var(--color-nav-hover);
+  }
+}
 .bubble .inline-code {
   font-family: ui-monospace, Menlo, monospace;
   background: var(--color-accent-soft);

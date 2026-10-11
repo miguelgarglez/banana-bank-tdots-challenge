@@ -5,7 +5,12 @@ export type MarkdownBlock =
   | { type: 'ul' | 'ol'; items: string[] }
   | { type: 'p'; text: string };
 
-const INLINE = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+export type Citations = {
+  resolve: (id: string) => { title: string } | null;
+  onOpen: (id: string) => void;
+};
+
+const INLINE = /(\*\*[^*]+\*\*|`[^`]+`|\[[a-z0-9][a-z0-9-]*\s+v\d+\])/g;
 
 export function parseMarkdown(text: string): MarkdownBlock[] {
   const blocks: MarkdownBlock[] = [];
@@ -63,9 +68,26 @@ export function parseMarkdown(text: string): MarkdownBlock[] {
   return blocks;
 }
 
-function inline(text: string): ReactNode[] {
-  return text.split(INLINE).map((part, i) =>
-    part.startsWith('**') && part.endsWith('**') ? (
+function inline(text: string, citations?: Citations): ReactNode[] {
+  return text.split(INLINE).map((part, i) => {
+    const citation = /^\[([a-z0-9][a-z0-9-]*)\s+v(\d+)\]$/.exec(part);
+    if (citation) {
+      if (!citations) return part;
+      const doc = citations.resolve(citation[1]);
+      if (!doc) return null;
+      return (
+        <button
+          type="button"
+          key={i}
+          className="citation"
+          onClick={() => citations.onOpen(citation[1])}
+        >
+          {doc.title}
+          <span aria-hidden="true">↗</span>
+        </button>
+      );
+    }
+    return part.startsWith('**') && part.endsWith('**') ? (
       <strong key={i}>{part.slice(2, -2)}</strong>
     ) : part.startsWith('`') && part.endsWith('`') ? (
       <code key={i} className="inline-code">
@@ -73,11 +95,19 @@ function inline(text: string): ReactNode[] {
       </code>
     ) : (
       part
-    ),
-  );
+    );
+  });
 }
 
-export function Markdown({ text, skipLeadingTitle }: { text: string; skipLeadingTitle?: string }) {
+export function Markdown({
+  text,
+  skipLeadingTitle,
+  citations,
+}: {
+  text: string;
+  skipLeadingTitle?: string;
+  citations?: Citations;
+}) {
   const blocks = parseMarkdown(text);
   const first = blocks[0];
   if (
@@ -93,19 +123,19 @@ export function Markdown({ text, skipLeadingTitle }: { text: string; skipLeading
       {blocks.map((block, i) => {
         if (block.type === 'heading') {
           const Tag = `h${Math.min(3, block.level + 1)}` as 'h2' | 'h3' | 'h4';
-          return <Tag key={i}>{inline(block.text)}</Tag>;
+          return <Tag key={i}>{inline(block.text, citations)}</Tag>;
         }
         if (block.type === 'ul' || block.type === 'ol') {
           const Tag = block.type;
           return (
             <Tag key={i}>
               {block.items.map((item, j) => (
-                <li key={j}>{inline(item)}</li>
+                <li key={j}>{inline(item, citations)}</li>
               ))}
             </Tag>
           );
         }
-        return <p key={i}>{inline((block as { text: string }).text)}</p>;
+        return <p key={i}>{inline((block as { text: string }).text, citations)}</p>;
       })}
     </div>
   );
