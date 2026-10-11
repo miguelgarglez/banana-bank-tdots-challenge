@@ -96,7 +96,7 @@ export default function TransferTab({
             />
           </label>
           <button className="primary-button" disabled={busy}>
-            {busy ? 'Processing…' : 'Send transfer'}
+            <span className="button-content">{busy ? 'Sending…' : 'Send transfer'}</span>
             <Icon name="arrow" />
           </button>
         </form>

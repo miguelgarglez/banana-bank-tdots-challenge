@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import type { AnyRecord } from '../../lib/api';
 import { date, money } from '../../lib/format';
 import Icon from '../Icon';
@@ -18,6 +19,45 @@ export default function CaseDetail({
   onReconcile: (intentId: string) => void;
   onDraft: () => void;
 }) {
+  const prevRows = useRef<Record<string, { appStatus?: string; finding?: string }>>({});
+  const [flash, setFlash] = useState<Record<string, boolean>>({});
+  const [fadingFindings, setFadingFindings] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const prev = prevRows.current;
+    const nowFlash: string[] = [];
+    const nowFading: Record<string, string> = {};
+    for (const r of selectedCase?.reconciliation ?? []) {
+      const before = prev[r.intentId];
+      const resolved = r.appStatus === 'completed' && r.bankStatus === 'completed';
+      if (before && before.appStatus !== 'completed' && resolved) {
+        nowFlash.push(r.intentId);
+        if (before.finding && !r.finding) nowFading[r.intentId] = before.finding;
+      }
+    }
+    prevRows.current = Object.fromEntries(
+      (selectedCase?.reconciliation ?? []).map((r: AnyRecord) => [
+        r.intentId,
+        { appStatus: r.appStatus, finding: r.finding },
+      ]),
+    );
+    if (!nowFlash.length) return;
+    setFlash((f) => ({ ...f, ...Object.fromEntries(nowFlash.map((id) => [id, true])) }));
+    if (Object.keys(nowFading).length) {
+      setFadingFindings((ff) => ({ ...ff, ...nowFading }));
+      const t = setTimeout(
+        () =>
+          setFadingFindings((ff) => {
+            const next = { ...ff };
+            for (const id of nowFlash) delete next[id];
+            return next;
+          }),
+        200,
+      );
+      return () => clearTimeout(t);
+    }
+  }, [selectedCase]);
+
   return (
     <section className="panel case-detail">
       {selectedCase ? (
@@ -39,12 +79,18 @@ export default function CaseDetail({
             <>
               <h3>Reconciliation</h3>
               {selectedCase.reconciliation.map((r: AnyRecord) => (
-                <div className="reconciliation-row" key={r.intentId}>
+                <div
+                  className={`reconciliation-row${flash[r.intentId] ? ' reconciled-flash' : ''}`}
+                  key={r.intentId}
+                >
                   <div className="evidence-row">
                     {money(r.amountCents)} · {r.appStatus} → {r.bankStatus}
                     <small>{r.reference ? `${r.reference.slice(0, 13)}…` : 'no reference'}</small>
                   </div>
                   {r.finding && <p className="finding">{r.finding}</p>}
+                  {!r.finding && fadingFindings[r.intentId] && (
+                    <p className="finding fading">{fadingFindings[r.intentId]}</p>
+                  )}
                   {r.fixable && (
                     <button
                       className="primary-button"
@@ -60,8 +106,15 @@ export default function CaseDetail({
           )}
           <h3>Copilot</h3>
           <button className="secondary-button" disabled={busy} onClick={onDraft}>
-            {busy ? 'Thinking…' : 'Draft a brief'}
+            Draft a brief
           </button>
+          {busy && (
+            <div className="brief-skeleton" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </div>
+          )}
           {brief && brief.caseId === selectedCase.incident.id && <CopilotBrief brief={brief} />}
           {selectedCase.history?.length > 0 && (
             <>

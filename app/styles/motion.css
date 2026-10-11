@@ -1,0 +1,461 @@
+/* ─────────────────────────────────────────────────────────
+ * MOTION STORYBOARD
+ *
+ * Tokens: --ease-out / --ease-in-out, --dur-press 120ms ·
+ * --dur-fast 160ms · --dur-base 220ms · --dur-slow 320ms.
+ * Solo transform/opacity se animan; color y fondo van con
+ * transition de propiedades explícitas (nunca `all`).
+ *
+ * Botones y elementos pulsables
+ *    0ms   :active → scale(0.97) con --dur-press --ease-out
+ *   —      hover (solo pointer:fine) → fondo sutil, --dur-fast
+ *   —      :focus-visible → anillo 2px --color-brand, offset 2px
+ *   —      busy → contenido blur(2px) + opacity .7, --dur-fast
+ *
+ * Navegación lateral
+ *    0ms   al cambiar de pestaña, .nav-indicator hace
+ *          translateY() hasta el item activo, --dur-base
+ *          --ease-in-out; el item activo no pinta fondo propio
+ *
+ * Cambio de pestaña
+ *    0ms   .tab-enter entra: opacity 0 → 1, translateY 6px → 0,
+ *          --dur-base --ease-out (@starting-style)
+ *
+ * Listas (actividad, casos, documentos, resultados)
+ *    0ms   cada fila: opacity 0 + translateY 8px → 0,
+ *          --dur-base; stagger 30ms por fila, máximo 8 filas
+ *
+ * Chat
+ *    0ms   burbuja nueva: opacity 0 + translateY 6px +
+ *          scale .98 → reposo, --dur-base --ease-out
+ *    —     "Checking…" (con BananaMark): fundido de opacidad
+ *    —     tarjeta de propuesta inline: misma entrada que panel
+ *
+ * Avisos (.alert)
+ *    0ms   entra desde arriba: translateY -8px + opacity,
+ *          --dur-base --ease-out
+ *    —     sale con opacity, --dur-fast; el notice se
+ *          auto-cierra a los 6s en el hook
+ *
+ * Paneles (propuestas / operaciones pendientes)
+ *    0ms   entrada: opacity + translateY 8px + scale .98,
+ *          --dur-base --ease-out (@starting-style)
+ *    0ms   pulso de atención: box-shadow --color-accent al
+ *          35% → 0, keyframe único de 900ms
+ *
+ * Operador
+ *    0ms   fila reconciliada: flash de fondo --color-success
+ *          al 15% → transparente, 700ms, una vez
+ *    —     .finding desaparece con opacity, --dur-fast
+ *    —     "Draft a brief" ocupado → 3 líneas skeleton con
+ *          shimmer desplazándose, 1.2s linear infinite
+ *
+ * Marca (BananaMark)
+ *    —     loading: balanceo rotate(-10°) ↔ rotate(10°),
+ *          origen 50% 70%, 1.4s --ease-in-out alternate;
+ *          el rabito arrastra 0.1s
+ *    —     hover logo: sacudida única 500ms (-6°→6°→0)
+ *
+ * prefers-reduced-motion: sin transform ni keyframes de
+ * movimiento; quedan solo transiciones de opacity/color y el
+ * pulso de opacidad del plátano.
+ * ───────────────────────────────────────────────────────── */
+
+.primary-button,
+.secondary-button,
+.text-button,
+.nav-item,
+.case-item,
+.conversation-list button,
+.document-list button,
+.search-form .primary-button,
+.composer button,
+.suggestions button,
+.history-heading button,
+.alert button {
+  transition:
+    transform var(--dur-press) var(--ease-out),
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    opacity var(--dur-fast) ease;
+}
+.primary-button:active,
+.secondary-button:active,
+.text-button:active,
+.nav-item:active,
+.case-item:active,
+.conversation-list button:active,
+.document-list button:active,
+.composer button:active,
+.suggestions button:active {
+  transform: scale(0.97);
+}
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.text-button:focus-visible,
+.nav-item:focus-visible,
+.case-item:focus-visible,
+.conversation-list button:focus-visible,
+.document-list button:focus-visible,
+.composer button:focus-visible,
+.suggestions button:focus-visible,
+.person-picker:focus-visible,
+.composer textarea:focus-visible,
+.search-form input:focus-visible,
+.transfer-form input:focus-visible,
+.transfer-form select:focus-visible,
+.conversation-picker select:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .case-item:hover,
+  .document-list button:hover,
+  .conversation-list button:hover,
+  .suggestions button:hover {
+    background: var(--color-nav-hover);
+  }
+  .text-button:hover svg {
+    transform: translateX(2px);
+  }
+}
+.text-button svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+button[disabled] {
+  cursor: default;
+}
+.button-content {
+  transition:
+    filter var(--dur-fast) ease,
+    opacity var(--dur-fast) ease;
+}
+button[disabled] > .button-content {
+  filter: blur(2px);
+  opacity: 0.7;
+}
+
+nav {
+  position: relative;
+}
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 46px;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-md);
+  transition: transform var(--dur-base) var(--ease-in-out);
+  pointer-events: none;
+}
+.nav-item {
+  position: relative;
+}
+nav .nav-item.active {
+  background: transparent;
+}
+
+.tab-enter {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+@starting-style {
+  .tab-enter {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.stagger-in {
+  animation: stagger-in var(--dur-base) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+
+.message {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+@starting-style {
+  .message {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+.thinking {
+  transition: opacity var(--dur-fast) ease;
+}
+@starting-style {
+  .thinking {
+    opacity: 0;
+  }
+}
+
+.alert {
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-base) var(--ease-out);
+}
+@starting-style {
+  .alert {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+.alert.leaving {
+  opacity: 0;
+  transition-duration: var(--dur-fast);
+}
+
+.panel.approvals {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  animation: proposal-pulse 900ms var(--ease-out) 1;
+}
+@starting-style {
+  .panel.approvals {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes proposal-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 18px transparent;
+  }
+}
+.confirmation-code {
+  font-family: ui-monospace, Menlo, monospace;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--forest);
+}
+
+.chat-proposals {
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--paper);
+}
+.proposal-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  animation: proposal-pulse 900ms var(--ease-out) 1;
+}
+@starting-style {
+  .proposal-card {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+.proposal-card .proposal-amount {
+  font-size: 22px;
+  color: var(--forest);
+}
+.proposal-card small {
+  color: var(--muted);
+}
+.proposal-card .primary-button {
+  align-self: flex-start;
+}
+.proposal-card.pending {
+  border-style: dashed;
+  box-shadow: none;
+  animation: none;
+}
+
+.reconciliation-row {
+  border-radius: var(--radius-md);
+  transition: background-color var(--dur-fast) ease;
+}
+.reconciliation-row.reconciled-flash {
+  animation: reconcile-flash 700ms var(--ease-out) 1;
+}
+@keyframes reconcile-flash {
+  0% {
+    background: color-mix(in srgb, var(--color-success) 15%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
+}
+.finding {
+  transition: opacity var(--dur-fast) ease;
+}
+.finding.fading {
+  opacity: 0;
+}
+.brief-skeleton {
+  margin: 12px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.brief-skeleton i {
+  display: block;
+  height: 13px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-nav-hover) 25%,
+    var(--color-accent-soft) 50%,
+    var(--color-nav-hover) 75%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.2s linear infinite;
+}
+.brief-skeleton i:nth-child(2) {
+  width: 82%;
+}
+.brief-skeleton i:nth-child(3) {
+  width: 64%;
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.banana-mark-icon {
+  display: inline-flex;
+}
+.banana-loading svg {
+  transform-origin: 50% 70%;
+  animation: banana-swing 1.4s var(--ease-in-out) infinite alternate;
+}
+.banana-loading .banana-stem {
+  animation: banana-swing 1.4s var(--ease-in-out) 0.1s infinite alternate;
+  transform-origin: 50% 70%;
+}
+@keyframes banana-swing {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}
+.banana-wiggle {
+  animation: banana-wiggle 0.5s var(--ease-in-out) 1;
+}
+@keyframes banana-wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  33% {
+    transform: rotate(-6deg);
+  }
+  66% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.brand-symbol {
+  display: inline-flex;
+}
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.loading .banana-mark-icon {
+  color: var(--color-spinner);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-indicator,
+  .tab-enter,
+  .message,
+  .thinking,
+  .alert,
+  .panel.approvals,
+  .proposal-card,
+  .primary-button,
+  .secondary-button,
+  .text-button,
+  .nav-item,
+  .case-item,
+  .conversation-list button,
+  .document-list button,
+  .composer button,
+  .suggestions button {
+    transition:
+      opacity var(--dur-fast) ease,
+      background-color var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+  .tab-enter,
+  .message,
+  .alert,
+  .panel.approvals,
+  .proposal-card {
+    transform: none;
+  }
+  @starting-style {
+    .tab-enter,
+    .message,
+    .alert,
+    .panel.approvals,
+    .proposal-card,
+    .thinking {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  .stagger-in,
+  .panel.approvals,
+  .proposal-card,
+  .reconciliation-row.reconciled-flash,
+  .brief-skeleton i,
+  .banana-loading svg,
+  .banana-loading .banana-stem,
+  .banana-wiggle {
+    animation: none;
+  }
+  .banana-loading svg {
+    animation: banana-breathe 1.4s ease-in-out infinite alternate;
+  }
+  @keyframes banana-breathe {
+    from {
+      opacity: 0.6;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

@@ -86,6 +86,11 @@ export function useBananaApp() {
   useEffect(() => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [messages, busy]);
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(''), 6000);
+    return () => clearTimeout(t);
+  }, [notice]);
   async function openConversation(id: string) {
     const g = generation.current;
     activeConversation.current = id;

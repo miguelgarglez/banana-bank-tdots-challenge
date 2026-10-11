@@ -1,4 +1,5 @@
 'use client';
+import BananaMark from './components/BananaMark';
 import ChatTab from './components/ChatTab';
 import DocumentsTab from './components/DocumentsTab';
 import Notice from './components/Notice';
@@ -41,10 +42,10 @@ export default function Home() {
           />
           {!app.current || !app.dashboard ? (
             <div className="loading">
-              <span className="spinner" /> Getting things ready…
+              <BananaMark size={44} state="loading" /> Getting things ready…
             </div>
           ) : (
-            <>
+            <div className="tab-enter" key={app.tab}>
               {app.tab === 'overview' && !app.operator && (
                 <OverviewTab
                   name={app.current.name}
@@ -56,6 +57,11 @@ export default function Home() {
               {app.tab === 'chat' && !app.operator && (
                 <ChatTab
                   name={app.current.name}
+                  approvals={app.dashboard.approvals}
+                  pendingOperations={app.dashboard.pendingOperations}
+                  accountLabel={app.accountLabel}
+                  contactLabel={app.contactLabel}
+                  onConfirm={app.confirm}
                   conversations={app.conversations}
                   conversationId={app.conversationId}
                   messages={app.messages}
@@ -84,12 +90,13 @@ export default function Home() {
                   onOverview={() => app.setTab('overview')}
                 />
               )}
-              {app.dashboard.approvals?.length > 0 && (
+              {app.dashboard.approvals?.length > 0 && app.tab !== 'chat' && (
                 <ApprovalsPanel
                   approvals={app.dashboard.approvals}
                   accountLabel={app.accountLabel}
                   contactLabel={app.contactLabel}
                   onConfirm={app.confirm}
+                  busy={app.busy}
                 />
               )}
               {app.dashboard.pendingOperations?.length > 0 && (
@@ -128,7 +135,7 @@ export default function Home() {
                   onOpenDoc={app.openDocument}
                 />
               )}
-            </>
+            </div>
           )}
         </main>
         <footer>

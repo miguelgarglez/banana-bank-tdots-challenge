@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { Person } from '../../../src/types';
 import type { AnyRecord } from '../../lib/api';
 import { date } from '../../lib/format';
@@ -19,10 +20,11 @@ export default function CaseList({
         <h2>Inbox</h2>
         <span className="subtle-tag">All cases</span>
       </div>
-      {incidents?.map((c: AnyRecord) => (
+      {incidents?.map((c: AnyRecord, i: number) => (
         <button
           key={c.id}
-          className={`case-item ${selectedId === c.id ? 'selected' : ''}`}
+          className={`case-item stagger-in ${selectedId === c.id ? 'selected' : ''}`}
+          style={{ '--i': Math.min(i, 8) } as CSSProperties}
           onClick={() => onOpen(c.id)}
         >
           <span

@@ -1,4 +1,6 @@
+import { useLayoutEffect, useRef } from 'react';
 import type { AnyRecord } from '../lib/api';
+import BananaMark from './BananaMark';
 import Icon from './Icon';
 
 export default function Sidebar({
@@ -20,19 +22,39 @@ export default function Sidebar({
   onNew: () => void;
   onOpen: (id: string) => void;
 }) {
+  const navRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const logoRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const active = navRef.current?.querySelector('.nav-item.active');
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
+    if (active instanceof HTMLElement) {
+      indicator.style.height = `${active.offsetHeight}px`;
+      indicator.style.transform = `translateY(${active.offsetTop}px)`;
+      indicator.style.opacity = '1';
+    } else {
+      indicator.style.opacity = '0';
+    }
+  }, [tab, nav]);
+
   return (
     <aside className="sidebar">
       <a className="brand" href="/" aria-label="Banana Bank home">
-        <span className="brand-symbol" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 32 32">
-            <path d="M25 4c1 13-7 22-20 20 6 9 25 1 23-16Z" fill="currentColor" />
-            <path d="m24 5 1-3 3 1" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
+        <span
+          className="brand-symbol"
+          ref={logoRef}
+          onMouseEnter={() => logoRef.current?.classList.add('banana-wiggle')}
+          onAnimationEnd={() => logoRef.current?.classList.remove('banana-wiggle')}
+        >
+          <BananaMark size={28} />
         </span>
         banana<span className="brand-dot">.</span>
       </a>
       <div className="workspace-label">{operator ? 'CUSTOMER SUPPORT' : 'PERSONAL BANKING'}</div>
-      <nav>
+      <nav ref={navRef}>
+        <span className="nav-indicator" ref={indicatorRef} />
         {nav.map(([id, icon, label]) => (
           <button
             key={id}

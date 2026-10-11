@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { AnyRecord } from '../lib/api';
 import Icon from './Icon';
 
@@ -66,8 +67,12 @@ export default function DocumentsTab({
               Close results ×
             </button>
           </div>
-          {sources.map((s) => (
-            <article key={s.id}>
+          {sources.map((s, i) => (
+            <article
+              key={s.id}
+              className="stagger-in"
+              style={{ '--i': Math.min(i, 8) } as CSSProperties}
+            >
               <span className="subtle-tag">Similarity {s.score.toFixed(3)}</span>
               <h3>{s.title || 'No title in the index'}</h3>
               <small>
@@ -84,10 +89,11 @@ export default function DocumentsTab({
             <h2>Documents</h2>
             <span>{docs.length} sources</span>
           </div>
-          {docs.map((d) => (
+          {docs.map((d, i) => (
             <button
               key={d.id}
-              className={document?.id === d.id ? 'selected' : ''}
+              className={`stagger-in ${document?.id === d.id ? 'selected' : ''}`}
+              style={{ '--i': Math.min(i, 8) } as CSSProperties}
               onClick={() => onOpenDoc(d.id)}
             >
               <Icon name="document" />

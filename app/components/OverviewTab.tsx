@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import Icon from './Icon';
@@ -61,8 +62,12 @@ export default function OverviewTab({
             <h2>Recent activity</h2>
             <span>Latest transactions</span>
           </div>
-          {dashboard.movements?.slice(0, 7).map((m: AnyRecord) => (
-            <div className="movement" key={m.id}>
+          {dashboard.movements?.slice(0, 7).map((m: AnyRecord, i: number) => (
+            <div
+              className="movement stagger-in"
+              key={m.id}
+              style={{ '--i': Math.min(i, 8) } as CSSProperties}
+            >
               <span className={`movement-icon ${m.amountCents > 0 ? 'positive' : ''}`}>
                 {m.amountCents > 0 ? '↙' : '↗'}
               </span>

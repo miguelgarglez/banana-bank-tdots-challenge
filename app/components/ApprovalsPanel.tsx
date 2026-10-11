@@ -6,11 +6,13 @@ export default function ApprovalsPanel({
   accountLabel,
   contactLabel,
   onConfirm,
+  busy,
 }: {
   approvals: AnyRecord[];
   accountLabel: (id: string) => string;
   contactLabel: (id: string) => string;
   onConfirm: (id: string) => void;
+  busy?: boolean;
 }) {
   return (
     <section className="panel approvals">
@@ -22,10 +24,11 @@ export default function ApprovalsPanel({
             {accountLabel(a.payload.fromAccountId)} → {contactLabel(a.payload.toAccountId)}
           </p>
           <p>
-            {a.payload.concept} · Code: <strong>{a.confirmationCode}</strong>
+            {a.payload.concept} · Code:{' '}
+            <code className="confirmation-code">{a.confirmationCode}</code>
           </p>
-          <button className="primary-button" onClick={() => onConfirm(a.id)}>
-            Confirm these details
+          <button className="primary-button" disabled={busy} onClick={() => onConfirm(a.id)}>
+            <span className="button-content">Confirm these details</span>
           </button>
         </div>
       ))}
