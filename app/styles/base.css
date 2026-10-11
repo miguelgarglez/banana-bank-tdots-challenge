@@ -22,16 +22,13 @@ button:disabled {
   opacity: 0.5;
   cursor: wait;
 }
-button,
-a,
-input,
-select,
-textarea {
-  outline-offset: 4px;
-}
 button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--color-focus);
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role='combobox']:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
 }
 button {
   border: 0;

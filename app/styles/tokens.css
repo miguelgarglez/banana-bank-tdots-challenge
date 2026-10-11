@@ -9,7 +9,9 @@
   --color-chrome: #fffef7;
   --color-accent-soft: #fbefb0;
   --color-control: #324e49;
-  --color-focus: #54775c;
+  --color-focus: var(--color-brand);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
   --color-brand-dot: #dfb72c;
   --color-demo-label: #7a8b7f;
   --color-nav-text: #64746c;

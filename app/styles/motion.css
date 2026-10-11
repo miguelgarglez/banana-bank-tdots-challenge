@@ -9,7 +9,7 @@
  * Botones y elementos pulsables
  *    0ms   :active → scale(0.97) con --dur-press --ease-out
  *   —      hover (solo pointer:fine) → fondo sutil, --dur-fast
- *   —      :focus-visible → anillo 2px --color-brand, offset 2px
+ *   —      :focus-visible → anillo --focus-ring-width --color-focus, offset --focus-ring-offset
  *   —      busy → contenido blur(2px) + opacity .7, --dur-fast
  *
  * Navegación lateral
@@ -90,22 +90,6 @@
 .composer button:active,
 .suggestions button:active {
   transform: scale(0.97);
-}
-.primary-button:focus-visible,
-.secondary-button:focus-visible,
-.text-button:focus-visible,
-.nav-item:focus-visible,
-.case-item:focus-visible,
-.conversation-list button:focus-visible,
-.document-list button:focus-visible,
-.composer button:focus-visible,
-.suggestions button:focus-visible,
-.person-picker:focus-visible,
-.composer textarea:focus-visible,
-.search-form input:focus-visible,
-.transfer-form input:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
 }
 @media (hover: hover) and (pointer: fine) {
   .case-item:hover,

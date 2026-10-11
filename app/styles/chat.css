@@ -98,6 +98,12 @@
   padding: 12px 12px 10px;
   display: flex;
   align-items: center;
+  transition: border-color var(--dur-fast) ease;
+}
+.composer:focus-within {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--color-focus);
 }
 .composer textarea {
   border: 0;
@@ -109,6 +115,9 @@
   background: none;
   outline: none;
   color: var(--ink);
+}
+.composer textarea:focus-visible {
+  outline: none;
 }
 .composer button {
   width: 37px;
