@@ -11,9 +11,11 @@ import TopBar from './components/TopBar';
 import TransferTab from './components/TransferTab';
 import CasesTab from './components/operator/CasesTab';
 import { useBananaApp } from './hooks/useBananaApp';
+import { useFocusModality } from './hooks/useFocusModality';
 
 export default function Home() {
   const app = useBananaApp();
+  useFocusModality();
   return (
     <div className="app-shell">
       <Sidebar

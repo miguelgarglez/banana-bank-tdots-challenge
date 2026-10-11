@@ -30,6 +30,13 @@ textarea:focus-visible,
   outline: var(--focus-ring-width) solid var(--color-focus);
   outline-offset: var(--focus-ring-offset);
 }
+html[data-focus='pointer'] input:focus-visible,
+html[data-focus='pointer'] textarea:focus-visible,
+html[data-focus='pointer'] .composer:focus-within,
+html[data-focus='pointer'] .search-form:focus-within,
+html[data-focus='pointer'] .amount-hero-input:focus-within {
+  outline: none;
+}
 button {
   border: 0;
 }

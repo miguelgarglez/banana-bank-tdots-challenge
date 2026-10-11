@@ -2,6 +2,7 @@ import type { Person } from '../../../src/types';
 import type { AnyRecord } from '../../lib/api';
 import CaseDetail from './CaseDetail';
 import CaseList from './CaseList';
+import { TextMorph } from 'torph/react';
 
 export default function CasesTab({
   name,
@@ -36,7 +37,11 @@ export default function CasesTab({
         </div>
         <div className="case-count">
           <strong>
-            {dashboard.incidents?.filter((c: AnyRecord) => c.status === 'open').length || 0}
+            <TextMorph>
+              {String(
+                dashboard.incidents?.filter((c: AnyRecord) => c.status === 'open').length || 0,
+              )}
+            </TextMorph>
           </strong>
           <span>open cases</span>
         </div>

@@ -157,3 +157,6 @@
   border-radius: var(--radius-lg);
   resize: vertical;
 }
+.brief textarea:focus {
+  border-color: var(--color-focus);
+}

@@ -35,13 +35,18 @@ async function nav(label) {
 }
 async function focusField(sel) {
   const loc = page.locator(sel).first();
+  await page.evaluate(() => {
+    document.documentElement.dataset.focus = 'keyboard';
+  });
   await loc.focus();
   // programmatic focus can miss :focus-visible; fall back to keyboard focus
-  const w = await loc.evaluate((el) => getComputedStyle(el).outlineWidth);
-  if (w === '0px') {
+  const w = await loc.evaluate(
+    (el) => `${getComputedStyle(el).outlineWidth} ${getComputedStyle(el).outlineStyle}`,
+  );
+  if (w === '0px' || w.endsWith(' none')) {
     for (let i = 0; i < 40; i++) {
-      await page.keyboard.press('Tab');
       if (await loc.evaluate((el) => el === document.activeElement)) break;
+      await page.keyboard.press('Tab');
     }
   }
   await page.waitForTimeout(150);

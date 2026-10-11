@@ -48,6 +48,7 @@
 .balance {
   font-size: 31px;
   letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
 }
 .account-bottom {
   display: flex;

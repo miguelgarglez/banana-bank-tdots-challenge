@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { AnyRecord } from '../lib/api';
 import Icon from './Icon';
 import { Markdown } from './Markdown';
+import { TextMorph } from 'torph/react';
 
 export default function DocumentsTab({
   operator,
@@ -88,7 +89,9 @@ export default function DocumentsTab({
         <section className="panel document-list">
           <div className="section-title">
             <h2>Documents</h2>
-            <span>{docs.length} sources</span>
+            <span>
+              <TextMorph>{String(docs.length)}</TextMorph> sources
+            </span>
           </div>
           {docs.map((d, i) => (
             <button

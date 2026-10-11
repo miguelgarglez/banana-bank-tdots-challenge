@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import Icon from './Icon';
+import { TextMorph } from 'torph/react';
 
 export default function OverviewTab({
   name,
@@ -35,7 +36,9 @@ export default function OverviewTab({
               <span className="account-icon">↗</span>
             </div>
             <div className="balance-label">AVAILABLE BALANCE</div>
-            <div className="balance">{money(a.balanceCents)}</div>
+            <div className="balance">
+              <TextMorph>{money(a.balanceCents)}</TextMorph>
+            </div>
             <div className="account-bottom">
               <span>
                 {a.iban.slice(0, 9)} ···· {a.iban.slice(-4)}

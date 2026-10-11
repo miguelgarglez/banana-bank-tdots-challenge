@@ -129,6 +129,12 @@
 }
 .amount-hero-input:focus-within {
   border-color: var(--color-focus);
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+.amount-hero-input input:focus-visible {
+  outline: none;
 }
 .amount-hero-input > span {
   font-size: 24px;
@@ -201,6 +207,9 @@
   background: var(--color-surface);
   color: var(--color-select-text);
   font-size: 12px;
+}
+.description-input:focus {
+  border-color: var(--color-focus);
 }
 .transfer-submit {
   width: 100%;
