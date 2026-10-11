@@ -21,10 +21,13 @@
 .case-count strong {
   font-size: 26px;
   font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
-.case-count span {
+.case-count > span {
   font-size: 11px;
   max-width: 65px;
+  line-height: 1.2;
 }
 .operator-grid {
   flex: 1;
