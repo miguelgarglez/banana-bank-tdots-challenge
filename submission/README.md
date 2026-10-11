@@ -61,7 +61,7 @@ Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capt
 - Marca: el plátano es ahora un componente (`BananaMark`) que se balancea en las pantallas de espera, acompaña al "Checking…" del chat, hace una sacudida al pasar sobre el logo y es el favicon (`app/icon.svg`).
 - La propuesta de transferencia aparece además dentro de la conversación que la creó (importe, origen → destino, código y botón), y el titular puede descartarla con **Not now**: `POST /api/approvals/:id/dismiss` consume la aprobación, marca la intención `cancelled` y deja un evento `transfer.cancelled` auditado.
 - Accesibilidad: con `prefers-reduced-motion` desaparecen todos los movimientos de transformación y quedan solo cambios de opacidad y color.
-- Evidencias: `submission/evidencias/despues/19-ui-*.png`, `19-ui-microinteracciones.webm` y la nota `19-ui-microinteracciones.md`.
+- Evidencias: `submission/evidencias/despues/19-ui-*.png`, `19-ui-microinteracciones.mp4` y la nota `19-ui-microinteracciones.md`.
 
 ## Método de trabajo y verificación
 
