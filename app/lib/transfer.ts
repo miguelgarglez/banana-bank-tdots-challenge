@@ -6,7 +6,7 @@ export function parseAmount(input: string): number | null {
   return cents;
 }
 
-export type TransferPhase = 'draft' | 'review' | 'done';
+export type TransferPhase = 'draft' | 'review' | 'done' | 'closed';
 
 export function transferPhase(approval: unknown | null, outcome: unknown | null): TransferPhase {
   if (outcome) return 'done';

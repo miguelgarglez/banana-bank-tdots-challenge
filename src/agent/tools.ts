@@ -7,7 +7,9 @@ import { resolveIntent } from '../banking/resolve';
 import { searchDocuments } from '../retrieval/search';
 import { appDb } from '../db';
 import { recordEvent } from '../telemetry';
-import type { Operation, ToolContext } from '../types';
+import { person } from '../people';
+import { HttpError } from '../auth';
+import type { Account, Operation, ToolContext } from '../types';
 const object = (properties: Record<string, unknown>) => ({
   type: 'object',
   properties,
@@ -46,6 +48,19 @@ export const toolDefinitions: FunctionTool[] = [
       toAccountId: string,
       amountCents: { type: 'integer' },
       concept: string,
+    }),
+    strict: true,
+  },
+  {
+    type: 'function',
+    name: 'draft_transfer',
+    description:
+      'Open an editable transfer card for the customer when they want to send money but any detail (source account, recipient account, amount, concept) is missing or ambiguous. Pass what you know and null for the rest. The customer completes and reviews it in the card; no money moves and no proposal is created by this tool.',
+    parameters: object({
+      fromAccountId: { type: ['string', 'null'] },
+      toAccountId: { type: ['string', 'null'] },
+      amountCents: { type: ['integer', 'null'] },
+      concept: { type: ['string', 'null'] },
     }),
     strict: true,
   },
@@ -94,6 +109,33 @@ export async function runTool(name: string, args: unknown, ctx: ToolContext): Pr
       case 'transfer_money':
         result = await transferMoney(ctx, args);
         break;
+      case 'draft_transfer': {
+        if (person(ctx.userId)?.role !== 'customer')
+          throw new HttpError(403, 'A customer account is required.');
+        const draft = z
+          .object({
+            fromAccountId: z.string().nullable(),
+            toAccountId: z.string().nullable(),
+            amountCents: z.number().int().positive().nullable(),
+            concept: z.string().max(200).nullable(),
+          })
+          .parse(args);
+        const [accounts, contacts] = await Promise.all([
+          bankRequest<Account[]>(ctx.userId, '/v1/accounts'),
+          bankRequest<Account[]>(ctx.userId, '/v1/contacts'),
+        ]);
+        if (!accounts.some((a) => a.id === draft.fromAccountId)) draft.fromAccountId = null;
+        if (!contacts.some((c) => c.id === draft.toAccountId)) draft.toAccountId = null;
+        const draftId = randomUUID();
+        recordEvent(ctx, 'transfer.drafted', { draftId, draft });
+        result = {
+          status: 'draft',
+          draftId,
+          draft,
+          note: 'The customer now sees an editable transfer card under your reply. Reply in one short sentence pointing to it; do not list the details again.',
+        };
+        break;
+      }
       case 'confirm_transfer': {
         const { approvalId } = z.object({ approvalId: z.string() }).parse(args);
         const approval = appDb()

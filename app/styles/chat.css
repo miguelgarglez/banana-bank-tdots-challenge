@@ -68,13 +68,8 @@
     height: auto;
   }
   .chat-header,
-  .chat-proposals,
   .chat-footer {
     flex-shrink: 0;
-  }
-  .chat-proposals {
-    max-height: 40%;
-    overflow-y: auto;
   }
 }
 .chat-panel {
@@ -130,13 +125,31 @@
   gap: 9px;
   margin-bottom: 20px;
 }
+.message-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  max-width: 82%;
+}
+.message.user .message-body {
+  align-items: flex-end;
+}
+.chat-transfer {
+  width: 100%;
+  max-width: 480px;
+}
+.chat-transfer .text-button.chat-transfer-dismiss {
+  margin-top: 6px;
+  font-size: 10px;
+}
 .message-avatar {
   width: 27px;
   height: 27px;
   font-size: 18px;
 }
 .bubble {
-  max-width: 82%;
+  max-width: 100%;
   padding: 13px 16px;
   border-radius: 0 12px 12px 12px;
   background: var(--color-bubble);

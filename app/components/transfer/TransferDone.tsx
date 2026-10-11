@@ -13,7 +13,7 @@ export default function TransferDone({
   outcome: AnyRecord;
   contacts: AnyRecord[];
   people: Person[];
-  onReset: () => void;
+  onReset?: () => void;
   onOverview: () => void;
 }) {
   const payload = outcome.payload;
@@ -55,9 +55,11 @@ export default function TransferDone({
         </>
       )}
       <div className="transfer-actions">
-        <button className="secondary-button" onClick={onReset}>
-          New transfer
-        </button>
+        {onReset && (
+          <button className="secondary-button" onClick={onReset}>
+            New transfer
+          </button>
+        )}
         <button className="text-button" onClick={onOverview}>
           View my accounts ↗
         </button>

@@ -233,46 +233,11 @@ nav .nav-item.active {
   color: var(--forest);
 }
 
-.chat-proposals {
-  padding: 10px 16px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: var(--paper);
-}
-.proposal-card {
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 14px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  transition:
-    opacity var(--dur-base) var(--ease-out),
-    transform var(--dur-base) var(--ease-out);
-  animation: proposal-pulse 900ms var(--ease-out) 1;
-}
-@starting-style {
-  .proposal-card {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
-  }
-}
-.proposal-card .proposal-amount {
-  font-size: 22px;
-  color: var(--forest);
-}
-.proposal-card small {
-  color: var(--muted);
-}
 .proposal-actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
-.proposal-card.leaving,
 .panel.approvals .leaving {
   opacity: 0;
   transform: scale(0.98);
@@ -284,11 +249,6 @@ nav .nav-item.active {
   transition:
     opacity var(--dur-fast) ease,
     transform var(--dur-fast) ease;
-}
-.proposal-card.pending {
-  border-style: dashed;
-  box-shadow: none;
-  animation: none;
 }
 
 .reconciliation-row {
@@ -407,7 +367,6 @@ nav .nav-item.active {
   .thinking,
   .alert,
   .panel.approvals,
-  .proposal-card,
   .primary-button,
   .secondary-button,
   .text-button,
@@ -425,8 +384,7 @@ nav .nav-item.active {
   .tab-enter,
   .message,
   .alert,
-  .panel.approvals,
-  .proposal-card {
+  .panel.approvals {
     transform: none;
   }
   @starting-style {
@@ -434,7 +392,6 @@ nav .nav-item.active {
     .message,
     .alert,
     .panel.approvals,
-    .proposal-card,
     .thinking {
       opacity: 0;
       transform: none;
@@ -442,7 +399,6 @@ nav .nav-item.active {
   }
   .stagger-in,
   .panel.approvals,
-  .proposal-card,
   .reconciliation-row.reconciled-flash,
   .brief-skeleton i,
   .banana-loading .banana-shape,

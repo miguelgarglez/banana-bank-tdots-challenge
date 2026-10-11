@@ -1,18 +1,20 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
+import type { Person } from '../../src/types';
 import type { AnyRecord } from '../lib/api';
-import { date, money } from '../lib/format';
+import { date } from '../lib/format';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
 import { Markdown, type Citations } from './Markdown';
 import Select from './Select';
+import ChatTransfer, { type ChatTransferArgs } from './transfer/ChatTransfer';
 
 export default function ChatTab({
-  approvals,
-  pendingOperations,
-  accountLabel,
-  contactLabel,
+  dashboard,
+  people,
+  onTransferSubmit,
   onConfirm,
   onDismiss,
+  onOverview,
   conversations,
   conversationId,
   messages,
@@ -26,12 +28,12 @@ export default function ChatTab({
   docs,
   onOpenSource,
 }: {
-  approvals: AnyRecord[];
-  pendingOperations: AnyRecord[];
-  accountLabel: (id: string) => string;
-  contactLabel: (id: string) => string;
+  dashboard: AnyRecord;
+  people: Person[];
+  onTransferSubmit: (intentId: string, args: ChatTransferArgs) => void;
   onConfirm: (id: string) => void;
   onDismiss: (id: string) => void;
+  onOverview: () => void;
   conversations: AnyRecord[];
   conversationId: string | null;
   messages: AnyRecord[];
@@ -45,7 +47,6 @@ export default function ChatTab({
   docs: AnyRecord[];
   onOpenSource: (id: string) => void;
 }) {
-  const [leaving, setLeaving] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (text === '' && textareaRef.current) textareaRef.current.style.height = 'auto';
@@ -57,11 +58,12 @@ export default function ChatTab({
     },
     onOpen: onOpenSource,
   };
-  const scoped = approvals?.filter((a) => a.conversationId === conversationId) ?? [];
-  const dismiss = (id: string) => {
-    setLeaving(id);
-    setTimeout(() => onDismiss(id), 160);
-  };
+  const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
+  const pendingCode = messages
+    .flatMap((m) => m.transfers ?? [])
+    .find(
+      (t: AnyRecord) => t.kind === 'intent' && t.status === 'awaiting_confirmation' && t.approval,
+    )?.approval?.confirmationCode;
   return (
     <div className="chat-layout">
       <div className="chat-toolbar">
@@ -120,12 +122,30 @@ export default function ChatTab({
           {messages.map((m, i) => (
             <div className={`message ${m.role}`} key={m.id || i}>
               {m.role === 'assistant' && <span className="message-avatar">✧</span>}
-              <div className="bubble">
-                <Markdown
-                  text={String(m.content)}
-                  citations={m.role === 'assistant' ? citations : undefined}
-                />
-                <small>{date(m.created_at)}</small>
+              <div className="message-body">
+                <div className="bubble">
+                  <Markdown
+                    text={String(m.content)}
+                    citations={m.role === 'assistant' ? citations : undefined}
+                  />
+                  <small>{date(m.created_at)}</small>
+                </div>
+                {m.role === 'assistant' &&
+                  m.transfers?.map((t: AnyRecord) => (
+                    <div className="chat-transfer" key={t.id}>
+                      <ChatTransfer
+                        attachment={t}
+                        isLatest={m === lastAssistant}
+                        dashboard={dashboard}
+                        people={people}
+                        busy={busy}
+                        onSubmit={onTransferSubmit}
+                        onConfirm={onConfirm}
+                        onDismiss={onDismiss}
+                        onOverview={onOverview}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           ))}
@@ -143,51 +163,6 @@ export default function ChatTab({
           )}
           <div ref={messagesEnd} />
         </div>
-        {(scoped.length > 0 || pendingOperations?.length > 0) && (
-          <div className="chat-proposals">
-            {scoped.map((a) => (
-              <div className={`proposal-card${leaving === a.id ? ' leaving' : ''}`} key={a.id}>
-                <strong className="proposal-amount">{money(a.payload.amountCents)}</strong>
-                <span>
-                  {accountLabel(a.payload.fromAccountId)} → {contactLabel(a.payload.toAccountId)}
-                </span>
-                <span className="proposal-concept">{a.payload.concept}</span>
-                <span>
-                  Code: <code className="confirmation-code">{a.confirmationCode}</code>
-                </span>
-                <div className="proposal-actions">
-                  <button
-                    className="primary-button"
-                    disabled={busy}
-                    onClick={() => onConfirm(a.id)}
-                  >
-                    <span className="button-content">Confirm these details</span>
-                  </button>
-                  <button
-                    className="secondary-button"
-                    disabled={busy}
-                    onClick={() => dismiss(a.id)}
-                  >
-                    Not now
-                  </button>
-                </div>
-                <small>Reply with the code or confirm here.</small>
-              </div>
-            ))}
-            {pendingOperations?.map((o) => (
-              <div className="proposal-card pending" key={o.intentId}>
-                <span>
-                  {money(o.payload.amountCents)} to {contactLabel(o.payload.toAccountId)} · awaiting
-                  bank confirmation
-                </span>
-                <small>
-                  Ref {o.reference?.slice(0, 8)} · we will update the outcome when the bank ledger
-                  is readable again.
-                </small>
-              </div>
-            ))}
-          </div>
-        )}
         <div className="chat-footer">
           <form
             className="composer"
@@ -199,7 +174,11 @@ export default function ChatTab({
             <textarea
               ref={textareaRef}
               aria-label="Message the assistant"
-              placeholder="What can we help with?"
+              placeholder={
+                pendingCode
+                  ? `Type "confirm ${pendingCode}" or confirm on the card`
+                  : 'What can we help with?'
+              }
               value={text}
               onChange={(e) => {
                 onText(e.target.value);

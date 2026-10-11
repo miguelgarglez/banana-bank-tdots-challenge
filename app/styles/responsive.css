@@ -235,8 +235,10 @@
     padding: 17px 12px;
     height: 410px;
   }
-  .bubble {
+  .message-body {
     max-width: 90%;
+  }
+  .bubble {
     font-size: 11px;
   }
   .chat-footer {

@@ -167,6 +167,43 @@ export function useBananaApp() {
       }
     }
   }
+  async function reloadMessages() {
+    const g = generation.current;
+    const id = conversationId;
+    if (!id) return;
+    try {
+      const c = await api(`conversations/${id}`);
+      if (g === generation.current && activeConversation.current === id) setMessages(c.messages);
+    } catch {}
+  }
+  async function submitChatTransfer(
+    intentId: string,
+    args: {
+      fromAccountId: string;
+      toAccountId: string;
+      amountCents: number;
+      concept: string;
+    },
+  ) {
+    const g = generation.current;
+    setBusy(true);
+    setError('');
+    try {
+      await api('actions', {
+        name: 'transfer_money',
+        intentId,
+        arguments: args,
+        conversationId,
+      });
+      if (g !== generation.current) return;
+      await reloadMessages();
+      await refresh(g);
+    } catch (e) {
+      if (g === generation.current) setError((e as Error).message);
+    } finally {
+      if (g === generation.current) setBusy(false);
+    }
+  }
   async function openLibrary() {
     const g = generation.current;
     setTab('documents');
@@ -234,6 +271,7 @@ export function useBananaApp() {
         );
       }
       await refresh(g);
+      await reloadMessages();
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
     }
@@ -247,6 +285,7 @@ export function useBananaApp() {
         setManualIntentId(null);
       else setNotice('Proposal dismissed.');
       await refresh(g);
+      await reloadMessages();
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
     }
@@ -420,6 +459,7 @@ export function useBananaApp() {
     send,
     openLibrary,
     submitTransfer,
+    submitChatTransfer,
     confirm,
     dismiss,
     openCase,

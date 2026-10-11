@@ -56,12 +56,12 @@ export default function Home() {
               )}
               {app.tab === 'chat' && !app.operator && (
                 <ChatTab
-                  approvals={app.dashboard.approvals}
-                  pendingOperations={app.dashboard.pendingOperations}
-                  accountLabel={app.accountLabel}
-                  contactLabel={app.contactLabel}
+                  dashboard={app.dashboard}
+                  people={app.people}
+                  onTransferSubmit={app.submitChatTransfer}
                   onConfirm={app.confirm}
                   onDismiss={app.dismiss}
+                  onOverview={() => app.setTab('overview')}
                   conversations={app.conversations}
                   conversationId={app.conversationId}
                   messages={app.messages}

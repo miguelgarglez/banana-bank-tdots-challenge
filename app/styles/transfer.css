@@ -15,6 +15,24 @@
 .transfer-card.phase-done {
   border-color: var(--color-positive);
 }
+.transfer-card.phase-closed {
+  border-style: dashed;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.transfer-card.phase-closed .transfer-closed-line {
+  margin: 0;
+}
+.transfer-card.compact {
+  padding: 18px;
+}
+.transfer-card.compact.phase-closed {
+  padding: 10px 14px;
+}
+.transfer-card.compact .amount-hero {
+  font-size: 28px;
+}
 .transfer-card-body {
   transition:
     opacity var(--dur-base) var(--ease-out),
@@ -35,6 +53,18 @@
   font-weight: 600;
   color: var(--color-label);
   margin-bottom: 10px;
+}
+.recipient-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.recipient-collapsed .account-pills {
+  margin-top: 0;
+}
+.recipient-change {
+  font-size: 10px;
 }
 .recipient-chips {
   display: flex;
@@ -115,6 +145,12 @@
   letter-spacing: -0.02em;
   color: var(--forest);
   font-variant-numeric: tabular-nums;
+}
+.transfer-form.compact .amount-hero-input input {
+  font-size: 32px;
+}
+.transfer-form.compact .amount-hero-input > span {
+  font-size: 20px;
 }
 .amount-after {
   font-size: 10px;

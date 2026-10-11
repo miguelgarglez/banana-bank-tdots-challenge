@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { appDb } from '../db';
 import { sendMessage } from '../agent/run';
+import { transferAttachments } from '../banking/attachments';
 import { defineRoute } from './router';
 import { conversationFor } from './shared';
 
@@ -60,10 +61,16 @@ function conversationDetail(
   userId: string,
   id: string,
 ) {
+  const attachments = transferAttachments(userId, id);
   return json({
     conversation: conversationFor(id, userId),
-    messages: appDb()
-      .prepare('SELECT * FROM messages WHERE conversation_id=? ORDER BY created_at,rowid')
-      .all(id),
+    messages: (
+      appDb()
+        .prepare('SELECT * FROM messages WHERE conversation_id=? ORDER BY created_at,rowid')
+        .all(id) as { role: string; run_id: string | null }[]
+    ).map((m) => ({
+      ...m,
+      transfers: m.role === 'assistant' && m.run_id ? (attachments.get(m.run_id) ?? []) : [],
+    })),
   });
 }
