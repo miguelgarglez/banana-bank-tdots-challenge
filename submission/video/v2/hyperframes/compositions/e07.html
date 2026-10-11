@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: #f8f6ef;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            sans-serif;
+        }
+        #e07-wrap {
+          position: absolute;
+          inset: 0;
+          padding: 60px 90px;
+          display: flex;
+          gap: 70px;
+          align-items: center;
+        }
+        #e07-counters {
+          width: 700px;
+        }
+        .e07-counter {
+          margin-bottom: 56px;
+        }
+        .e07-num {
+          font-size: 104px;
+          font-weight: 800;
+          color: #1f3d35;
+          letter-spacing: -0.03em;
+          line-height: 1;
+        }
+        .e07-num span {
+          color: #c9a227;
+        }
+        .e07-lab {
+          font-size: 28px;
+          color: #5d6b66;
+          margin-top: 12px;
+          font-weight: 600;
+        }
+        #e07-reviewers {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 26px;
+        }
+        .e07-rev {
+          background: #fff;
+          border: 1px solid #e3e1d8;
+          border-radius: 18px;
+          padding: 24px 32px;
+          box-shadow: 0 12px 30px rgba(31, 61, 53, 0.1);
+        }
+        .e07-rev h3 {
+          font-size: 28px;
+          color: #1f3d35;
+          margin-bottom: 12px;
+        }
+        .e07-rev li {
+          font-size: 23px;
+          color: #1d2a26;
+          line-height: 1.4;
+          margin-left: 24px;
+          margin-bottom: 6px;
+        }
+        .e07-rev .e07-parity {
+          font-size: 22px;
+          color: #1f3d35;
+          font-weight: 700;
+          margin-top: 12px;
+        }
+      </style>
+      <div id="root" data-composition-id="e07" data-width="1920" data-height="1080">
+        <div id="e07-wrap">
+          <div id="e07-counters">
+            <div class="e07-counter">
+              <div class="e07-num">
+                <span id="e07-ta">13</span> → <span id="e07-tb">13</span> tests
+              </div>
+              <div class="e07-lab">cada arreglo con su test que fallaba antes</div>
+            </div>
+            <div class="e07-counter">
+              <div class="e07-num">+<span id="e07-cb">0</span> commits</div>
+              <div class="e07-lab">commits pequeños por bloque</div>
+            </div>
+            <div class="e07-counter">
+              <div class="e07-num"><span id="e07-rb">0</span> rondas</div>
+              <div class="e07-lab">de revisión independiente</div>
+            </div>
+          </div>
+          <div id="e07-reviewers">
+            <div class="e07-rev" id="e07-r1">
+              <h3>Codex (GPT) · 2 rondas</h3>
+              <ul>
+                <li>confirmación dependiente del modelo</li>
+                <li>estado unknown que podía duplicar</li>
+                <li>caducidad que reactivaba aprobaciones</li>
+              </ul>
+            </div>
+            <div class="e07-rev" id="e07-r2">
+              <h3>Cursor (Grok 4.7) · 3 rondas</h3>
+              <ul>
+                <li>cuerpo ilegible tratado como rechazo</li>
+                <li>informe bajo otro caso</li>
+                <li>negación que contenía el código</li>
+              </ul>
+            </div>
+            <div class="e07-rev" id="e07-r3">
+              <h3>Refactor sin cambio de píxeles</h3>
+              <ul>
+                <li>API: tabla de rutas por dominio</li>
+                <li>Tokens de diseño</li>
+                <li>Vista en componentes</li>
+              </ul>
+              <div class="e07-parity">Paridad: 0 px en 8 capturas × 3 pasos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        const wrap = document.querySelector('#e07-wrap');
+        const ta = document.querySelector('#e07-tb');
+        const cb = document.querySelector('#e07-cb');
+        const rb = document.querySelector('#e07-rb');
+        tl.fromTo(wrap, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
+        const tests = { v: 13 },
+          commits = { v: 0 },
+          rounds = { v: 0 };
+        // los tres contadores acaban antes de que la narración diga "tres rondas" (~17 s)
+        tl.to(
+          tests,
+          {
+            v: 78,
+            duration: 3,
+            ease: 'power1.out',
+            onUpdate: () => {
+              ta.textContent = Math.round(tests.v);
+            },
+          },
+          1,
+        );
+        tl.to(
+          commits,
+          {
+            v: 45,
+            duration: 2.5,
+            ease: 'power1.out',
+            onUpdate: () => {
+              cb.textContent = Math.round(commits.v);
+            },
+          },
+          5,
+        );
+        tl.to(
+          rounds,
+          {
+            v: 3,
+            duration: 1.4,
+            ease: 'power1.out',
+            onUpdate: () => {
+              rb.textContent = Math.round(rounds.v);
+            },
+          },
+          8.5,
+        );
+        tl.fromTo(
+          '#e07-r1',
+          { opacity: 0, x: 20 },
+          { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
+          19,
+        );
+        tl.fromTo(
+          '#e07-r2',
+          { opacity: 0, x: 20 },
+          { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
+          26,
+        );
+        tl.fromTo(
+          '#e07-r3',
+          { opacity: 0, x: 20 },
+          { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
+          34,
+        );
+        tl.to(wrap, { opacity: 0, duration: 0.4 }, 62.3);
+        window.__timelines['e07'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

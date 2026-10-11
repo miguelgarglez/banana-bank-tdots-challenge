@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: #f8f6ef;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            sans-serif;
+        }
+        .e06-panel {
+          position: absolute;
+          inset: 0;
+        }
+        .e06-view {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 150px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .e06-imgwrap {
+          position: relative;
+          transform: scale(0.94);
+          transform-origin: top center;
+          overflow: hidden;
+          border-radius: 16px;
+          box-shadow: 0 20px 50px rgba(31, 61, 53, 0.22);
+          border: 1px solid #e3e1d8;
+          background: #fff;
+        }
+        .e06-imgwrap.wide {
+          width: 1700px;
+          height: 880px;
+        }
+        .e06-imgwrap.tall {
+          width: 1100px;
+          height: 880px;
+        }
+        .e06-imgwrap img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: block;
+        }
+        .e06-band {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 140px;
+          height: 150px;
+          background: rgba(248, 246, 239, 0.92);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 16px 80px;
+          gap: 10px;
+          border-top: 1px solid #e3e1d8;
+        }
+        .e06-cap {
+          font-size: 30px;
+          font-weight: 800;
+          color: #1f3d35;
+          line-height: 1.3;
+          text-align: center;
+        }
+        .e06-cap .bad {
+          color: #a03a2a;
+        }
+        .e06-cap .good {
+          color: #4c7a5f;
+        }
+        .e06-note {
+          font-size: 26px;
+          color: #5d6b66;
+          line-height: 1.35;
+          text-align: center;
+        }
+      </style>
+      <div id="root" data-composition-id="e06" data-width="1920" data-height="1080">
+        <div class="e06-panel" id="e06-p1">
+          <div class="e06-view">
+            <div class="e06-imgwrap wide">
+              <img
+                data-layout-allow-overflow
+                id="e06-s1"
+                src="assets/img/07b-operador-caso-lucia-full.png"
+                style="width: 1440px"
+              />
+            </div>
+          </div>
+          <div class="e06-band">
+            <div class="e06-cap">
+              El caso de Lucía: la app dijo <span class="bad">"fallida"</span>, el banco dice
+              <span class="good">"completada"</span>
+            </div>
+          </div>
+        </div>
+        <div class="e06-panel" id="e06-p2" style="opacity: 0">
+          <div class="e06-view">
+            <div class="e06-imgwrap tall">
+              <img
+                data-layout-allow-overflow
+                id="e06-s2"
+                src="assets/img/09-operador-reconciliado.png"
+                style="width: 574px"
+              />
+            </div>
+          </div>
+          <div class="e06-band">
+            <div class="e06-cap">
+              Un botón corrige el estado sin tocar el banco y deja un evento auditado
+            </div>
+          </div>
+        </div>
+        <div class="e06-panel" id="e06-p3" style="opacity: 0">
+          <div class="e06-view">
+            <div class="e06-imgwrap tall">
+              <img
+                data-layout-allow-overflow
+                id="e06-s3"
+                src="assets/img/08-operador-brief.png"
+                style="width: 574px"
+              />
+            </div>
+          </div>
+          <div class="e06-band">
+            <div class="e06-cap">Informe del copiloto, anclado a la evidencia</div>
+            <div class="e06-note">
+              Hechos verificados · comprobaciones pendientes · discrepancias · borrador de respuesta
+              con citas
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        // wide container 1700x880, tall 1100x880; x = cw/2 - cx*scale, y = 440 - cy*scale
+        tl.fromTo('#e06-p1', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
+        tl.set('#e06-s1', { x: -260, y: -300, scale: 1, transformOrigin: '0 0' }, 0);
+        tl.to('#e06-s1', { x: -1310, y: -739, scale: 1.8, duration: 1.8, ease: 'power2.inOut' }, 9);
+        tl.to('#e06-p1', { opacity: 0, duration: 0.4 }, 29.6);
+        tl.fromTo('#e06-p2', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 30);
+        tl.fromTo(
+          '#e06-s2',
+          { x: 33, y: -442, scale: 1.8, transformOrigin: '0 0' },
+          { x: 33, y: -1351, duration: 15, ease: 'power1.inOut' },
+          30.4,
+        );
+        tl.to('#e06-p2', { opacity: 0, duration: 0.4 }, 47.6);
+        tl.fromTo('#e06-p3', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 48);
+        tl.fromTo(
+          '#e06-s3',
+          { x: 119, y: 0, scale: 1.5, transformOrigin: '0 0' },
+          { x: 119, y: -1963, duration: 18, ease: 'power1.inOut' },
+          48.4,
+        );
+        tl.to('#e06-p3', { opacity: 0, duration: 0.4 }, 68);
+        window.__timelines['e06'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

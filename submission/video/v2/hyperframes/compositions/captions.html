@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            sans-serif;
+        }
+        .cap-line {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 950px;
+          display: flex;
+          justify-content: center;
+          pointer-events: none;
+        }
+        .cap-line span {
+          display: inline-block;
+          max-width: 1500px;
+          background: rgba(31, 61, 53, 0.92);
+          color: #f8f6ef;
+          font-size: 38px;
+          font-weight: 600;
+          font-family: ui-sans-serif, system-ui, sans-serif;
+          padding: 14px 28px;
+          border-radius: 14px;
+          text-align: center;
+          line-height: 1.3;
+        }
+      </style>
+      <div
+        id="root"
+        data-composition-id="captions"
+        data-width="1920"
+        data-height="1080"
+        data-layout-allow-caption-zone
+        data-layout-allow-overlap
+      >
+        <div class="cap-line" id="cap-0" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Hola, soy Miguel.</span></div>
+        <div class="cap-line" id="cap-1" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Este es mi trabajo para el reto</span></div>
+        <div class="cap-line" id="cap-2" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>de Banana Bank:</span></div>
+        <div class="cap-line" id="cap-3" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>un banco ficticio que quiere lanzar su</span></div>
+        <div class="cap-line" id="cap-4" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>asistente de inteligencia artificial el lunes.</span></div>
+        <div class="cap-line" id="cap-5" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>En seis minutos os cuento qué encontré,</span></div>
+        <div class="cap-line" id="cap-6" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>qué arreglé, qué construí y cómo lo</span></div>
+        <div class="cap-line" id="cap-7" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>comprobé. La aplicación es un Next.js con un</span></div>
+        <div class="cap-line" id="cap-8" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>agente que habla con un banco externo</span></div>
+        <div class="cap-line" id="cap-9" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>por una API firmada.</span></div>
+        <div class="cap-line" id="cap-10" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El simulador del banco es intocable:</span></div>
+        <div class="cap-line" id="cap-11" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>en la evaluación pueden sustituirlo por otro</span></div>
+        <div class="cap-line" id="cap-12" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>con el mismo contrato.</span></div>
+        <div class="cap-line" id="cap-13" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Mi método fue siempre el mismo.</span></div>
+        <div class="cap-line" id="cap-14" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Primero reproducir el fallo y guardar la</span></div>
+        <div class="cap-line" id="cap-15" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>prueba. Después escribir un test que falla,</span></div>
+        <div class="cap-line" id="cap-16" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>arreglar, y ver el test pasar.</span></div>
+        <div class="cap-line" id="cap-17" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Luego repetir la misma reproducción en la</span></div>
+        <div class="cap-line" id="cap-18" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>API y en el navegador.</span></div>
+        <div class="cap-line" id="cap-19" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y al final,</span></div>
+        <div class="cap-line" id="cap-20" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>dos rondas de revisión independiente con otros</span></div>
+        <div class="cap-line" id="cap-21" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>modelos, que encontraron defectos reales que también</span></div>
+        <div class="cap-line" id="cap-22" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>corregí. El fallo más grave es de dinero.</span></div>
+        <div class="cap-line" id="cap-23" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Cuando el banco cobra pero pierde la</span></div>
+        <div class="cap-line" id="cap-24" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>respuesta, la aplicación reintentaba con una referencia</span></div>
+        <div class="cap-line" id="cap-25" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>nueva. El banco deduplica por referencia,</span></div>
+        <div class="cap-line" id="cap-26" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>así que la veía como otra operación.</span></div>
+        <div class="cap-line" id="cap-27" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Lo reproduje con el escenario de respuesta</span></div>
+        <div class="cap-line" id="cap-28" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>perdida: una orden de diez euros movió veinte,</span></div>
+        <div class="cap-line" id="cap-29" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>el banco registró dos operaciones y la</span></div>
+        <div class="cap-line" id="cap-30" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>aplicación mostró una sola,</span></div>
+        <div class="cap-line" id="cap-31" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>completada. El cliente y el operador no podían</span></div>
+        <div class="cap-line" id="cap-32" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>verlo. El arreglo:</span></div>
+        <div class="cap-line" id="cap-33" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>una referencia estable por intención.</span></div>
+        <div class="cap-line" id="cap-34" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Ante un error ambiguo,</span></div>
+        <div class="cap-line" id="cap-35" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la aplicación consulta la operación por esa</span></div>
+        <div class="cap-line" id="cap-36" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>referencia antes de decidir.</span></div>
+        <div class="cap-line" id="cap-37" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Si existe, está completada.</span></div>
+        <div class="cap-line" id="cap-38" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Si el banco dice que no la</span></div>
+        <div class="cap-line" id="cap-39" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>tiene, reintenta con la misma referencia.</span></div>
+        <div class="cap-line" id="cap-40" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Si tampoco puede verificar,</span></div>
+        <div class="cap-line" id="cap-41" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la deja en estado desconocido,</span></div>
+        <div class="cap-line" id="cap-42" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>nunca en fallida,</span></div>
+        <div class="cap-line" id="cap-43" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y la resuelve después contra el libro</span></div>
+        <div class="cap-line" id="cap-44" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>mayor. Mientras una operación equivalente siga sin resolver,</span></div>
+        <div class="cap-line" id="cap-45" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>se bloquea cualquier otra igual.</span></div>
+        <div class="cap-line" id="cap-46" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y un timeout o una respuesta ilegible</span></div>
+        <div class="cap-line" id="cap-47" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>ya no se tratan como rechazo.</span></div>
+        <div class="cap-line" id="cap-48" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El segundo fallo:</span></div>
+        <div class="cap-line" id="cap-49" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>decir 'envía cinco euros a Bruno'</span></div>
+        <div class="cap-line" id="cap-50" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>ejecutaba la transferencia en el mismo turno,</span></div>
+        <div class="cap-line" id="cap-51" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>sin resumen ni confirmación.</span></div>
+        <div class="cap-line" id="cap-52" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Ahora todo el dinero pasa por una</span></div>
+        <div class="cap-line" id="cap-53" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>única puerta. El agente propone:</span></div>
+        <div class="cap-line" id="cap-54" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>origen, destino, importe y concepto,</span></div>
+        <div class="cap-line" id="cap-55" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y un código de seis caracteres.</span></div>
+        <div class="cap-line" id="cap-56" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y la confirmación la verifica el servidor,</span></div>
+        <div class="cap-line" id="cap-57" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>no el modelo.</span></div>
+        <div class="cap-line" id="cap-58" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Por chat, el mensaje del cliente tiene</span></div>
+        <div class="cap-line" id="cap-59" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>que ser el código,</span></div>
+        <div class="cap-line" id="cap-60" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y nada más.</span></div>
+        <div class="cap-line" id="cap-61" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Un 'sí' a secas se rechaza.</span></div>
+        <div class="cap-line" id="cap-62" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Una negación que mencione el código también.</span></div>
+        <div class="cap-line" id="cap-63" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Desde el panel,</span></div>
+        <div class="cap-line" id="cap-64" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>el botón de confirmar es la otra</span></div>
+        <div class="cap-line" id="cap-65" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>vía, y las dos consumen la propuesta</span></div>
+        <div class="cap-line" id="cap-66" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>una sola vez.</span></div>
+        <div class="cap-line" id="cap-67" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Las propuestas caducan a los diez minutos,</span></div>
+        <div class="cap-line" id="cap-68" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>el importe tiene que coincidir,</span></div>
+        <div class="cap-line" id="cap-69" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y el formulario manual pasa por la</span></div>
+        <div class="cap-line" id="cap-70" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>misma puerta. El tercer bloque es el agente y</span></div>
+        <div class="cap-line" id="cap-71" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la búsqueda. El asistente escribía código Python si se</span></div>
+        <div class="cap-line" id="cap-72" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>lo pedían, y el prompt le animaba</span></div>
+        <div class="cap-line" id="cap-73" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>a rellenar huecos con 'prácticas bancarias comunes'.</span></div>
+        <div class="cap-line" id="cap-74" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Además, los ochenta documentos comparten párrafos de</span></div>
+        <div class="cap-line" id="cap-75" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>plantilla idénticos, y el troceado por caracteres</span></div>
+        <div class="cap-line" id="cap-76" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>producía fragmentos iguales sin título ni vigencia.</span></div>
+        <div class="cap-line" id="cap-77" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Ahora el prompt acota el alcance,</span></div>
+        <div class="cap-line" id="cap-78" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>exige citar documento y versión,</span></div>
+        <div class="cap-line" id="cap-79" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y trata lo caducado como histórico.</span></div>
+        <div class="cap-line" id="cap-80" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El troceado respeta párrafos y lleva los</span></div>
+        <div class="cap-line" id="cap-81" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>metadatos en cada fragmento,</span></div>
+        <div class="cap-line" id="cap-82" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y la búsqueda excluye por defecto lo</span></div>
+        <div class="cap-line" id="cap-83" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>que ya no está en vigor.</span></div>
+        <div class="cap-line" id="cap-84" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El resultado: rechaza lo que no es banca,</span></div>
+        <div class="cap-line" id="cap-85" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>no inventa, y distingue la comisión histórica</span></div>
+        <div class="cap-line" id="cap-86" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>de la actual con sus citas.</span></div>
+        <div class="cap-line" id="cap-87" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Para la parte creativa elegí al operador,</span></div>
+        <div class="cap-line" id="cap-88" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>La vista del caso es ahora una</span></div>
+        <div class="cap-line" id="cap-89" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>herramienta de trabajo.</span></div>
+        <div class="cap-line" id="cap-90" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Una bandeja con los casos abiertos y</span></div>
+        <div class="cap-line" id="cap-91" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>resueltos. Arriba, el chequeo de dinero:</span></div>
+        <div class="cap-line" id="cap-92" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la discrepancia entre lo que registró la</span></div>
+        <div class="cap-line" id="cap-93" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>aplicación y lo que dice el banco,</span></div>
+        <div class="cap-line" id="cap-94" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>con el arreglo en el mismo sitio.</span></div>
+        <div class="cap-line" id="cap-95" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Debajo, una sola línea de tiempo:</span></div>
+        <div class="cap-line" id="cap-96" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>mensajes, actividad del agente en palabras llanas,</span></div>
+        <div class="cap-line" id="cap-97" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>entradas del banco e hitos del caso.</span></div>
+        <div class="cap-line" id="cap-98" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El informe del copiloto es una tarjeta</span></div>
+        <div class="cap-line" id="cap-99" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>con un borrador de respuesta editable y</span></div>
+        <div class="cap-line" id="cap-100" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>las fuentes citadas.</span></div>
+        <div class="cap-line" id="cap-101" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y al aplicar la reconciliación,</span></div>
+        <div class="cap-line" id="cap-102" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la fila pasa a verde y queda</span></div>
+        <div class="cap-line" id="cap-103" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>el evento auditado.</span></div>
+        <div class="cap-line" id="cap-104" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y una segunda capacidad,</span></div>
+        <div class="cap-line" id="cap-105" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>esta para el cliente:</span></div>
+        <div class="cap-line" id="cap-106" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>las transferencias ocurren dentro de la conversación.</span></div>
+        <div class="cap-line" id="cap-107" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Antes, el modelo tenía que extraer cuatro</span></div>
+        <div class="cap-line" id="cap-108" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>datos del texto libre;</span></div>
+        <div class="cap-line" id="cap-109" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>si faltaba uno,</span></div>
+        <div class="cap-line" id="cap-110" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>preguntaba una y otra vez,</span></div>
+        <div class="cap-line" id="cap-111" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y podía inventarse el importe.</span></div>
+        <div class="cap-line" id="cap-112" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Ahora el agente tiene una herramienta de</span></div>
+        <div class="cap-line" id="cap-113" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>borrador: detecta la intención y lo que ya</span></div>
+        <div class="cap-line" id="cap-114" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>se ha dicho,</span></div>
+        <div class="cap-line" id="cap-115" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y abre una tarjeta editable debajo de</span></div>
+        <div class="cap-line" id="cap-116" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>su respuesta con lo que falta.</span></div>
+        <div class="cap-line" id="cap-117" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Es el mismo componente que la pestaña</span></div>
+        <div class="cap-line" id="cap-118" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>de transferencias, y pasa por borrador,</span></div>
+        <div class="cap-line" id="cap-119" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>revisión y enviado en el mismo sitio,</span></div>
+        <div class="cap-line" id="cap-120" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>con el código,</span></div>
+        <div class="cap-line" id="cap-121" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la cuenta atrás de caducidad y el</span></div>
+        <div class="cap-line" id="cap-122" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>saldo resultante. El modelo no toca el dinero:</span></div>
+        <div class="cap-line" id="cap-123" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la propuesta, el código,</span></div>
+        <div class="cap-line" id="cap-124" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la caducidad y el uso único siguen</span></div>
+        <div class="cap-line" id="cap-125" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>siendo del servidor.</span></div>
+        <div class="cap-line" id="cap-126" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Y como las tarjetas se derivan de</span></div>
+        <div class="cap-line" id="cap-127" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>las intenciones reales,</span></div>
+        <div class="cap-line" id="cap-128" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>una conversación reabierta muestra cada transferencia en</span></div>
+        <div class="cap-line" id="cap-129" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>su estado verdadero,</span></div>
+        <div class="cap-line" id="cap-130" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>junto al mensaje que la creó.</span></div>
+        <div class="cap-line" id="cap-131" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>El starter traía trece pruebas;</span></div>
+        <div class="cap-line" id="cap-132" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>ahora hay setenta y ocho,</span></div>
+        <div class="cap-line" id="cap-133" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y cada arreglo tiene su test que</span></div>
+        <div class="cap-line" id="cap-134" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>fallaba antes. Las reproducciones de antes y después,</span></div>
+        <div class="cap-line" id="cap-135" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>por API y en navegador,</span></div>
+        <div class="cap-line" id="cap-136" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>están en la carpeta de evidencias,</span></div>
+        <div class="cap-line" id="cap-137" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y cada bloque de interfaz tiene un</span></div>
+        <div class="cap-line" id="cap-138" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>script de Playwright que lo recorre y</span></div>
+        <div class="cap-line" id="cap-139" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>guarda capturas. Pedí tres rondas de revisión a otros</span></div>
+        <div class="cap-line" id="cap-140" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>modelos. Encontraron cosas que yo no había visto:</span></div>
+        <div class="cap-line" id="cap-141" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>que la confirmación aún dependía del criterio</span></div>
+        <div class="cap-line" id="cap-142" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>del modelo, que una operación en estado</span></div>
+        <div class="cap-line" id="cap-143" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>desconocido podía acabar duplicada al proponerla de</span></div>
+        <div class="cap-line" id="cap-144" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>nuevo, o que una negación que citara</span></div>
+        <div class="cap-line" id="cap-145" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>el código pasaba el control.</span></div>
+        <div class="cap-line" id="cap-146" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Todo eso está corregido y cubierto por</span></div>
+        <div class="cap-line" id="cap-147" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>pruebas. Después, con el comportamiento ya fijado,</span></div>
+        <div class="cap-line" id="cap-148" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>reorganicé la aplicación sin cambiar un píxel:</span></div>
+        <div class="cap-line" id="cap-149" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>una tabla de rutas por dominio en</span></div>
+        <div class="cap-line" id="cap-150" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la API, tokens de diseño,</span></div>
+        <div class="cap-line" id="cap-151" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y la vista partida en componentes.</span></div>
+        <div class="cap-line" id="cap-152" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Lo comprobé con capturas comparadas píxel a</span></div>
+        <div class="cap-line" id="cap-153" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>píxel en cada paso.</span></div>
+        <div class="cap-line" id="cap-154" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>Después, rutas reales:</span></div>
+        <div class="cap-line" id="cap-155" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>cada vista tiene su dirección;</span></div>
+        <div class="cap-line" id="cap-156" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>recargar mantiene la persona,</span></div>
+        <div class="cap-line" id="cap-157" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>la conversación, el documento o el caso</span></div>
+        <div class="cap-line" id="cap-158" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>abierto; atrás y adelante funcionan;</span></div>
+        <div class="cap-line" id="cap-159" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y una ruta inexistente tiene su propia</span></div>
+        <div class="cap-line" id="cap-160" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>página. Y los detalles que no se ven:</span></div>
+        <div class="cap-line" id="cap-161" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>un selector accesible con teclado,</span></div>
+        <div class="cap-line" id="cap-162" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>un anillo de foco que solo aparece</span></div>
+        <div class="cap-line" id="cap-163" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>al navegar con teclado,</span></div>
+        <div class="cap-line" id="cap-164" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>importes que deslizan sus dígitos,</span></div>
+        <div class="cap-line" id="cap-165" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>citas que son chips y abren el</span></div>
+        <div class="cap-line" id="cap-166" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>documento, un corpus saneado de ochenta documentos</span></div>
+        <div class="cap-line" id="cap-167" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>casi iguales a cuarenta y seis distintos,</span></div>
+        <div class="cap-line" id="cap-168" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>y respeto a la preferencia de movimiento</span></div>
+        <div class="cap-line" id="cap-169" data-layout-allow-overlap style="opacity:0"><span data-layout-allow-overlap>reducido. Queda fuera, por tiempo,</span></div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        const CAPS = [{"s":0,"e":1.3},{"s":2.08,"e":3.62},{"s":3.62,"e":4.44},{"s":5.16,"e":7.2},{"s":7.2,"e":9.58},{"s":10.52,"e":12.6},{"s":13.26,"e":15.94},{"s":15.94,"e":20.33},{"s":20.33,"e":22.31},{"s":22.31,"e":23.73},{"s":25.15,"e":27.05},{"s":28.01,"e":30.35},{"s":30.35,"e":31.63},{"s":33.27,"e":34.71},{"s":35.85,"e":38.13},{"s":38.13,"e":41.03},{"s":41.85,"e":43.37},{"s":44.09,"e":47.03},{"s":47.03,"e":48.29},{"s":49.67,"e":50.17},{"s":50.67,"e":52.85},{"s":52.85,"e":56.03},{"s":56.03,"e":59.57},{"s":60.35,"e":62.35},{"s":62.35,"e":65.53},{"s":65.53,"e":68.25},{"s":68.81,"e":70.49},{"s":71.41,"e":73.61},{"s":73.61,"e":77.07},{"s":77.57,"e":80.49},{"s":80.49,"e":81.73},{"s":82.21,"e":85.61},{"s":85.61,"e":87.19},{"s":87.79,"e":89.55},{"s":90.47,"e":91.43},{"s":91.79,"e":94.09},{"s":94.09,"e":95.67},{"s":96.27,"e":97.87},{"s":98.55,"e":99.93},{"s":99.93,"e":102.03},{"s":102.73,"e":104.05},{"s":104.39,"e":105.91},{"s":106.63,"e":107.19},{"s":107.51,"e":109.51},{"s":109.51,"e":112.97},{"s":113.39,"e":114.97},{"s":114.97,"e":117.77},{"s":117.77,"e":119.51},{"s":120.29,"e":121.73},{"s":121.93,"e":124.77},{"s":125.51,"e":128.27},{"s":128.53,"e":130.31},{"s":131.39,"e":133.25},{"s":133.25,"e":135.79},{"s":135.79,"e":139.07},{"s":139.33,"e":141.23},{"s":141.63,"e":144.21},{"s":144.85,"e":145.39},{"s":146.17,"e":148.85},{"s":148.85,"e":149.75},{"s":149.75,"e":150.75},{"s":151.51,"e":152.99},{"s":153.93,"e":156.03},{"s":157.05,"e":157.51},{"s":157.87,"e":159.59},{"s":159.59,"e":161.93},{"s":161.93,"e":162.93},{"s":163.81,"e":165.99},{"s":166.57,"e":168.01},{"s":168.63,"e":170.75},{"s":170.75,"e":174.11},{"s":174.11,"e":177.57},{"s":177.57,"e":179.69},{"s":179.69,"e":182.69},{"s":183.43,"e":186.91},{"s":186.91,"e":189.57},{"s":189.57,"e":192.63},{"s":193.37,"e":195.15},{"s":196.03,"e":197.55},{"s":197.55,"e":199.81},{"s":200.37,"e":203.23},{"s":203.23,"e":204.75},{"s":204.75,"e":207.51},{"s":207.51,"e":208.53},{"s":209.23,"e":211.57},{"s":212.03,"e":214.45},{"s":214.45,"e":215.93},{"s":216.77,"e":284.17},{"s":285.17,"e":287.77},{"s":287.77,"e":288.91},{"s":289.73,"e":292.43},{"s":292.43,"e":295.39},{"s":296.03,"e":298.29},{"s":298.29,"e":300.27},{"s":300.73,"e":302.39},{"s":303.55,"e":305.55},{"s":306.59,"e":309.21},{"s":310.15,"e":312.15},{"s":312.53,"e":315.39},{"s":315.39,"e":317.99},{"s":317.99,"e":319.67},{"s":320.17,"e":321.73},{"s":322.23,"e":324.07},{"s":324.07,"e":325.03},{"s":326.026,"e":327.486},{"s":328.526,"e":329.466},{"s":330.166,"e":332.586},{"s":333.846,"e":336.206},{"s":336.206,"e":337.346},{"s":338.106,"e":338.926},{"s":339.546,"e":340.926},{"s":341.566,"e":343.506},{"s":344.046,"e":345.946},{"s":345.946,"e":348.546},{"s":348.546,"e":349.006},{"s":349.386,"e":351.646},{"s":351.646,"e":352.986},{"s":353.666,"e":355.806},{"s":355.806,"e":358.226},{"s":358.846,"e":360.966},{"s":361.666,"e":362.306},{"s":362.726,"e":364.926},{"s":364.926,"e":367.746},{"s":368.486,"e":369.926},{"s":370.286,"e":372.786},{"s":372.786,"e":373.686},{"s":374.446,"e":376.126},{"s":376.126,"e":377.406},{"s":377.926,"e":381.466},{"s":381.466,"e":382.426},{"s":382.866,"e":384.386},{"s":385.338,"e":387.558},{"s":388.298,"e":389.458},{"s":390.118,"e":392.078},{"s":392.078,"e":395.658},{"s":396.178,"e":397.718},{"s":398.438,"e":399.958},{"s":400.298,"e":402.798},{"s":402.798,"e":405.318},{"s":405.318,"e":408.978},{"s":408.978,"e":412.198},{"s":412.498,"e":415.298},{"s":415.298,"e":417.938},{"s":417.938,"e":421.718},{"s":421.718,"e":423.858},{"s":423.858,"e":425.558},{"s":426.438,"e":428.658},{"s":428.658,"e":432.438},{"s":432.998,"e":435.678},{"s":436.478,"e":438.138},{"s":438.138,"e":439.938},{"s":439.938,"e":442.218},{"s":442.798,"e":446.078},{"s":446.078,"e":447.218},{"s":448.05,"e":450.31},{"s":450.83,"e":452.17},{"s":453.03,"e":454.21},{"s":454.51,"e":456.63},{"s":456.63,"e":459.39},{"s":459.67,"e":462.01},{"s":462.01,"e":464.35},{"s":465.07,"e":466.73},{"s":467.35,"e":468.95},{"s":468.95,"e":470.29},{"s":470.85,"e":472.41},{"s":473.05,"e":474.57},{"s":474.57,"e":477.45},{"s":477.45,"e":479.51},{"s":480.21,"e":481.91},{"s":481.91,"e":515.178}];
+        CAPS.forEach((g, i) => {
+          const el = document.getElementById('cap-' + i);
+          tl.fromTo(el, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, g.s);
+          tl.to(el, { opacity: 0, duration: 0.12 }, g.e - 0.12);
+          tl.set(el, { opacity: 0, visibility: 'hidden' }, g.e);
+        });
+        setTimeout(() => {
+          CAPS.forEach((g, i) => {
+            const el = document.getElementById('cap-' + i);
+            if (getComputedStyle(el).opacity === '1' && tl.time() > g.e)
+              console.warn('caption still visible past end:', i);
+          });
+        }, 0);
+        window.__timelines['captions'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

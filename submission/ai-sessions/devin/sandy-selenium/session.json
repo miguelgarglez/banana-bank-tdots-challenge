@@ -1,0 +1,18 @@
+{
+  "id": "sandy-selenium",
+  "working_directory": "/Users/miguelgarglez/Developer/hackathon-tdots",
+  "backend_type": "windsurf",
+  "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+  "agent_mode": "accept-edits",
+  "created_at": "2026-10-11T11:18:18+00:00",
+  "last_activity_at": "2026-10-11T14:40:33+00:00",
+  "title": "Ajustar SVG de la banana y corregir loader: giro asimétrico",
+  "main_chain_id": 150,
+  "shell_last_seen_index": 0,
+  "workspace_dirs": "[]",
+  "hidden": 0,
+  "metadata": "{\"total_credit_cost\":0,\"total_acu_cost\":0.0,\"client_meta\":{\"cognition.ai/requestingTabId\":\"new-1791717342912-2jvqmh5ca\",\"cognition.ai/worktreeFor\":null}}",
+  "subagents": [
+    "sidekick"
+  ]
+}

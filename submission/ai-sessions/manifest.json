@@ -1,6 +1,9 @@
 {
-  "generated_at": "2026-10-10T18:59:15.076303+00:00",
-  "project_roots": ["/Users/miguelgarglez/Developer/hackathon-tdots"],
+  "generated_at": "2026-10-11T20:21:51.757439+00:00",
+  "project_roots": [
+    "/Users/miguelgarglez/Developer/hackathon-tdots",
+    "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate"
+  ],
   "since": null,
   "sessions": [
     {
@@ -10,8 +13,8 @@
       "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
       "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
       "start": "2026-10-10T10:31:38+00:00",
-      "end": "2026-10-10T18:59:12+00:00",
-      "nodes": 3316,
+      "end": "2026-10-11T11:27:32+00:00",
+      "nodes": 5013,
       "subagent_branches": 1,
       "path": "devin/righteous-nest"
     },
@@ -22,7 +25,7 @@
       "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
       "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
       "start": "2026-10-10T10:49:02+00:00",
-      "end": "2026-10-10T11:05:04+00:00",
+      "end": "2026-10-11T11:19:43+00:00",
       "nodes": 76,
       "subagent_branches": 0,
       "path": "devin/best-account"
@@ -76,7 +79,7 @@
       "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
       "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
       "start": "2026-10-10T13:17:11+00:00",
-      "end": "2026-10-10T13:20:53+00:00",
+      "end": "2026-10-11T11:19:46+00:00",
       "nodes": 67,
       "subagent_branches": 0,
       "path": "devin/pinto-night"
@@ -113,10 +116,60 @@
       "end": "2026-10-10T18:35:04.030000+00:00",
       "messages": 651,
       "path": "cursor/303aa08e-966e-4010-9a45-7da4ed161f62"
+    },
+    {
+      "agent": "devin",
+      "id": "maze-muse",
+      "title": "Ajustar anillos de foco en campos de texto para accesibilidad visual",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-11T10:23:43+00:00",
+      "end": "2026-10-11T19:21:49+00:00",
+      "nodes": 2176,
+      "subagent_branches": 1,
+      "path": "devin/maze-muse"
+    },
+    {
+      "agent": "devin",
+      "id": "sandy-selenium",
+      "title": "Ajustar SVG de la banana y corregir loader: giro asimétrico",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-11T11:18:18+00:00",
+      "end": "2026-10-11T14:40:33+00:00",
+      "nodes": 151,
+      "subagent_branches": 1,
+      "path": "devin/sandy-selenium"
+    },
+    {
+      "agent": "devin",
+      "id": "romantic-sense",
+      "title": "Crear página 404 sencilla con enlace a inicio",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-11T11:19:37+00:00",
+      "end": "2026-10-11T11:28:14+00:00",
+      "nodes": 138,
+      "subagent_branches": 1,
+      "path": "devin/romantic-sense"
+    },
+    {
+      "agent": "devin",
+      "id": "laser-mint",
+      "title": "Preparar entrega del hackathon t·Dots Banana Candidate",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-11T14:53:16+00:00",
+      "end": "2026-10-11T20:21:49+00:00",
+      "nodes": 726,
+      "subagent_branches": 1,
+      "path": "devin/laser-mint"
     }
   ],
   "secret_scan": {
-    "devin/righteous-nest/nodes.jsonl": 2,
+    "devin/maze-muse/nodes.jsonl": 4,
+    "devin/righteous-nest/nodes.jsonl": 4,
+    "devin/laser-mint/nodes.jsonl": 31,
     "cursor/3263249d-4087-4aa4-866d-705fd32afbb0/messages.jsonl": 4,
     "cursor/303aa08e-966e-4010-9a45-7da4ed161f62/messages.jsonl": 2
   }

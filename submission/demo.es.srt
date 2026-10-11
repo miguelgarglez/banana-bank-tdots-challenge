@@ -1,0 +1,679 @@
+1
+00:00:00,000 --> 00:00:01,300
+Hola, soy Miguel.
+
+2
+00:00:02,080 --> 00:00:03,620
+Este es mi trabajo para el reto
+
+3
+00:00:03,620 --> 00:00:04,440
+de Banana Bank:
+
+4
+00:00:05,160 --> 00:00:07,200
+un banco ficticio que quiere lanzar su
+
+5
+00:00:07,200 --> 00:00:09,580
+asistente de inteligencia artificial el lunes.
+
+6
+00:00:10,520 --> 00:00:12,600
+En seis minutos os cuento qué encontré,
+
+7
+00:00:13,260 --> 00:00:15,940
+qué arreglé, qué construí y cómo lo
+
+8
+00:00:15,940 --> 00:00:20,330
+comprobé. La aplicación es un Next.js con un
+
+9
+00:00:20,330 --> 00:00:22,310
+agente que habla con un banco externo
+
+10
+00:00:22,310 --> 00:00:23,730
+por una API firmada.
+
+11
+00:00:25,150 --> 00:00:27,050
+El simulador del banco es intocable:
+
+12
+00:00:28,010 --> 00:00:30,350
+en la evaluación pueden sustituirlo por otro
+
+13
+00:00:30,350 --> 00:00:31,630
+con el mismo contrato.
+
+14
+00:00:33,270 --> 00:00:34,710
+Mi método fue siempre el mismo.
+
+15
+00:00:35,850 --> 00:00:38,130
+Primero reproducir el fallo y guardar la
+
+16
+00:00:38,130 --> 00:00:41,030
+prueba. Después escribir un test que falla,
+
+17
+00:00:41,850 --> 00:00:43,370
+arreglar, y ver el test pasar.
+
+18
+00:00:44,090 --> 00:00:47,030
+Luego repetir la misma reproducción en la
+
+19
+00:00:47,030 --> 00:00:48,290
+API y en el navegador.
+
+20
+00:00:49,670 --> 00:00:50,170
+Y al final,
+
+21
+00:00:50,670 --> 00:00:52,850
+dos rondas de revisión independiente con otros
+
+22
+00:00:52,850 --> 00:00:56,030
+modelos, que encontraron defectos reales que también
+
+23
+00:00:56,030 --> 00:00:59,570
+corregí. El fallo más grave es de dinero.
+
+24
+00:01:00,350 --> 00:01:02,350
+Cuando el banco cobra pero pierde la
+
+25
+00:01:02,350 --> 00:01:05,530
+respuesta, la aplicación reintentaba con una referencia
+
+26
+00:01:05,530 --> 00:01:08,250
+nueva. El banco deduplica por referencia,
+
+27
+00:01:08,810 --> 00:01:10,490
+así que la veía como otra operación.
+
+28
+00:01:11,410 --> 00:01:13,610
+Lo reproduje con el escenario de respuesta
+
+29
+00:01:13,610 --> 00:01:17,070
+perdida: una orden de diez euros movió veinte,
+
+30
+00:01:17,570 --> 00:01:20,490
+el banco registró dos operaciones y la
+
+31
+00:01:20,490 --> 00:01:21,730
+aplicación mostró una sola,
+
+32
+00:01:22,210 --> 00:01:25,610
+completada. El cliente y el operador no podían
+
+33
+00:01:25,610 --> 00:01:27,190
+verlo. El arreglo:
+
+34
+00:01:27,790 --> 00:01:29,550
+una referencia estable por intención.
+
+35
+00:01:30,470 --> 00:01:31,430
+Ante un error ambiguo,
+
+36
+00:01:31,790 --> 00:01:34,090
+la aplicación consulta la operación por esa
+
+37
+00:01:34,090 --> 00:01:35,670
+referencia antes de decidir.
+
+38
+00:01:36,270 --> 00:01:37,870
+Si existe, está completada.
+
+39
+00:01:38,550 --> 00:01:39,930
+Si el banco dice que no la
+
+40
+00:01:39,930 --> 00:01:42,030
+tiene, reintenta con la misma referencia.
+
+41
+00:01:42,730 --> 00:01:44,050
+Si tampoco puede verificar,
+
+42
+00:01:44,390 --> 00:01:45,910
+la deja en estado desconocido,
+
+43
+00:01:46,630 --> 00:01:47,190
+nunca en fallida,
+
+44
+00:01:47,510 --> 00:01:49,510
+y la resuelve después contra el libro
+
+45
+00:01:49,510 --> 00:01:52,970
+mayor. Mientras una operación equivalente siga sin resolver,
+
+46
+00:01:53,390 --> 00:01:54,970
+se bloquea cualquier otra igual.
+
+47
+00:01:54,970 --> 00:01:57,770
+Y un timeout o una respuesta ilegible
+
+48
+00:01:57,770 --> 00:01:59,510
+ya no se tratan como rechazo.
+
+49
+00:02:00,290 --> 00:02:01,730
+El segundo fallo:
+
+50
+00:02:01,930 --> 00:02:04,770
+decir 'envía cinco euros a Bruno'
+
+51
+00:02:05,510 --> 00:02:08,270
+ejecutaba la transferencia en el mismo turno,
+
+52
+00:02:08,530 --> 00:02:10,310
+sin resumen ni confirmación.
+
+53
+00:02:11,390 --> 00:02:13,250
+Ahora todo el dinero pasa por una
+
+54
+00:02:13,250 --> 00:02:15,790
+única puerta. El agente propone:
+
+55
+00:02:15,790 --> 00:02:19,070
+origen, destino, importe y concepto,
+
+56
+00:02:19,330 --> 00:02:21,230
+y un código de seis caracteres.
+
+57
+00:02:21,630 --> 00:02:24,210
+Y la confirmación la verifica el servidor,
+
+58
+00:02:24,850 --> 00:02:25,390
+no el modelo.
+
+59
+00:02:26,170 --> 00:02:28,850
+Por chat, el mensaje del cliente tiene
+
+60
+00:02:28,850 --> 00:02:29,750
+que ser el código,
+
+61
+00:02:29,750 --> 00:02:30,750
+y nada más.
+
+62
+00:02:31,510 --> 00:02:32,990
+Un 'sí' a secas se rechaza.
+
+63
+00:02:33,930 --> 00:02:36,030
+Una negación que mencione el código también.
+
+64
+00:02:37,050 --> 00:02:37,510
+Desde el panel,
+
+65
+00:02:37,870 --> 00:02:39,590
+el botón de confirmar es la otra
+
+66
+00:02:39,590 --> 00:02:41,930
+vía, y las dos consumen la propuesta
+
+67
+00:02:41,930 --> 00:02:42,930
+una sola vez.
+
+68
+00:02:43,810 --> 00:02:45,990
+Las propuestas caducan a los diez minutos,
+
+69
+00:02:46,570 --> 00:02:48,010
+el importe tiene que coincidir,
+
+70
+00:02:48,630 --> 00:02:50,750
+y el formulario manual pasa por la
+
+71
+00:02:50,750 --> 00:02:54,110
+misma puerta. El tercer bloque es el agente y
+
+72
+00:02:54,110 --> 00:02:57,570
+la búsqueda. El asistente escribía código Python si se
+
+73
+00:02:57,570 --> 00:02:59,690
+lo pedían, y el prompt le animaba
+
+74
+00:02:59,690 --> 00:03:02,690
+a rellenar huecos con 'prácticas bancarias comunes'.
+
+75
+00:03:03,430 --> 00:03:06,910
+Además, los ochenta documentos comparten párrafos de
+
+76
+00:03:06,910 --> 00:03:09,570
+plantilla idénticos, y el troceado por caracteres
+
+77
+00:03:09,570 --> 00:03:12,630
+producía fragmentos iguales sin título ni vigencia.
+
+78
+00:03:13,370 --> 00:03:15,150
+Ahora el prompt acota el alcance,
+
+79
+00:03:16,030 --> 00:03:17,550
+exige citar documento y versión,
+
+80
+00:03:17,550 --> 00:03:19,810
+y trata lo caducado como histórico.
+
+81
+00:03:20,370 --> 00:03:23,230
+El troceado respeta párrafos y lleva los
+
+82
+00:03:23,230 --> 00:03:24,750
+metadatos en cada fragmento,
+
+83
+00:03:24,750 --> 00:03:27,510
+y la búsqueda excluye por defecto lo
+
+84
+00:03:27,510 --> 00:03:28,530
+que ya no está en vigor.
+
+85
+00:03:29,230 --> 00:03:31,570
+El resultado: rechaza lo que no es banca,
+
+86
+00:03:32,030 --> 00:03:34,450
+no inventa, y distingue la comisión histórica
+
+87
+00:03:34,450 --> 00:03:35,930
+de la actual con sus citas.
+
+88
+00:03:36,770 --> 00:04:44,170
+Para la parte creativa elegí al operador,
+
+89
+00:04:45,170 --> 00:04:47,770
+La vista del caso es ahora una
+
+90
+00:04:47,770 --> 00:04:48,910
+herramienta de trabajo.
+
+91
+00:04:49,730 --> 00:04:52,430
+Una bandeja con los casos abiertos y
+
+92
+00:04:52,430 --> 00:04:55,390
+resueltos. Arriba, el chequeo de dinero:
+
+93
+00:04:56,030 --> 00:04:58,290
+la discrepancia entre lo que registró la
+
+94
+00:04:58,290 --> 00:05:00,270
+aplicación y lo que dice el banco,
+
+95
+00:05:00,730 --> 00:05:02,390
+con el arreglo en el mismo sitio.
+
+96
+00:05:03,550 --> 00:05:05,550
+Debajo, una sola línea de tiempo:
+
+97
+00:05:06,590 --> 00:05:09,210
+mensajes, actividad del agente en palabras llanas,
+
+98
+00:05:10,150 --> 00:05:12,150
+entradas del banco e hitos del caso.
+
+99
+00:05:12,530 --> 00:05:15,390
+El informe del copiloto es una tarjeta
+
+100
+00:05:15,390 --> 00:05:17,990
+con un borrador de respuesta editable y
+
+101
+00:05:17,990 --> 00:05:19,670
+las fuentes citadas.
+
+102
+00:05:20,170 --> 00:05:21,730
+Y al aplicar la reconciliación,
+
+103
+00:05:22,230 --> 00:05:24,070
+la fila pasa a verde y queda
+
+104
+00:05:24,070 --> 00:05:25,030
+el evento auditado.
+
+105
+00:05:26,026 --> 00:05:27,486
+Y una segunda capacidad,
+
+106
+00:05:28,526 --> 00:05:29,466
+esta para el cliente:
+
+107
+00:05:30,166 --> 00:05:32,586
+las transferencias ocurren dentro de la conversación.
+
+108
+00:05:33,846 --> 00:05:36,206
+Antes, el modelo tenía que extraer cuatro
+
+109
+00:05:36,206 --> 00:05:37,346
+datos del texto libre;
+
+110
+00:05:38,106 --> 00:05:38,926
+si faltaba uno,
+
+111
+00:05:39,546 --> 00:05:40,926
+preguntaba una y otra vez,
+
+112
+00:05:41,566 --> 00:05:43,506
+y podía inventarse el importe.
+
+113
+00:05:44,046 --> 00:05:45,946
+Ahora el agente tiene una herramienta de
+
+114
+00:05:45,946 --> 00:05:48,546
+borrador: detecta la intención y lo que ya
+
+115
+00:05:48,546 --> 00:05:49,006
+se ha dicho,
+
+116
+00:05:49,386 --> 00:05:51,646
+y abre una tarjeta editable debajo de
+
+117
+00:05:51,646 --> 00:05:52,986
+su respuesta con lo que falta.
+
+118
+00:05:53,666 --> 00:05:55,806
+Es el mismo componente que la pestaña
+
+119
+00:05:55,806 --> 00:05:58,226
+de transferencias, y pasa por borrador,
+
+120
+00:05:58,846 --> 00:06:00,966
+revisión y enviado en el mismo sitio,
+
+121
+00:06:01,666 --> 00:06:02,306
+con el código,
+
+122
+00:06:02,726 --> 00:06:04,926
+la cuenta atrás de caducidad y el
+
+123
+00:06:04,926 --> 00:06:07,746
+saldo resultante. El modelo no toca el dinero:
+
+124
+00:06:08,486 --> 00:06:09,926
+la propuesta, el código,
+
+125
+00:06:10,286 --> 00:06:12,786
+la caducidad y el uso único siguen
+
+126
+00:06:12,786 --> 00:06:13,686
+siendo del servidor.
+
+127
+00:06:14,446 --> 00:06:16,126
+Y como las tarjetas se derivan de
+
+128
+00:06:16,126 --> 00:06:17,406
+las intenciones reales,
+
+129
+00:06:17,926 --> 00:06:21,466
+una conversación reabierta muestra cada transferencia en
+
+130
+00:06:21,466 --> 00:06:22,426
+su estado verdadero,
+
+131
+00:06:22,866 --> 00:06:24,386
+junto al mensaje que la creó.
+
+132
+00:06:25,338 --> 00:06:27,558
+El starter traía trece pruebas;
+
+133
+00:06:28,298 --> 00:06:29,458
+ahora hay setenta y ocho,
+
+134
+00:06:30,118 --> 00:06:32,078
+y cada arreglo tiene su test que
+
+135
+00:06:32,078 --> 00:06:35,658
+fallaba antes. Las reproducciones de antes y después,
+
+136
+00:06:36,178 --> 00:06:37,718
+por API y en navegador,
+
+137
+00:06:38,438 --> 00:06:39,958
+están en la carpeta de evidencias,
+
+138
+00:06:40,298 --> 00:06:42,798
+y cada bloque de interfaz tiene un
+
+139
+00:06:42,798 --> 00:06:45,318
+script de Playwright que lo recorre y
+
+140
+00:06:45,318 --> 00:06:48,978
+guarda capturas. Pedí tres rondas de revisión a otros
+
+141
+00:06:48,978 --> 00:06:52,198
+modelos. Encontraron cosas que yo no había visto:
+
+142
+00:06:52,498 --> 00:06:55,298
+que la confirmación aún dependía del criterio
+
+143
+00:06:55,298 --> 00:06:57,938
+del modelo, que una operación en estado
+
+144
+00:06:57,938 --> 00:07:01,718
+desconocido podía acabar duplicada al proponerla de
+
+145
+00:07:01,718 --> 00:07:03,858
+nuevo, o que una negación que citara
+
+146
+00:07:03,858 --> 00:07:05,558
+el código pasaba el control.
+
+147
+00:07:06,438 --> 00:07:08,658
+Todo eso está corregido y cubierto por
+
+148
+00:07:08,658 --> 00:07:12,438
+pruebas. Después, con el comportamiento ya fijado,
+
+149
+00:07:12,998 --> 00:07:15,678
+reorganicé la aplicación sin cambiar un píxel:
+
+150
+00:07:16,478 --> 00:07:18,138
+una tabla de rutas por dominio en
+
+151
+00:07:18,138 --> 00:07:19,938
+la API, tokens de diseño,
+
+152
+00:07:19,938 --> 00:07:22,218
+y la vista partida en componentes.
+
+153
+00:07:22,798 --> 00:07:26,078
+Lo comprobé con capturas comparadas píxel a
+
+154
+00:07:26,078 --> 00:07:27,218
+píxel en cada paso.
+
+155
+00:07:28,050 --> 00:07:30,310
+Después, rutas reales:
+
+156
+00:07:30,830 --> 00:07:32,170
+cada vista tiene su dirección;
+
+157
+00:07:33,030 --> 00:07:34,210
+recargar mantiene la persona,
+
+158
+00:07:34,510 --> 00:07:36,630
+la conversación, el documento o el caso
+
+159
+00:07:36,630 --> 00:07:39,390
+abierto; atrás y adelante funcionan;
+
+160
+00:07:39,670 --> 00:07:42,010
+y una ruta inexistente tiene su propia
+
+161
+00:07:42,010 --> 00:07:44,350
+página. Y los detalles que no se ven:
+
+162
+00:07:45,070 --> 00:07:46,730
+un selector accesible con teclado,
+
+163
+00:07:47,350 --> 00:07:48,950
+un anillo de foco que solo aparece
+
+164
+00:07:48,950 --> 00:07:50,290
+al navegar con teclado,
+
+165
+00:07:50,850 --> 00:07:52,410
+importes que deslizan sus dígitos,
+
+166
+00:07:53,050 --> 00:07:54,570
+citas que son chips y abren el
+
+167
+00:07:54,570 --> 00:07:57,450
+documento, un corpus saneado de ochenta documentos
+
+168
+00:07:57,450 --> 00:07:59,510
+casi iguales a cuarenta y seis distintos,
+
+169
+00:08:00,210 --> 00:08:01,910
+y respeto a la preferencia de movimiento
+
+170
+00:08:01,910 --> 00:08:35,178
+reducido. Queda fuera, por tiempo,

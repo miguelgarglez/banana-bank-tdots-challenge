@@ -1,0 +1,18 @@
+{
+  "id": "laser-mint",
+  "working_directory": "/Users/miguelgarglez/Developer/hackathon-tdots",
+  "backend_type": "windsurf",
+  "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+  "agent_mode": "accept-edits",
+  "created_at": "2026-10-11T14:53:16+00:00",
+  "last_activity_at": "2026-10-11T20:21:49+00:00",
+  "title": "Preparar entrega del hackathon t·Dots Banana Candidate",
+  "main_chain_id": 724,
+  "shell_last_seen_index": 0,
+  "workspace_dirs": "[]",
+  "hidden": 0,
+  "metadata": "{\"total_credit_cost\":0,\"total_acu_cost\":0.0,\"client_meta\":{\"cognition.ai/requestingTabId\":\"new-1791730320350-z5l26yhfv\",\"cognition.ai/worktreeFor\":null}}",
+  "subagents": [
+    "sidekick"
+  ]
+}

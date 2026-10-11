@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: #f8f6ef;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            sans-serif;
+        }
+        #e07b-eyebrow {
+          position: absolute;
+          top: 48px;
+          left: 96px;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: #6b7572;
+        }
+        #e07b-title {
+          position: absolute;
+          top: 78px;
+          left: 96px;
+          font-size: 44px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: #1f3d35;
+        }
+        #e07b-chips {
+          position: absolute;
+          right: 90px;
+          top: 84px;
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+        }
+        .e07b-chip {
+          font-family: monospace;
+          font-size: 18px;
+          background: #1f3d35;
+          color: #f8f6ef;
+          padding: 8px 16px;
+          border-radius: 10px;
+          width: fit-content;
+        }
+        #e07b-frame {
+          position: absolute;
+          top: 150px;
+          left: 50%;
+          margin-left: -560px;
+          width: 1120px;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 30px 80px rgba(20, 32, 28, 0.18);
+          background: #fff;
+        }
+        #e07b-bar {
+          height: 44px;
+          background: #efede4;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0 18px;
+        }
+        .e07b-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #d6d2c4;
+        }
+        #e07b-url {
+          margin-left: 14px;
+          font-family: monospace;
+          font-size: 18px;
+          color: #5d6b66;
+          background: #f8f6ef;
+          border-radius: 999px;
+          padding: 4px 18px;
+        }
+        #e07b-screen {
+          position: relative;
+          width: 1120px;
+          height: 700px;
+          overflow: hidden;
+        }
+        #e07b-screen video {
+          position: absolute;
+          inset: 0;
+          width: 1120px;
+          height: 700px;
+          object-fit: cover;
+          display: block;
+        }
+        #e07b-grid {
+          position: absolute;
+          left: 90px;
+          right: 90px;
+          top: 190px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 26px;
+          opacity: 0;
+        }
+        .e07b-tile {
+          background: #fff;
+          border: 1px solid #e3e0d6;
+          border-radius: 18px;
+          overflow: hidden;
+          box-shadow: 0 14px 34px rgba(31, 61, 53, 0.1);
+          opacity: 0;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+        }
+        .e07b-tile .e07b-media {
+          position: relative;
+          flex: 1;
+          overflow: hidden;
+          background: #efece2;
+        }
+        .e07b-tile .e07b-media video,
+        .e07b-tile .e07b-media img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top left;
+          display: block;
+        }
+        .e07b-tile .e07b-media img.e07b-contain {
+          object-fit: contain;
+          padding: 18px;
+        }
+        .e07b-tile h4 {
+          font-size: 24px;
+          font-weight: 700;
+          color: #1f3d35;
+          padding: 16px 22px;
+        }
+        .e07b-text {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          text-align: center;
+          padding: 20px;
+        }
+        .e07b-big {
+          font-size: 72px;
+          font-weight: 800;
+          color: #1f3d35;
+          letter-spacing: -0.03em;
+        }
+        .e07b-big span {
+          color: #c9a227;
+        }
+        .e07b-sub {
+          font-size: 22px;
+          color: #5d6b66;
+          font-weight: 600;
+          line-height: 1.3;
+        }
+      </style>
+      <div id="root" data-composition-id="e07b" data-width="1920" data-height="1080">
+        <div id="e07b-eyebrow">CALIDAD</div>
+        <div id="e07b-title">Rutas reales y detalles</div>
+        <div id="e07b-chips">
+          <div class="e07b-chip">app/(app)/</div>
+          <div class="e07b-chip">app/styles/motion.css</div>
+          <div class="e07b-chip">app/components/Markdown.tsx</div>
+        </div>
+        <div id="e07b-frame">
+          <div id="e07b-bar">
+            <span class="e07b-dot"></span><span class="e07b-dot"></span><span class="e07b-dot"></span>
+            <span id="e07b-url">banana.bank/overview</span>
+          </div>
+          <div id="e07b-screen">
+            <video
+              id="e07b-vid-routes"
+              class="clip"
+              src="assets/rec/routes-reload.mp4"
+              muted
+              data-start="1.5"
+              data-duration="19.83"
+            ></video>
+          </div>
+        </div>
+        <div id="e07b-grid">
+          <div class="e07b-tile">
+            <div class="e07b-media">
+              <img
+                class="clip"
+                src="assets/img/select-persona.png"
+                data-start="22.0"
+                data-duration="13.648"
+              />
+            </div>
+            <h4>Select accesible</h4>
+          </div>
+          <div class="e07b-tile">
+            <div class="e07b-media">
+              <img
+                class="clip e07b-contain"
+                src="assets/img/focus-tab.png"
+                data-start="22.0"
+                data-duration="13.648"
+              />
+            </div>
+            <h4>Foco solo con teclado</h4>
+          </div>
+          <div class="e07b-tile">
+            <div class="e07b-media">
+              <img class="clip" src="assets/img/tt-amount.png" data-start="25.2" data-duration="10.448" />
+              <video
+                id="e07b-vid-tt"
+                class="clip"
+                src="assets/rec/transfer-tab.mp4"
+                muted
+                data-start="22.0"
+                data-duration="3.0"
+                data-media-start="6.5"
+              ></video>
+            </div>
+            <h4>Dígitos que deslizan</h4>
+          </div>
+          <div class="e07b-tile">
+            <div class="e07b-media">
+              <img class="clip" src="assets/img/cit-last.png" data-start="28.2" data-duration="7.448" />
+              <video
+                id="e07b-vid-cit"
+                class="clip"
+                src="assets/rec/citations.mp4"
+                muted
+                data-start="22.0"
+                data-duration="6.0"
+                data-media-start="3.0"
+              ></video>
+            </div>
+            <h4>Citas como chips</h4>
+          </div>
+          <div class="e07b-tile">
+            <div class="e07b-text">
+              <div class="e07b-big">80 <span>→</span> 46</div>
+              <div class="e07b-sub">documentos casi iguales → distintos</div>
+            </div>
+            <h4>Corpus saneado</h4>
+          </div>
+          <div class="e07b-tile">
+            <div class="e07b-text">
+              <div class="e07b-big">◔</div>
+              <div class="e07b-sub">respeta la preferencia del sistema</div>
+            </div>
+            <h4>prefers-reduced-motion</h4>
+          </div>
+        </div>
+      </div>
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        const url = (t) => () => {
+          document.querySelector('#e07b-url').textContent = t;
+        };
+        tl.fromTo('#e07b-eyebrow', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.2);
+        tl.fromTo('#e07b-title', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.35);
+        tl.fromTo('#e07b-frame', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.1);
+        tl.fromTo('#e07b-chips', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.6);
+        // url pill follows the recording (video starts at 1.5)
+        tl.call(url('banana.bank/assistant/bee0b225'), null, 5.7);
+        tl.call(url('banana.bank/documents/aurora-fees-2026'), null, 11.4);
+        tl.call(url('banana.bank/no-existe'), null, 18.3);
+        tl.call(url('banana.bank/overview'), null, 20.0);
+        tl.to('#e07b-frame', { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, 21.3);
+        tl.to('#e07b-grid', { opacity: 1, duration: 0.3 }, 21.9);
+        tl.fromTo(
+          '.e07b-tile',
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.45, stagger: 0.35, ease: 'power3.out' },
+          22.0,
+        );
+        tl.to(['#e07b-eyebrow', '#e07b-title', '#e07b-chips', '#e07b-grid'], { opacity: 0, duration: 0.4 }, 35.2);
+        window.__timelines['e07b'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

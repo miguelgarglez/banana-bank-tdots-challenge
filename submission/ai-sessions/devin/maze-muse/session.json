@@ -1,0 +1,18 @@
+{
+  "id": "maze-muse",
+  "working_directory": "/Users/miguelgarglez/Developer/hackathon-tdots",
+  "backend_type": "windsurf",
+  "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+  "agent_mode": "accept-edits",
+  "created_at": "2026-10-11T10:23:43+00:00",
+  "last_activity_at": "2026-10-11T19:21:49+00:00",
+  "title": "Ajustar anillos de foco en campos de texto para accesibilidad visual",
+  "main_chain_id": 2175,
+  "shell_last_seen_index": 0,
+  "workspace_dirs": "[]",
+  "hidden": 0,
+  "metadata": "{\"total_credit_cost\":0,\"total_acu_cost\":0.0,\"client_meta\":{\"cognition.ai/requestingTabId\":\"new-1791713991690-it9l95z29\",\"cognition.ai/worktreeFor\":null}}",
+  "subagents": [
+    "sidekick"
+  ]
+}
