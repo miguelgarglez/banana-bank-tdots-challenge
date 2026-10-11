@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Person } from '../../src/types';
 import { api, type AnyRecord } from '../lib/api';
+import { parseAmount } from '../lib/transfer';
 
 export function useBananaApp() {
   const [people, setPeople] = useState<Person[]>([]),
@@ -25,19 +26,17 @@ export function useBananaApp() {
     [to, setTo] = useState(''),
     [amount, setAmount] = useState(''),
     [concept, setConcept] = useState('');
-  const activeConversation = useRef<string | null>(null),
-    manualIntentId = useRef<string | null>(null);
+  const [manualIntentId, setManualIntentId] = useState<string | null>(null),
+    [transferOutcome, setTransferOutcome] = useState<AnyRecord | null>(null);
+  const activeConversation = useRef<string | null>(null);
   const generation = useRef(0),
     messagesEnd = useRef<HTMLDivElement>(null);
   async function refresh(g = generation.current) {
     const data = await api('dashboard');
     if (g !== generation.current) return;
     setDashboard(data);
-    if (
-      manualIntentId.current &&
-      !data.approvals?.some((a: AnyRecord) => a.intent_id === manualIntentId.current)
-    )
-      manualIntentId.current = null;
+    if (manualIntentId && !data.approvals?.some((a: AnyRecord) => a.intent_id === manualIntentId))
+      setManualIntentId(null);
     if (data.accounts?.length)
       setFrom((v) => (data.accounts.some((a: AnyRecord) => a.id === v) ? v : data.accounts[0].id));
   }
@@ -63,6 +62,8 @@ export function useBananaApp() {
     setTo('');
     setAmount('');
     setConcept('');
+    setManualIntentId(null);
+    setTransferOutcome(null);
     setTab('overview');
     try {
       const result = await api('session', { userId: id });
@@ -182,34 +183,32 @@ export function useBananaApp() {
     setBusy(true);
     setError('');
     setNotice('');
+    const amountCents = parseAmount(amount);
+    if (amountCents === null) {
+      setError('Enter a valid amount.');
+      setBusy(false);
+      return;
+    }
     if (!to) {
       setError('Choose a recipient.');
       setBusy(false);
       return;
     }
     try {
-      if (!manualIntentId.current) manualIntentId.current = crypto.randomUUID();
+      const intentId = manualIntentId ?? crypto.randomUUID();
+      if (!manualIntentId) setManualIntentId(intentId);
+      const args = { fromAccountId: from, toAccountId: to, amountCents, concept };
       const result = await api('actions', {
         name: 'transfer_money',
-        intentId: manualIntentId.current,
-        arguments: {
-          fromAccountId: from,
-          toAccountId: to,
-          amountCents: Math.round(Number(amount.replace(',', '.')) * 100),
-          concept,
-        },
+        intentId,
+        arguments: args,
         conversationId,
       });
       if (g !== generation.current) return;
-      if (['completed', 'failed', 'blocked'].includes(result.status)) manualIntentId.current = null;
-      setNotice(
-        result.status === 'completed'
-          ? 'Transfer completed. You can check it in your activity.'
-          : result.status === 'requires_confirmation'
-            ? 'Review the proposal to confirm the transfer.'
-            : result.error || 'The operation is still pending.',
-      );
-      if (result.status === 'requires_confirmation') setTab('overview');
+      if (['completed', 'unknown', 'failed', 'blocked'].includes(result.status)) {
+        setTransferOutcome({ ...result, payload: args });
+        setManualIntentId(null);
+      }
       await refresh(g);
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
@@ -220,14 +219,20 @@ export function useBananaApp() {
   async function confirm(id: string) {
     const g = generation.current;
     try {
+      const approval = dashboard?.approvals?.find((a: AnyRecord) => a.id === id);
+      const isManual = approval?.intent_id === manualIntentId;
       const result = await api(`approvals/${id}/confirm`, {});
       if (g !== generation.current) return;
-      manualIntentId.current = null;
-      setNotice(
-        result.status === 'completed'
-          ? 'Transfer confirmed and completed.'
-          : result.error || result.status,
-      );
+      if (isManual) {
+        setTransferOutcome({ ...result, payload: approval.payload });
+        setManualIntentId(null);
+      } else {
+        setNotice(
+          result.status === 'completed'
+            ? 'Transfer confirmed and completed.'
+            : result.error || result.status,
+        );
+      }
       await refresh(g);
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
@@ -237,11 +242,21 @@ export function useBananaApp() {
     const g = generation.current;
     try {
       await api(`approvals/${id}/dismiss`, {});
-      if (g === generation.current) setNotice('Proposal dismissed.');
+      if (g !== generation.current) return;
+      if (dashboard?.approvals?.find((a: AnyRecord) => a.id === id)?.intent_id === manualIntentId)
+        setManualIntentId(null);
+      else setNotice('Proposal dismissed.');
       await refresh(g);
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
     }
+  }
+  function resetTransfer() {
+    setTransferOutcome(null);
+    setManualIntentId(null);
+    setTo('');
+    setAmount('');
+    setConcept('');
   }
   async function openCase(id: string) {
     const g = generation.current;
@@ -335,9 +350,11 @@ export function useBananaApp() {
     }
   }
   const resetManual = (fn: (v: string) => void) => (v: string) => {
-    manualIntentId.current = null;
+    setManualIntentId(null);
     fn(v);
   };
+  const manualApproval =
+    dashboard?.approvals?.find((a: AnyRecord) => a.intent_id === manualIntentId) ?? null;
   const accountLabel = (id: string) =>
     dashboard?.accounts?.find((x: AnyRecord) => x.id === id)?.label || id;
   const contactLabel = (id: string) => {
@@ -388,6 +405,9 @@ export function useBananaApp() {
     setAmount: resetManual(setAmount),
     concept,
     setConcept: resetManual(setConcept),
+    manualApproval,
+    transferOutcome,
+    resetTransfer,
     messagesEnd,
     nav,
     operator,

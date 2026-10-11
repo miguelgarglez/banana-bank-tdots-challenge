@@ -91,18 +91,25 @@ export default function Home() {
                   setConcept={app.setConcept}
                   onSubmit={app.submitTransfer}
                   onOverview={() => app.setTab('overview')}
-                />
-              )}
-              {app.dashboard.approvals?.length > 0 && app.tab !== 'chat' && (
-                <ApprovalsPanel
-                  approvals={app.dashboard.approvals}
-                  accountLabel={app.accountLabel}
-                  contactLabel={app.contactLabel}
+                  approval={app.manualApproval}
+                  outcome={app.transferOutcome}
                   onConfirm={app.confirm}
                   onDismiss={app.dismiss}
-                  busy={app.busy}
+                  onReset={app.resetTransfer}
                 />
               )}
+              {app.dashboard.approvals?.length > 0 &&
+                app.tab !== 'chat' &&
+                app.tab !== 'transfer' && (
+                  <ApprovalsPanel
+                    approvals={app.dashboard.approvals}
+                    accountLabel={app.accountLabel}
+                    contactLabel={app.contactLabel}
+                    onConfirm={app.confirm}
+                    onDismiss={app.dismiss}
+                    busy={app.busy}
+                  />
+                )}
               {app.dashboard.pendingOperations?.length > 0 && app.tab !== 'chat' && (
                 <PendingOperationsPanel
                   operations={app.dashboard.pendingOperations}

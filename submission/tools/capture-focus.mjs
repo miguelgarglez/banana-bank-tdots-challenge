@@ -107,14 +107,14 @@ await focusField('.transfer-form input[aria-label="Amount in euros"]');
 console.log('transfer amount:');
 await report('.transfer-form input[aria-label="Amount in euros"]');
 await shotField(
-  page.locator('.transfer-form label', { hasText: 'Amount in euros' }),
+  page.locator('.transfer-field', { has: page.locator('input[aria-label="Amount in euros"]') }),
   'c-transfer-amount-focus',
 );
-await focusField('.transfer-form label:has-text("Description") input');
+await focusField('input[aria-label="Description"]');
 console.log('transfer concept:');
-await report('.transfer-form label:has-text("Description") input');
+await report('input[aria-label="Description"]');
 await shotField(
-  page.locator('.transfer-form label', { hasText: 'Description' }),
+  page.locator('.transfer-field', { has: page.locator('input[aria-label="Description"]') }),
   'c-transfer-concept-focus',
 );
 

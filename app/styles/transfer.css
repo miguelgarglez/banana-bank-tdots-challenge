@@ -1,65 +1,301 @@
 .transfer-layout {
-  display: grid;
-  grid-template-columns: minmax(350px, 550px) 1fr;
-  gap: 50px;
+  max-width: 560px;
+  margin: 0 auto;
 }
-.transfer-form {
-  padding: 30px;
+.transfer-card {
+  background: var(--color-surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px;
 }
-.transfer-form h2 {
-  margin-bottom: 25px;
-  font-size: 20px;
+.transfer-card.phase-review {
+  border-color: var(--color-quote-border);
+  animation: proposal-pulse 900ms var(--ease-out) 1;
 }
-label {
+.transfer-card.phase-done {
+  border-color: var(--color-positive);
+}
+.transfer-card-body {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+@starting-style {
+  .transfer-card-body {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.transfer-field {
+  margin-bottom: 22px;
+}
+.field-label {
   display: block;
   font-size: 11px;
   font-weight: 600;
   color: var(--color-label);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
-label input {
-  display: block;
+.recipient-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.recipient-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 8px;
+  border: 1px solid var(--color-select-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--ink);
+  font-size: 12px;
+  transition:
+    border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease,
+    transform var(--dur-press) var(--ease-out);
+}
+.recipient-chip[aria-pressed='true'] {
+  border-color: var(--color-brand);
+  background: var(--color-nav-hover);
+}
+.account-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.account-pill {
+  padding: 7px 12px;
+  border: 1px solid var(--color-select-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-select-text);
+  font-size: 11px;
+  transition:
+    border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease,
+    transform var(--dur-press) var(--ease-out);
+}
+.account-pill[aria-pressed='true'] {
+  border-color: var(--color-brand);
+  background: var(--color-nav-hover);
+}
+.amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.amount-hero-input {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+  transition: border-color var(--dur-fast) ease;
+}
+.amount-hero-input:focus-within {
+  border-color: var(--color-focus);
+}
+.amount-hero-input > span {
+  font-size: 24px;
+  color: var(--color-unit);
+}
+.amount-hero-input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--forest);
+  font-variant-numeric: tabular-nums;
+}
+.amount-after {
+  font-size: 10px;
+  color: var(--color-unit);
+  white-space: nowrap;
+}
+.amount-after.negative {
+  color: var(--color-danger);
+}
+.account-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.account-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-select-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-select-text);
+  font-size: 12px;
+  text-align: left;
+  transition:
+    border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease,
+    transform var(--dur-press) var(--ease-out);
+}
+.account-option[aria-checked='true'] {
+  border-color: var(--color-brand);
+  background: var(--color-nav-hover);
+}
+.account-option small {
+  color: var(--color-unit);
+}
+.account-option-balance {
+  font-variant-numeric: tabular-nums;
+  color: var(--forest);
+}
+.description-input {
   width: 100%;
-  margin-top: 8px;
   border: 1px solid var(--color-select-border);
   border-radius: var(--radius-sm);
   padding: 12px;
-  background: white;
+  background: var(--color-surface);
   color: var(--color-select-text);
   font-size: 12px;
 }
-.amount-input {
-  position: relative;
+.transfer-submit {
+  width: 100%;
+  margin-top: 4px;
 }
-.amount-input input {
-  font-size: 26px;
+.amount-hero {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--forest);
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0 18px;
 }
-.amount-input span {
-  position: absolute;
-  right: 17px;
-  top: 16px;
+.amount-hero.md {
+  font-size: 28px;
+}
+.transfer-route {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.transfer-route svg {
+  color: var(--color-unit);
+  flex-shrink: 0;
+}
+.transfer-route small {
+  display: block;
+  font-size: 10px;
+  color: var(--color-unit);
+}
+.transfer-concept {
+  font-size: 12px;
+  margin: 14px 0;
+}
+.transfer-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 16px 0;
+}
+.transfer-code-row small {
+  font-size: 10px;
+  color: var(--color-unit);
+  font-variant-numeric: tabular-nums;
+}
+.transfer-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.transfer-note-small {
+  display: block;
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--color-unit);
+}
+.done-check {
+  width: 44px;
+  height: 44px;
+  color: var(--color-positive);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 10px;
+}
+.done-check .done-check-mark {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: draw-check 400ms var(--ease-out) 120ms forwards;
+}
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.done-pending-icon {
+  display: inline-flex;
+  color: var(--color-unit);
+  margin-bottom: 10px;
+}
+.done-pending-icon svg {
+  width: 40px;
+  height: 40px;
+}
+.transfer-done-to {
+  font-size: 13px;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.transfer-done-ref {
   font-size: 11px;
   color: var(--color-unit);
 }
-.transfer-form .primary-button {
-  width: 100%;
-  margin-top: 5px;
+@media (hover: hover) and (pointer: fine) {
+  .recipient-chip:hover,
+  .account-pill:hover,
+  .account-option:hover {
+    background: var(--color-nav-hover);
+  }
 }
-.transfer-note {
-  padding-top: 35px;
-  color: var(--color-transfer-note);
+.recipient-chip:active,
+.account-pill:active,
+.account-option:active {
+  transform: scale(0.97);
 }
-.transfer-note > svg {
-  margin-bottom: 25px;
-  width: 32px;
-  height: 32px;
-}
-.transfer-note h2 {
-  font-size: 28px;
-  line-height: 1.3;
-}
-.transfer-note p {
-  font-size: 12px;
-  max-width: 275px;
-  line-height: 1.8;
+@media (prefers-reduced-motion: reduce) {
+  .transfer-card-body {
+    transition: opacity var(--dur-fast) ease;
+    transform: none;
+  }
+  @starting-style {
+    .transfer-card-body {
+      transform: none;
+    }
+  }
+  .done-check .done-check-mark {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .recipient-chip:active,
+  .account-pill:active,
+  .account-option:active {
+    transform: none;
+  }
 }

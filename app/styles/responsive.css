@@ -95,12 +95,6 @@
   .documents-layout {
     grid-template-columns: 1fr;
   }
-  .transfer-layout {
-    grid-template-columns: 1fr;
-  }
-  .transfer-note {
-    display: none;
-  }
   .date-chip,
   .demo-label {
     display: none;
@@ -263,11 +257,15 @@
   .search-form > svg {
     display: none;
   }
-  .transfer-form {
+  .transfer-card {
     padding: 20px;
   }
-  .transfer-layout {
-    display: block;
+  .recipient-chips {
+    flex-wrap: wrap;
+  }
+  .amount-hero-input input,
+  .amount-hero {
+    font-size: 32px;
   }
   footer {
     margin: 0 17px;

@@ -65,9 +65,10 @@ const ctx = await browser.newContext({
 });
 const page = await ctx.newPage();
 
-async function person(id) {
+async function person(name) {
   await page.goto(BASE, { waitUntil: 'networkidle' });
-  await page.selectOption('select[aria-label="Switch person"]', id);
+  await page.locator('.select-trigger[aria-label="Switch person"]').click();
+  await page.locator('.select-option', { hasText: name }).first().click();
   await page.waitForLoadState('networkidle');
 }
 async function nav(label) {
@@ -80,7 +81,7 @@ async function shot(name) {
   console.log(`captured ${name}.png`);
 }
 
-await person('lucia');
+await person('Lucía');
 await shot('lucia-overview');
 
 await nav('Assistant');
@@ -89,17 +90,14 @@ await page.waitForLoadState('networkidle');
 await shot('lucia-chat-dinner');
 
 await nav('Transfers');
-const contacts = await page.$$eval('.transfer-form select option', (els) =>
-  els.map((e) => ({ v: e.value, t: e.textContent })),
-);
-const bruno = contacts.find((o) => /Bruno/i.test(o.t));
-if (!bruno) throw new Error('Bruno contact not found');
-await page.locator('.transfer-form select').nth(1).selectOption(bruno.v);
+const bruno = page.locator('.recipient-chip', { hasText: 'Bruno' }).first();
+if (!(await bruno.isVisible().catch(() => false))) throw new Error('Bruno contact not found');
+await bruno.click();
+await page.waitForTimeout(300);
+if (await page.locator('.account-pill').first().isVisible())
+  await page.locator('.account-pill').first().click();
 await page.getByLabel('Amount in euros').fill('85');
-await page
-  .locator('.transfer-form label', { hasText: 'Description' })
-  .locator('input')
-  .fill('Team dinner');
+await page.getByLabel('Description').fill('Team dinner');
 await shot('lucia-transfers');
 
 await nav('Documents');
@@ -108,7 +106,7 @@ await page.getByRole('button', { name: /Aurora · current fees/ }).click();
 await page.waitForLoadState('networkidle');
 await shot('lucia-document-open');
 
-await person('marta');
+await person('Marta');
 await shot('marta-cases');
 await page.locator('.case-item', { hasText: 'Lucía' }).first().click();
 await page.waitForLoadState('networkidle');

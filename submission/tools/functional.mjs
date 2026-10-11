@@ -16,23 +16,34 @@ const browser = await chromium.launch();
 const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const log = (s) => console.log('OK', s);
 
+async function switchPerson(name) {
+  await page.locator('.select-trigger[aria-label="Switch person"]').click();
+  await page.locator('.select-option', { hasText: name }).first().click();
+  await page.waitForLoadState('networkidle');
+}
+
 await page.goto('http://127.0.0.1:3000', { waitUntil: 'networkidle' });
-await page.selectOption('select[aria-label="Switch person"]', 'lucia');
+await switchPerson('Lucía');
 await page.waitForSelector('text=Your accounts at a glance');
 log('lucia overview');
 
 await page.click('button.nav-item:has-text("Transfers")');
-await page.selectOption('form.transfer-form select >> nth=1', { index: 1 });
+const chip = page.locator('.recipient-chip', { hasText: 'Bruno' }).first();
+if (await chip.isVisible().catch(() => false)) await chip.click();
+else await page.locator('.recipient-chip').first().click();
+await page.waitForTimeout(300);
+if (await page.locator('.account-pill').first().isVisible())
+  await page.locator('.account-pill').first().click();
 await page.fill('input[aria-label="Amount in euros"]', '25');
-await page.fill('form.transfer-form label >> nth=3 >> input', 'P3 parity check');
-await page.click('button:has-text("Send transfer")');
-await page.waitForSelector('text=Proposals awaiting confirmation');
-log('proposal panel with code visible');
-await page.click('button:has-text("Confirm these details")');
-await page.waitForSelector('text=Transfer confirmed and completed.');
-log('transfer confirmed and completed');
+await page.fill('input[aria-label="Description"]', 'P3 parity check');
+await page.click('button:has-text("Review transfer")');
+await page.waitForSelector('.transfer-card.phase-review .confirmation-code');
+log('transfer card in review with code visible');
+await page.click('button:has-text("Confirm transfer")');
+await page.waitForSelector('.transfer-card.phase-done');
+log('transfer done (card confirmed)');
 
-await page.selectOption('select[aria-label="Switch person"]', 'marta');
+await switchPerson('Marta');
 await page.waitForSelector('text=Every case, a person.');
 await page.click('.case-item:has-text("dinner payment")');
 await page.waitForSelector('text=Latest message');
