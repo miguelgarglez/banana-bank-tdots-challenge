@@ -5,41 +5,42 @@ import CaseList from './CaseList';
 import { TextMorph } from 'torph/react';
 
 export default function CasesTab({
-  name,
   dashboard,
   people,
   selectedCase,
   brief,
   busy,
+  docs,
   onOpen,
   onClose,
   onReconcile,
   onDraft,
+  onOpenSource,
 }: {
-  name: string;
   dashboard: AnyRecord;
   people: Person[];
   selectedCase: AnyRecord | null;
   brief: AnyRecord | null;
   busy: boolean;
+  docs: AnyRecord[];
   onOpen: (id: string) => void;
   onClose: () => void;
   onReconcile: (intentId: string) => void;
   onDraft: () => void;
+  onOpenSource: (id: string) => void;
 }) {
   return (
-    <>
-      <div className="page-heading">
+    <div className="operator-layout">
+      <div className="page-heading operator-heading">
         <div>
           <div className="eyebrow">CUSTOMER SUPPORT</div>
           <h1>Every case, a person.</h1>
-          <p>Hello, {name.split(' ')[0]}. Here are your customer support cases.</p>
         </div>
         <div className="case-count">
           <strong>
             <TextMorph>
               {String(
-                dashboard.incidents?.filter((c: AnyRecord) => c.status === 'open').length || 0,
+                dashboard.incidents?.filter((c: AnyRecord) => c.status !== 'closed').length || 0,
               )}
             </TextMorph>
           </strong>
@@ -57,11 +58,13 @@ export default function CasesTab({
           selectedCase={selectedCase}
           brief={brief}
           busy={busy}
+          docs={docs}
           onClose={onClose}
           onReconcile={onReconcile}
           onDraft={onDraft}
+          onOpenSource={onOpenSource}
         />
       </div>
-    </>
+    </div>
   );
 }

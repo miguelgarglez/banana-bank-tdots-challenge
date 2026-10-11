@@ -255,7 +255,7 @@ nav .nav-item.active {
   border-radius: var(--radius-md);
   transition: background-color var(--dur-fast) ease;
 }
-.reconciliation-row.reconciled-flash {
+.ledger-row.reconciled-flash {
   animation: reconcile-flash 700ms var(--ease-out) 1;
 }
 @keyframes reconcile-flash {
@@ -399,7 +399,7 @@ nav .nav-item.active {
   }
   .stagger-in,
   .panel.approvals,
-  .reconciliation-row.reconciled-flash,
+  .ledger-row.reconciled-flash,
   .brief-skeleton i,
   .banana-loading .banana-shape,
   .banana-wiggle {

@@ -46,13 +46,13 @@ log('transfer done (card confirmed)');
 await switchPerson('Marta');
 await page.waitForSelector('text=Every case, a person.');
 await page.click('.case-item:has-text("dinner payment")');
-await page.waitForSelector('text=Latest message');
+await page.waitForSelector('.timeline');
 log('marta case open');
 await page.click('button:has-text("Draft a brief")');
 await page.waitForSelector('button:has-text("Copy reply")', { timeout: 60000 });
 log('brief drafted');
 await page.click('button:has-text("Apply reconciliation")');
-await page.waitForSelector('text=intent.reconciled', { timeout: 15000 });
+await page.waitForSelector('text=Reconciled by operator', { timeout: 15000 });
 log('reconciled');
 await browser.close();
 

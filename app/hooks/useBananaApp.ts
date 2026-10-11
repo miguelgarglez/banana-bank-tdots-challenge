@@ -349,7 +349,7 @@ export function useBananaApp() {
     setBusy(true);
     try {
       const d = await api(`incidents/${caseId}/brief`, {});
-      if (g === generation.current) setBrief({ ...d.brief, caseId });
+      if (g === generation.current) setBrief({ ...d.brief, caseId, model: d.model });
     } catch (e) {
       if (g === generation.current) setError((e as Error).message);
     } finally {

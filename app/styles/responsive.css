@@ -122,6 +122,25 @@
     min-height: 240px;
   }
 }
+@media (max-width: 850px) {
+  .main-shell.fixed-mode.fixed-cases {
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+  .fixed-cases main,
+  .fixed-cases .tab-enter,
+  .fixed-cases .operator-layout,
+  .fixed-cases .operator-grid {
+    display: block;
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+  .fixed-cases footer {
+    display: flex;
+  }
+}
 @media (max-width: 600px) {
   .sidebar {
     position: static;

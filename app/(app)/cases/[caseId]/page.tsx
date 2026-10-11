@@ -23,16 +23,17 @@ export default function CasePage() {
   return (
     <RoleGate role="operator">
       <CasesTab
-        name={app.current!.name}
         dashboard={app.dashboard!}
         people={app.people}
         selectedCase={app.selectedCase}
         brief={app.brief}
         busy={app.busy}
+        docs={app.docs}
         onOpen={app.openCase}
         onClose={app.closeCase}
         onReconcile={app.reconcileCase}
         onDraft={app.draftBrief}
+        onOpenSource={app.openSource}
       />
     </RoleGate>
   );

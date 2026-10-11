@@ -13,7 +13,7 @@ export default function Shell({ children }: { children: ReactNode }) {
   const app = useApp();
   const pathname = usePathname();
   const segment = pathname.split('/')[1] || 'overview';
-  const chatMode = segment === 'assistant' && !app.operator;
+  const fixedMode = segment === 'assistant' || segment === 'cases';
   return (
     <div className="app-shell">
       <Sidebar
@@ -23,7 +23,9 @@ export default function Shell({ children }: { children: ReactNode }) {
         conversationId={app.conversationId}
         onNew={app.newConversation}
       />
-      <div className={`main-shell${chatMode ? ' chat-mode' : ''}`}>
+      <div
+        className={`main-shell${fixedMode ? ' fixed-mode' : ''}${segment === 'cases' ? ' fixed-cases' : ''}`}
+      >
         <TopBar
           operator={app.operator}
           current={app.current}
