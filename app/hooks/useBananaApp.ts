@@ -177,6 +177,11 @@ export function useBananaApp() {
     setBusy(true);
     setError('');
     setNotice('');
+    if (!to) {
+      setError('Choose a recipient.');
+      setBusy(false);
+      return;
+    }
     try {
       if (!manualIntentId.current) manualIntentId.current = crypto.randomUUID();
       const result = await api('actions', {

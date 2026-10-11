@@ -1,9 +1,13 @@
+import type { Person } from '../../src/types';
 import type { AnyRecord } from '../lib/api';
 import { money } from '../lib/format';
+import Avatar from './Avatar';
 import Icon from './Icon';
+import Select from './Select';
 
 export default function TransferTab({
   dashboard,
+  people,
   from,
   to,
   amount,
@@ -17,6 +21,7 @@ export default function TransferTab({
   onOverview,
 }: {
   dashboard: AnyRecord;
+  people: Person[];
   from: string;
   to: string;
   amount: string;
@@ -49,24 +54,42 @@ export default function TransferTab({
           <h2>Your transfer details</h2>
           <label>
             From account
-            <select value={from} onChange={(e) => setFrom(e.target.value)} required>
-              {dashboard.accounts?.map((a: AnyRecord) => (
-                <option key={a.id} value={a.id}>
-                  {a.label} · {a.id} · {money(a.balanceCents)}
-                </option>
-              ))}
-            </select>
+            <Select
+              ariaLabel="From account"
+              value={from}
+              onChange={setFrom}
+              options={dashboard.accounts?.map((a: AnyRecord) => ({
+                value: a.id,
+                label: a.label,
+                description: `${a.id} · ${money(a.balanceCents)}`,
+                leading: <span className="account-leading">{a.label.slice(0, 1)}</span>,
+              }))}
+            />
           </label>
           <label>
             Recipient
-            <select value={to} onChange={(e) => setTo(e.target.value)} required>
-              <option value="">Select an account</option>
-              {dashboard.contacts?.map((a: AnyRecord) => (
-                <option key={a.id} value={a.id}>
-                  {a.name} · {a.label} · {a.id}
-                </option>
-              ))}
-            </select>
+            <Select
+              ariaLabel="Recipient"
+              placeholder="Select an account"
+              value={to}
+              onChange={setTo}
+              options={dashboard.contacts?.map((a: AnyRecord) => {
+                const person = people.find((p) => p.id === a.userId);
+                return {
+                  value: a.id,
+                  label: a.label,
+                  description: a.id,
+                  group: a.name,
+                  leading: (
+                    <Avatar
+                      initials={person?.initials ?? a.name.slice(0, 2)}
+                      color={person?.color}
+                      size={24}
+                    />
+                  ),
+                };
+              })}
+            />
           </label>
           <label>
             Amount in euros

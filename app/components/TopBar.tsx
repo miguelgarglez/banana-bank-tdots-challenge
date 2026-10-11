@@ -1,4 +1,6 @@
 import type { Person } from '../../src/types';
+import Avatar from './Avatar';
+import Select from './Select';
 
 export default function TopBar({
   operator,
@@ -21,34 +23,33 @@ export default function TopBar({
         <span className="avatar small" style={{ background: current?.color }}>
           {current?.initials || '·'}
         </span>
-        <select
-          aria-label="Switch person"
+        <Select
+          ariaLabel="Switch person"
+          variant="chrome"
           value={current?.id || ''}
-          disabled={!current}
-          onChange={(e) => onSelect(e.target.value)}
-        >
-          <option value="" disabled>
-            Loading…
-          </option>
-          <optgroup label="Customers">
-            {people
+          disabled={!people.length}
+          placeholder="Loading…"
+          onChange={onSelect}
+          options={[
+            ...people
               .filter((p) => p.role === 'customer')
-              .map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-          </optgroup>
-          <optgroup label="Operators">
-            {people
+              .map((p) => ({
+                value: p.id,
+                label: p.name,
+                group: 'Customers',
+                leading: <Avatar initials={p.initials} color={p.color} size={24} />,
+              })),
+            ...people
               .filter((p) => p.role === 'operator')
-              .map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} · Operator
-                </option>
-              ))}
-          </optgroup>
-        </select>
+              .map((p) => ({
+                value: p.id,
+                label: p.name,
+                description: 'Operator',
+                group: 'Operators',
+                leading: <Avatar initials={p.initials} color={p.color} size={24} />,
+              })),
+          ]}
+        />
       </div>
     </header>
   );

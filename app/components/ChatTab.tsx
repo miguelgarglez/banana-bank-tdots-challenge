@@ -3,6 +3,7 @@ import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
+import Select from './Select';
 
 export default function ChatTab({
   name,
@@ -61,18 +62,23 @@ export default function ChatTab({
       </div>
       <label className="conversation-picker">
         Conversation
-        <select
-          aria-label="Conversation"
+        <Select
+          ariaLabel="Conversation"
           value={conversationId || ''}
-          onChange={(e) => onOpen(e.target.value)}
-        >
-          <option value="">New conversation</option>
-          {conversations.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.title}
-            </option>
-          ))}
-        </select>
+          onChange={(v) => (v === '' ? onNew() : onOpen(v))}
+          options={[
+            {
+              value: '',
+              label: 'New conversation',
+              leading: <Icon name="chat" />,
+            },
+            ...conversations.map((c) => ({
+              value: c.id as string,
+              label: c.title as string,
+              description: date(c.created_at),
+            })),
+          ]}
+        />
       </label>
       <section className="chat-panel">
         <div className="chat-header">

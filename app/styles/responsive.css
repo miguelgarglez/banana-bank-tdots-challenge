@@ -111,9 +111,6 @@
   .breadcrumb {
     font-size: 10px;
   }
-  .persona-control select {
-    max-width: 165px;
-  }
   .page-heading {
     align-items: flex-start;
   }
@@ -187,10 +184,6 @@
   }
   .persona-control {
     gap: 5px;
-  }
-  .persona-control select {
-    font-size: 10px;
-    max-width: 155px;
   }
   main {
     padding: 25px 17px;

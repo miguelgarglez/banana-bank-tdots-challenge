@@ -29,6 +29,16 @@ export default function Icon({ name }: { name: string }) {
         <path d="m5 12 14 0m-6-6 6 6-6 6" />
       </>
     ),
+    chevron: (
+      <>
+        <path d="m6 9 6 6 6-6" />
+      </>
+    ),
+    check: (
+      <>
+        <path d="m5 12 5 5 9-11" />
+      </>
+    ),
     help: (
       <>
         <circle cx="12" cy="12" r="9" />

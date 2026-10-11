@@ -103,9 +103,7 @@
 .person-picker:focus-visible,
 .composer textarea:focus-visible,
 .search-form input:focus-visible,
-.transfer-form input:focus-visible,
-.transfer-form select:focus-visible,
-.conversation-picker select:focus-visible {
+.transfer-form input:focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }

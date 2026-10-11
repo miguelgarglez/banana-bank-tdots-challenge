@@ -44,14 +44,6 @@
   height: 30px;
   font-size: 10px;
 }
-.persona-control select {
-  border: 0;
-  background: transparent;
-  color: var(--color-control);
-  font-size: 12px;
-  max-width: 240px;
-  padding-right: 5px;
-}
 main {
   padding: 38px 43px 50px;
   min-height: calc(100vh - 152px);

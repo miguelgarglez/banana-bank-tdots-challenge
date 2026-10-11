@@ -60,6 +60,7 @@ Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capt
 - Micro-interacciones: `scale(0.97)` al pulsar, hovers sutiles solo en puntero fino, anillo de foco de 2 px coherente, indicador de navegación deslizante, entrada de pestaña con `@starting-style`, listas con stagger de 30 ms, burbujas que emergen y avisos que entran, salen y se auto-cierran a los 6 s.
 - Marca: el plátano es ahora un componente (`BananaMark`) que se balancea en las pantallas de espera, acompaña al "Checking…" del chat, hace una sacudida al pasar sobre el logo y es el favicon (`app/icon.svg`).
 - La propuesta de transferencia aparece además dentro de la conversación que la creó (importe, origen → destino, código y botón), y el titular puede descartarla con **Not now**: `POST /api/approvals/:id/dismiss` consume la aprobación, marca la intención `cancelled` y deja un evento `transfer.cancelled` auditado.
+- Selectores propios: los cuatro `<select>` nativos (persona, conversación, cuenta origen, destinatario) se sustituyen por un componente `Select` accesible (combobox/listbox, teclado completo, type-ahead) con avatares, saldos y grupos, y un popover que escala desde el disparador.
 - Accesibilidad: con `prefers-reduced-motion` desaparecen todos los movimientos de transformación y quedan solo cambios de opacidad y color.
 - Evidencias: `submission/evidencias/despues/19-ui-*.png`, `19-ui-microinteracciones.mp4` y la nota `19-ui-microinteracciones.md`.
 

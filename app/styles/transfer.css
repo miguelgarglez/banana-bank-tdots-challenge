@@ -17,8 +17,7 @@ label {
   color: var(--color-label);
   margin-bottom: 20px;
 }
-label input,
-label select {
+label input {
   display: block;
   width: 100%;
   margin-top: 8px;

@@ -78,6 +78,7 @@ export default function Home() {
               {app.tab === 'transfer' && !app.operator && (
                 <TransferTab
                   dashboard={app.dashboard}
+                  people={app.people}
                   from={app.from}
                   to={app.to}
                   amount={app.amount}
