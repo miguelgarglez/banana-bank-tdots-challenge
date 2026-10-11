@@ -284,8 +284,23 @@ nav .nav-item.active {
 .proposal-card small {
   color: var(--muted);
 }
-.proposal-card .primary-button {
-  align-self: flex-start;
+.proposal-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.proposal-card.leaving,
+.panel.approvals .leaving {
+  opacity: 0;
+  transform: scale(0.98);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-fast) ease;
+}
+.panel.approvals > div {
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-fast) ease;
 }
 .proposal-card.pending {
   border-style: dashed;

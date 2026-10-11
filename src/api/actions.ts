@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { appDb } from '../db';
 import { HttpError } from '../auth';
 import { transferMoney } from '../banking/actions';
+import { dismissProposal } from '../banking/authorization';
 import { runTool } from '../agent/tools';
 import { defineRoute } from './router';
 import { conversationFor } from './shared';
@@ -57,5 +58,9 @@ export const actionRoutes = [
         JSON.parse(approval.payload),
       ),
     );
+  }),
+  defineRoute('POST', 'approvals/:id/dismiss', 'any', async ({ json, current, params }) => {
+    if (current!.role !== 'customer') throw new HttpError(403, 'A customer is required.');
+    return json(dismissProposal(current!.id, params.id));
   }),
 ];

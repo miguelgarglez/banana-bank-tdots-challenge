@@ -223,6 +223,16 @@ export function useBananaApp() {
       if (g === generation.current) setError((e as Error).message);
     }
   }
+  async function dismiss(id: string) {
+    const g = generation.current;
+    try {
+      await api(`approvals/${id}/dismiss`, {});
+      if (g === generation.current) setNotice('Proposal dismissed.');
+      await refresh(g);
+    } catch (e) {
+      if (g === generation.current) setError((e as Error).message);
+    }
+  }
   async function openCase(id: string) {
     const g = generation.current;
     try {
@@ -377,6 +387,7 @@ export function useBananaApp() {
     openLibrary,
     submitTransfer,
     confirm,
+    dismiss,
     openCase,
     closeCase,
     reconcileCase,

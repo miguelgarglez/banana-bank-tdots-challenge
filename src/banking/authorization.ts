@@ -153,3 +153,31 @@ export async function authorizeTransfer(
     return fail('already_used', 'This proposal was already used.');
   return null;
 }
+export function dismissProposal(userId: string, approvalId: string) {
+  const db = appDb();
+  const approval = db
+    .prepare('SELECT * FROM approvals WHERE id=? AND user_id=?')
+    .get(approvalId, userId) as
+    { id: string; intent_id: string; consumed_at: string | null } | undefined;
+  if (!approval) throw new HttpError(404, 'Proposal not found.');
+  if (approval.consumed_at) throw new HttpError(409, 'This proposal was already used.');
+  const now = new Date().toISOString();
+  db.prepare('UPDATE approvals SET consumed_at=? WHERE id=?').run(now, approvalId);
+  const intent = db
+    .prepare('SELECT conversation_id FROM intents WHERE id=?')
+    .get(approval.intent_id) as { conversation_id: string | null } | undefined;
+  db.prepare(
+    "UPDATE intents SET status='cancelled' WHERE id=? AND status='awaiting_confirmation'",
+  ).run(approval.intent_id);
+  recordEvent(
+    {
+      userId,
+      conversationId: intent?.conversation_id ?? null,
+      runId: randomUUID(),
+      intentId: approval.intent_id,
+    },
+    'transfer.cancelled',
+    { approvalId, intentId: approval.intent_id, by: 'customer' },
+  );
+  return { status: 'cancelled', approvalId, intentId: approval.intent_id };
+}

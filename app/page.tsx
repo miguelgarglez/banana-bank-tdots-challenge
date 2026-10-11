@@ -62,6 +62,7 @@ export default function Home() {
                   accountLabel={app.accountLabel}
                   contactLabel={app.contactLabel}
                   onConfirm={app.confirm}
+                  onDismiss={app.dismiss}
                   conversations={app.conversations}
                   conversationId={app.conversationId}
                   messages={app.messages}
@@ -96,6 +97,7 @@ export default function Home() {
                   accountLabel={app.accountLabel}
                   contactLabel={app.contactLabel}
                   onConfirm={app.confirm}
+                  onDismiss={app.dismiss}
                   busy={app.busy}
                 />
               )}

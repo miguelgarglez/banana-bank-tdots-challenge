@@ -107,7 +107,8 @@ export async function sendMessage(userId: string, conversationId: string, conten
           .map((a) =>
             JSON.stringify({ approvalId: a.id, ...JSON.parse(a.payload), expiresAt: a.expires_at }),
           )
-          .join('\n');
+          .join('\n') +
+        '\nIf the customer declines or changes their mind, do not call any tool; tell them the proposal can be dismissed from the card or will expire in 10 minutes.';
     if (unconfirmed.length)
       instructions +=
         '\nUNCONFIRMED OPERATIONS (the bank has not confirmed these yet; never propose the same transfer again while listed; tell the customer it is being verified):\n' +

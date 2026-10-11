@@ -12,7 +12,8 @@ process.env.BANK_PORT = '4102';
 process.env.BANK_URL = 'http://127.0.0.1:4102';
 const { transferMoney } = await import('../src/banking/actions');
 const { resolveIntent } = await import('../src/banking/resolve');
-const { authorizeTransfer, confirmationCode } = await import('../src/banking/authorization');
+const { authorizeTransfer, confirmationCode, dismissProposal } =
+  await import('../src/banking/authorization');
 const { runTool } = await import('../src/agent/tools');
 const { appDb, closeAppDb } = await import('../src/db');
 const { bankDb, closeBankDb } = await import('../simulator/db');
@@ -432,6 +433,35 @@ test('a processing intent blocks an equivalent proposal', async () => {
   const proposal = (await transferMoney(ctx(randomUUID()), input)) as any;
   assert.equal(proposal.status, 'requires_confirmation');
   assert.equal(intent(stale).status, 'failed');
+});
+test('dismissing a proposal cancels it and blocks confirmation', async () => {
+  seedBank();
+  resetApp();
+  setScenario('normal');
+  const intentId = randomUUID();
+  const proposal = (await transferMoney(ctx(intentId), input)) as any;
+  assert.equal(proposal.status, 'requires_confirmation');
+  const out = dismissProposal('lucia', proposal.approvalId);
+  assert.equal(out.status, 'cancelled');
+  assert.ok(approval(proposal.approvalId).consumed_at);
+  assert.equal(intent(intentId).status, 'cancelled');
+  const event = appDb()
+    .prepare(
+      "SELECT * FROM events WHERE kind='transfer.cancelled' AND json_extract(data,'$.intentId')=?",
+    )
+    .get(intentId) as any;
+  assert.ok(event);
+  assert.equal(JSON.parse(event.data).by, 'customer');
+  const confirmed = await transferMoney(
+    ctx(intentId, 'lucia', { approvalId: proposal.approvalId, confirmedBy: 'click' }),
+    input,
+  );
+  assert.equal(confirmed.status, 'failed');
+  assert.equal((confirmed as any).code, 'already_used');
+  assert.equal(operations().length, 0);
+  assert.throws(() => dismissProposal('lucia', proposal.approvalId), /already used/);
+  const other = (await transferMoney(ctx(randomUUID()), input)) as any;
+  assert.throws(() => dismissProposal('bruno', other.approvalId), /Proposal not found/);
 });
 test('an identical proposal is blocked while another is unverified', async () => {
   seedBank();

@@ -22,7 +22,11 @@ export const dashboardRoutes = [
     ]);
     const approvals = (
       db
-        .prepare('SELECT * FROM approvals WHERE user_id=? AND consumed_at IS NULL AND expires_at>?')
+        .prepare(
+          `SELECT a.*, i.conversation_id AS conversationId, i.created_at AS createdAt
+           FROM approvals a JOIN intents i ON i.id=a.intent_id
+           WHERE a.user_id=? AND a.consumed_at IS NULL AND a.expires_at>?`,
+        )
         .all(current!.id, new Date().toISOString()) as any[]
     ).map((a) => ({
       ...a,

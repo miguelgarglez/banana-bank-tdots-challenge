@@ -1,4 +1,4 @@
-import type { RefObject } from 'react';
+import { useState, type RefObject } from 'react';
 import type { AnyRecord } from '../lib/api';
 import { money } from '../lib/format';
 import BananaMark from './BananaMark';
@@ -17,6 +17,7 @@ export default function ChatTab({
   accountLabel,
   contactLabel,
   onConfirm,
+  onDismiss,
   conversations,
   conversationId,
   messages,
@@ -34,6 +35,7 @@ export default function ChatTab({
   accountLabel: (id: string) => string;
   contactLabel: (id: string) => string;
   onConfirm: (id: string) => void;
+  onDismiss: (id: string) => void;
   conversations: AnyRecord[];
   conversationId: string | null;
   messages: AnyRecord[];
@@ -45,6 +47,12 @@ export default function ChatTab({
   onSend: (t: string) => void;
   onText: (v: string) => void;
 }) {
+  const [leaving, setLeaving] = useState<string | null>(null);
+  const scoped = approvals?.filter((a) => a.conversationId === conversationId) ?? [];
+  const dismiss = (id: string) => {
+    setLeaving(id);
+    setTimeout(() => onDismiss(id), 160);
+  };
   return (
     <div className="chat-layout">
       <div className="conversation-picker">
@@ -111,10 +119,10 @@ export default function ChatTab({
             </>
           )}
         </div>
-        {(approvals?.length > 0 || pendingOperations?.length > 0) && (
+        {(scoped.length > 0 || pendingOperations?.length > 0) && (
           <div className="chat-proposals">
-            {approvals?.map((a) => (
-              <div className="proposal-card" key={a.id}>
+            {scoped.map((a) => (
+              <div className={`proposal-card${leaving === a.id ? ' leaving' : ''}`} key={a.id}>
                 <strong className="proposal-amount">{money(a.payload.amountCents)}</strong>
                 <span>
                   {accountLabel(a.payload.fromAccountId)} → {contactLabel(a.payload.toAccountId)}
@@ -123,9 +131,22 @@ export default function ChatTab({
                 <span>
                   Code: <code className="confirmation-code">{a.confirmationCode}</code>
                 </span>
-                <button className="primary-button" disabled={busy} onClick={() => onConfirm(a.id)}>
-                  <span className="button-content">Confirm these details</span>
-                </button>
+                <div className="proposal-actions">
+                  <button
+                    className="primary-button"
+                    disabled={busy}
+                    onClick={() => onConfirm(a.id)}
+                  >
+                    <span className="button-content">Confirm these details</span>
+                  </button>
+                  <button
+                    className="secondary-button"
+                    disabled={busy}
+                    onClick={() => dismiss(a.id)}
+                  >
+                    Not now
+                  </button>
+                </div>
                 <small>Reply with the code or confirm here.</small>
               </div>
             ))}
