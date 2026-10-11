@@ -121,8 +121,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  .chat-panel .messages {
-    height: 420px;
+  .chat-toolbar-actions .select {
+    width: 240px;
   }
   .case-detail {
     min-height: 240px;
@@ -224,11 +224,15 @@
   .right-stack {
     grid-template-columns: 1fr;
   }
-  .compact {
-    display: block;
+  .chat-toolbar {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .compact .secondary-button {
-    margin-top: 15px;
+  .chat-toolbar-actions {
+    flex-wrap: wrap;
+  }
+  .chat-toolbar-actions .select {
+    width: 100%;
   }
   .chat-header {
     padding: 16px;

@@ -1,9 +1,82 @@
-.compact h1 {
-  font-size: 32px;
-}
 .chat-layout {
   max-width: 1000px;
   margin: auto;
+}
+.chat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.chat-toolbar h1 {
+  font-size: 24px;
+  margin: 0;
+}
+.chat-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chat-toolbar-actions .select {
+  width: 320px;
+  max-width: 100%;
+}
+@media (min-width: 601px) {
+  .main-shell.chat-mode {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chat-mode .topbar {
+    flex-shrink: 0;
+  }
+  .chat-mode main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 28px;
+    width: 100%;
+  }
+  .chat-mode footer {
+    display: none;
+  }
+  .chat-mode .tab-enter {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-layout {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .chat-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .messages {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+  }
+  .chat-header,
+  .chat-proposals,
+  .composer,
+  .chat-footnote {
+    flex-shrink: 0;
+  }
+  .chat-proposals {
+    max-height: 40%;
+    overflow-y: auto;
+  }
 }
 .chat-panel {
   background: var(--color-surface);

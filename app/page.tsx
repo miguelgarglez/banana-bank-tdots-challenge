@@ -26,7 +26,7 @@ export default function Home() {
         onNew={app.newConversation}
         onOpen={app.openConversation}
       />
-      <div className="main-shell">
+      <div className={`main-shell${app.tab === 'chat' && !app.operator ? ' chat-mode' : ''}`}>
         <TopBar
           operator={app.operator}
           current={app.current}
@@ -102,7 +102,7 @@ export default function Home() {
                   busy={app.busy}
                 />
               )}
-              {app.dashboard.pendingOperations?.length > 0 && (
+              {app.dashboard.pendingOperations?.length > 0 && app.tab !== 'chat' && (
                 <PendingOperationsPanel
                   operations={app.dashboard.pendingOperations}
                   contactLabel={app.contactLabel}

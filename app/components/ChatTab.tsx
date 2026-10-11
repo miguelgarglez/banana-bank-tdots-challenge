@@ -51,36 +51,31 @@ export default function ChatTab({
   };
   return (
     <div className="chat-layout">
-      <div className="page-heading compact">
-        <div>
-          <div className="eyebrow">ONE CONVERSATION, PLENTY OF POSSIBILITIES</div>
-          <h1>Your assistant</h1>
-          <p>Ask, plan, and get things done here.</p>
+      <div className="chat-toolbar">
+        <h1>Your assistant</h1>
+        <div className="chat-toolbar-actions">
+          <Select
+            ariaLabel="Conversation"
+            value={conversationId || ''}
+            onChange={(v) => (v === '' ? onNew() : onOpen(v))}
+            options={[
+              {
+                value: '',
+                label: 'New conversation',
+                leading: <Icon name="chat" />,
+              },
+              ...conversations.map((c) => ({
+                value: c.id as string,
+                label: c.title as string,
+                description: date(c.created_at),
+              })),
+            ]}
+          />
+          <button className="secondary-button" onClick={onNew}>
+            + New conversation
+          </button>
         </div>
-        <button className="secondary-button" onClick={onNew}>
-          + New conversation
-        </button>
       </div>
-      <label className="conversation-picker">
-        Conversation
-        <Select
-          ariaLabel="Conversation"
-          value={conversationId || ''}
-          onChange={(v) => (v === '' ? onNew() : onOpen(v))}
-          options={[
-            {
-              value: '',
-              label: 'New conversation',
-              leading: <Icon name="chat" />,
-            },
-            ...conversations.map((c) => ({
-              value: c.id as string,
-              label: c.title as string,
-              description: date(c.created_at),
-            })),
-          ]}
-        />
-      </label>
       <section className="chat-panel">
         <div className="chat-header">
           <span className="assistant-avatar">✧</span>
