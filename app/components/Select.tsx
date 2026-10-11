@@ -38,7 +38,17 @@ export default function Select({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [up, setUp] = useState(false);
+  const [pos, setPos] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+    width: number;
+    up: boolean;
+  }>({
+    left: 0,
+    width: 240,
+    up: false,
+  });
   const [active, setActive] = useState(0);
   const buffer = useRef('');
   const bufferTimer = useRef<ReturnType<typeof setTimeout>>(null);
@@ -64,10 +74,24 @@ export default function Select({
     }, 120);
     if (focus) triggerRef.current?.focus();
   };
+  const measure = () => {
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const width = Math.max(rect.width, 240);
+    const up = window.innerHeight - rect.bottom < 320 && rect.top > 320;
+    const left =
+      rect.left + width > window.innerWidth - 16
+        ? Math.max(16, Math.min(rect.right - width, window.innerWidth - 16 - width))
+        : rect.left;
+    setPos(
+      up
+        ? { bottom: window.innerHeight - rect.top + 6, left, width, up: true }
+        : { top: rect.bottom + 6, left, width, up: false },
+    );
+  };
   const openList = () => {
     if (disabled) return;
-    const rect = triggerRef.current?.getBoundingClientRect();
-    setUp(!!rect && window.innerHeight - rect.bottom < 320 && rect.top > 320);
+    measure();
     setActive(
       Math.max(
         0,
@@ -90,7 +114,13 @@ export default function Select({
       if (!rootRef.current?.contains(e.target as Node)) close();
     };
     document.addEventListener('pointerdown', onPointer);
-    return () => document.removeEventListener('pointerdown', onPointer);
+    window.addEventListener('scroll', measure, true);
+    window.addEventListener('resize', measure);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      window.removeEventListener('scroll', measure, true);
+      window.removeEventListener('resize', measure);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -177,7 +207,14 @@ export default function Select({
       </button>
       {open && (
         <ul
-          className={`select-popover${up ? ' up' : ''}${leaving ? ' leaving' : ''}`}
+          className={`select-popover${pos.up ? ' up' : ''}${leaving ? ' leaving' : ''}`}
+          style={{
+            position: 'fixed',
+            top: pos.top,
+            bottom: pos.bottom,
+            left: pos.left,
+            width: pos.width,
+          }}
           role="listbox"
           id={listId}
           aria-label={ariaLabel}

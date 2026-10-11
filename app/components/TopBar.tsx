@@ -20,9 +20,6 @@ export default function TopBar({
       </div>
       <div className="persona-control">
         <span className="demo-label">VIEW AS</span>
-        <span className="avatar small" style={{ background: current?.color }}>
-          {current?.initials || '·'}
-        </span>
         <Select
           ariaLabel="Switch person"
           variant="chrome"
