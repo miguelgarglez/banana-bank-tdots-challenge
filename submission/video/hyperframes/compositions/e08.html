@@ -1,59 +1,136 @@
 <!doctype html>
 <html>
-  <head><meta charset="UTF-8" /></head>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
   <body>
     <template>
       <style>
         #root {
-          position: absolute; inset: 0;
+          position: absolute;
+          inset: 0;
           background: #f8f6ef;
-          font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            sans-serif;
         }
-        #e08-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 60px; padding: 50px 90px; }
-        #e08-left { display: flex; flex-direction: column; align-items: center; }
-        #e08-list { display: flex; flex-direction: column; gap: 18px; margin-bottom: 44px; }
+        #e08-wrap {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 60px;
+          padding: 50px 90px;
+        }
+        #e08-left {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        #e08-list {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          margin-bottom: 44px;
+        }
         .e08-item {
-          background: #fff; border: 1px solid #e3e1d8; border-radius: 14px;
-          padding: 18px 34px; font-size: 27px; color: #1d2a26; font-weight: 600;
-          box-shadow: 0 8px 24px rgba(31,61,53,0.08); text-align: center;
+          background: #fff;
+          border: 1px solid #e3e1d8;
+          border-radius: 14px;
+          padding: 18px 34px;
+          font-size: 27px;
+          color: #1d2a26;
+          font-weight: 600;
+          box-shadow: 0 8px 24px rgba(31, 61, 53, 0.08);
+          text-align: center;
         }
-        .e08-item code { font-family: ui-monospace, Menlo, monospace; color: #1f3d35; font-weight: 700; }
-        #e08-thanks { font-size: 84px; font-weight: 800; color: #1f3d35; letter-spacing: -0.02em; }
-        #e08-author { font-size: 30px; color: #5d6b66; margin-top: 14px; }
+        .e08-item code {
+          font-family: ui-monospace, Menlo, monospace;
+          color: #1f3d35;
+          font-weight: 700;
+        }
+        #e08-thanks {
+          font-size: 84px;
+          font-weight: 800;
+          color: #1f3d35;
+          letter-spacing: -0.02em;
+        }
+        #e08-author {
+          font-size: 30px;
+          color: #5d6b66;
+          margin-top: 14px;
+        }
         #e08-viewer {
-          width: 640px; border: 1px solid #e3e1d8; border-radius: 16px; overflow: hidden;
-          box-shadow: 0 16px 40px rgba(31,61,53,0.14); opacity: 0;
+          width: 640px;
+          border: 1px solid #e3e1d8;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 16px 40px rgba(31, 61, 53, 0.14);
+          opacity: 0;
         }
-        #e08-viewer img { display: block; width: 100%; }
+        #e08-viewer img {
+          display: block;
+          width: 100%;
+        }
       </style>
       <div id="root" data-composition-id="e08" data-width="1920" data-height="1080">
         <div id="e08-wrap">
           <div id="e08-left">
             <div id="e08-list">
-              <div class="e08-item" id="e08-i1"><code>submission/README.md</code> · explicación completa</div>
-              <div class="e08-item" id="e08-i2"><code>submission/evidencias/</code> · antes, después, revisiones</div>
-              <div class="e08-item" id="e08-i3"><code>submission/ai-sessions/</code> · sesiones de IA completas</div>
-              <div class="e08-item" id="e08-i5"><code>submission/ai-sessions-viewer/</code> · visor interactivo de las sesiones</div>
-              <div class="e08-item" id="e08-i4"><code>npm ci · npm run setup · npm run dev</code></div>
+              <div class="e08-item" id="e08-i1">
+                <code>submission/README.md</code> · explicación completa
+              </div>
+              <div class="e08-item" id="e08-i2">
+                <code>submission/evidencias/</code> · antes, después, revisiones
+              </div>
+              <div class="e08-item" id="e08-i3">
+                <code>submission/ai-sessions/</code> · sesiones de IA completas
+              </div>
+              <div class="e08-item" id="e08-i5">
+                <code>submission/ai-sessions-viewer/</code> · visor interactivo de las sesiones
+              </div>
+              <div class="e08-item" id="e08-i4">
+                <code>npm ci · npm run setup · npm run dev</code>
+              </div>
             </div>
             <div id="e08-thanks">Gracias</div>
             <div id="e08-author">Miguel García González</div>
           </div>
-          <div id="e08-viewer"><img src="../assets/img/visor.png" alt="Visor de las sesiones de IA" /></div>
+          <div id="e08-viewer">
+            <img src="../assets/img/visor.png" alt="Visor de las sesiones de IA" />
+          </div>
         </div>
       </div>
       <script>
         const tl = gsap.timeline({ paused: true });
-        const wrap = document.querySelector("#e08-wrap");
+        const wrap = document.querySelector('#e08-wrap');
         tl.fromTo(wrap, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
-        tl.fromTo(["#e08-i1", "#e08-i2", "#e08-i3", "#e08-i5", "#e08-i4"],
-          { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.55, ease: "power2.out" }, 0.4);
+        tl.fromTo(
+          ['#e08-i1', '#e08-i2', '#e08-i3', '#e08-i5', '#e08-i4'],
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.45, stagger: 0.55, ease: 'power2.out' },
+          0.4,
+        );
         // la captura del visor aparece cuando la narración dice "visor interactivo" (~20 s)
-        tl.fromTo("#e08-viewer", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 20);
-        tl.fromTo("#e08-thanks", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 27);
-        tl.fromTo("#e08-author", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 27.6);
+        tl.fromTo(
+          '#e08-viewer',
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out' },
+          20,
+        );
+        tl.fromTo(
+          '#e08-thanks',
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+          27,
+        );
+        tl.fromTo('#e08-author', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 27.6);
         tl.to(wrap, { opacity: 0, duration: 0.6 }, 31.5);
-        window.__timelines["e08"] = tl;
+        window.__timelines['e08'] = tl;
       </script>
     </template>
   </body>

@@ -99,7 +99,7 @@ Fix all errors before presenting the result. Warnings should be reviewed before 
 3. Register one paused root timeline per composition on `window.__timelines`:
    ```js
    window.__timelines = window.__timelines || {};
-   window.__timelines["composition-id"] = gsap.timeline({ paused: true });
+   window.__timelines['composition-id'] = gsap.timeline({ paused: true });
    ```
    Scene timelines manually added to this root must not be paused. A paused
    child does not advance when the root is seeked. The runtime activates

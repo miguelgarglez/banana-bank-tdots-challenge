@@ -50,9 +50,7 @@
       "fixable": true
     }
   ],
-  "gaps": [
-    "No agent activity was recorded for this conversation."
-  ],
+  "gaps": ["No agent activity was recorded for this conversation."],
   "history": 3,
   "events": 0,
   "intents": 1,
@@ -70,7 +68,34 @@ La discrepancia plantada salta sola: `appStatus: "failed"` contra `bankStatus: "
 Respuesta completa:
 
 ```json
-{"brief":{"summary":"The €85 team-dinner transfer to Bruno was completed, despite the app showing it as failed. The bank ledger and reconciliation match the transfer details.","verifiedFacts":["The bank ledger records a completed €85.00 transfer from Lucía’s Aurora account to Bruno for “Team dinner” on 2026-09-23 at 16:41:12, reference ref-historic-lucia.","The app intent for that transfer is marked failed and reports that no response was received from the bank.","Reconciliation confirms the app/ledger status mismatch and identifies the bank operation as completed."],"pendingChecks":[],"discrepancies":["App status is failed, while the bank ledger status is completed for the same reference, amount, and transfer."],"suggestedActions":["Tell Lucía the transfer is recorded as completed in the bank ledger; do not initiate another transfer to check it.","If the recipient says they cannot see the payment, follow the internal ledger-inspection or reconciliation procedure (procedure-7; procedure-3)."],"draftReply":"Hi Lucía, I checked the bank record: your €85.00 team-dinner transfer to Bruno is marked as completed on 23 September 2026 (reference ref-historic-lucia). The app showed a failure, but the bank ledger confirms the payment completed. If Bruno cannot see it, please let us know so we can advise on the next step.","sources":["procedure-7","procedure-3"]},"model":"gpt-6-luna","usage":{"input_tokens":2819,"input_tokens_details":{"cache_write_tokens":2816,"cached_tokens":0},"output_tokens":309,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":3128}}
+{
+  "brief": {
+    "summary": "The €85 team-dinner transfer to Bruno was completed, despite the app showing it as failed. The bank ledger and reconciliation match the transfer details.",
+    "verifiedFacts": [
+      "The bank ledger records a completed €85.00 transfer from Lucía’s Aurora account to Bruno for “Team dinner” on 2026-09-23 at 16:41:12, reference ref-historic-lucia.",
+      "The app intent for that transfer is marked failed and reports that no response was received from the bank.",
+      "Reconciliation confirms the app/ledger status mismatch and identifies the bank operation as completed."
+    ],
+    "pendingChecks": [],
+    "discrepancies": [
+      "App status is failed, while the bank ledger status is completed for the same reference, amount, and transfer."
+    ],
+    "suggestedActions": [
+      "Tell Lucía the transfer is recorded as completed in the bank ledger; do not initiate another transfer to check it.",
+      "If the recipient says they cannot see the payment, follow the internal ledger-inspection or reconciliation procedure (procedure-7; procedure-3)."
+    ],
+    "draftReply": "Hi Lucía, I checked the bank record: your €85.00 team-dinner transfer to Bruno is marked as completed on 23 September 2026 (reference ref-historic-lucia). The app showed a failure, but the bank ledger confirms the payment completed. If Bruno cannot see it, please let us know so we can advise on the next step.",
+    "sources": ["procedure-7", "procedure-3"]
+  },
+  "model": "gpt-6-luna",
+  "usage": {
+    "input_tokens": 2819,
+    "input_tokens_details": { "cache_write_tokens": 2816, "cached_tokens": 0 },
+    "output_tokens": 309,
+    "output_tokens_details": { "reasoning_tokens": 0 },
+    "total_tokens": 3128
+  }
+}
 ```
 
 - verifiedFacts habla de la operación completada de €85.00 con `ref-historic-lucia` el 2026-09-23 — solo hechos del ledger y del intent.

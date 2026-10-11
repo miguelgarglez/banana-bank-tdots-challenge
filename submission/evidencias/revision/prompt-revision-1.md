@@ -1,6 +1,7 @@
 Eres un revisor independiente y escéptico de un proyecto de hackathon bancario (Next.js 16, TypeScript, SQLite). Trabajas en modo solo lectura: no modifiques archivos.
 
 Contexto: el starter traía fallos deliberados. El candidato ha hecho estos cambios (ver `git log fb0c776..HEAD` y `git diff fb0c776 HEAD -- src app tests`):
+
 1. src/banking/dispatch.ts + actions.ts: referencia bancaria estable por intención, consulta GET /v1/operations/:ref antes de reintentar un 5xx/timeout, estado `unknown` honesto.
 2. src/banking/authorization.ts + agent: puerta de confirmación (approvals con caducidad 10 min, uso único, mismo payload, guardia "misma run"), tool confirm_transfer, dedupe de propuestas idénticas por conversación.
 3. src/operator/view.ts + copilot.ts + telemetry.ts + UI: vista de caso con reconciliación app↔banco, acciones reconcile/close, brief IA con JSON estricto.

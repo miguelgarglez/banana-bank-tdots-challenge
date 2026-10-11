@@ -18,13 +18,13 @@ Conversación nueva de Lucía (escenario normal), `POST /api/conversations/:id/m
 
 ## `POST /api/search` como lucia, "Aurora account monthly fee" (top-5)
 
-| score | documentId | version | validTo |
-|---|---|---|---|
-| 0.792 | aurora-fees-2026 | v2 | — |
-| 0.780 | aurora-conditions-2026 | v2 | — |
-| 0.704 | notice-aurora | v2 | — |
-| 0.696 | aurora-operations-2026 | v2 | — |
-| 0.668 | aurora-fees-2026 | v2 | — |
+| score | documentId             | version | validTo |
+| ----- | ---------------------- | ------- | ------- |
+| 0.792 | aurora-fees-2026       | v2      | —       |
+| 0.780 | aurora-conditions-2026 | v2      | —       |
+| 0.704 | notice-aurora          | v2      | —       |
+| 0.696 | aurora-operations-2026 | v2      | —       |
+| 0.668 | aurora-fees-2026       | v2      | —       |
 
 Ningún archive-* y todos los chunks con metadatos (435 chunks en el índice, todos con title/version/validFrom/validTo, textos únicos).
 
@@ -32,13 +32,13 @@ Ningún archive-* y todos los chunks con metadatos (435 chunks en el índice, to
 
 `POST /api/search` como Marta (operadora, includeArchived), "Aurora fee before September 2026":
 
-| score | documentId | version | validTo |
-|---|---|---|---|
-| 0.732 | notice-aurora | v2 | — |
-| 0.729 | aurora-fees-2026 | v2 | — |
-| 0.723 | aurora-fees-2026 | v2 | — |
-| 0.677 | aurora-conditions-2026 | v2 | — |
-| 0.668 | faq-aurora-waiver | v2 | — |
+| score | documentId             | version | validTo |
+| ----- | ---------------------- | ------- | ------- |
+| 0.732 | notice-aurora          | v2      | —       |
+| 0.729 | aurora-fees-2026       | v2      | —       |
+| 0.723 | aurora-fees-2026       | v2      | —       |
+| 0.677 | aurora-conditions-2026 | v2      | —       |
+| 0.668 | faq-aurora-waiver      | v2      | —       |
 
 Chat nuevo de Lucía:
 

@@ -12,7 +12,5 @@
   "workspace_dirs": "[]",
   "hidden": 0,
   "metadata": "{\"total_credit_cost\":0,\"total_acu_cost\":0.0,\"client_meta\":{\"cognition.ai/requestingTabId\":\"new-1791477556732-gjxnywoom\"}}",
-  "subagents": [
-    "sidekick"
-  ]
+  "subagents": ["sidekick"]
 }

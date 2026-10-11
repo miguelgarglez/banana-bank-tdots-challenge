@@ -20,4 +20,4 @@
 ## Capturas y vídeo
 
 - `19-ui-overview.png`, `19-ui-chat-propuesta.png` (propuesta real creada desde el chat), `19-ui-loading.png` (plátano en carga), `19-ui-operator.png`, `19-ui-dismiss.png` (botón "Not now").
-- `19-ui-microinteracciones.webm` (27 s, 1440×900; también `19-ui-microinteracciones.mp4`, más ligero).
+- , 1440×900; también `19-ui-microinteracciones.mp4`, más ligero).

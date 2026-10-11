@@ -89,15 +89,17 @@ await page.waitForLoadState('networkidle');
 await shot('lucia-chat-dinner');
 
 await nav('Transfers');
-const contacts = await page.$$eval(
-  '.transfer-form select option',
-  (els) => els.map((e) => ({ v: e.value, t: e.textContent })),
+const contacts = await page.$$eval('.transfer-form select option', (els) =>
+  els.map((e) => ({ v: e.value, t: e.textContent })),
 );
 const bruno = contacts.find((o) => /Bruno/i.test(o.t));
 if (!bruno) throw new Error('Bruno contact not found');
 await page.locator('.transfer-form select').nth(1).selectOption(bruno.v);
 await page.getByLabel('Amount in euros').fill('85');
-await page.locator('.transfer-form label', { hasText: 'Description' }).locator('input').fill('Team dinner');
+await page
+  .locator('.transfer-form label', { hasText: 'Description' })
+  .locator('input')
+  .fill('Team dinner');
 await shot('lucia-transfers');
 
 await nav('Documents');

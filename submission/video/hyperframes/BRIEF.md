@@ -2,12 +2,12 @@
 workflow: general-video
 flow: automation
 storyboard: no
-message: "Las transferencias no se duplican, el dinero no se mueve sin confirmación del titular y el operador ve lo que pasó de verdad"
-destination: "entrega de hackathon, se ve en un ordenador"
-aspect: "16:9"
+message: 'Las transferencias no se duplican, el dinero no se mueve sin confirmación del titular y el operador ve lo que pasó de verdad'
+destination: 'entrega de hackathon, se ve en un ordenador'
+aspect: '16:9'
 language: es-ES
-audience: "equipo técnico evaluador de t·Dots"
-length: "5-6 minutos"
+audience: 'equipo técnico evaluador de t·Dots'
+length: '5-6 minutos'
 ---
 
 ## Intent
