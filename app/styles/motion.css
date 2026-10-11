@@ -51,9 +51,10 @@
  *          shimmer desplazándose, 1.2s linear infinite
  *
  * Marca (BananaMark)
- *    —     loading: balanceo rotate(-10°) ↔ rotate(10°),
- *          origen 50% 70%, 1.4s --ease-in-out alternate;
- *          el rabito arrastra 0.1s
+ *    —     loading: vuelta completa de 1.5s; acelera (0.65,0,0.35,1)
+ *          hasta 372° en 0.87s, frena con overshoot y asienta en 360°
+ *          a los 1.05s, reposo hasta la siguiente vuelta. Cuerpo y
+ *          rabito son un solo <g>, origen en el centro del bbox
  *    —     hover logo: sacudida única 500ms (-6°→6°→0)
  *
  * prefers-reduced-motion: sin transform ni keyframes de
@@ -348,20 +349,25 @@ nav .nav-item.active {
 .banana-mark-icon {
   display: inline-flex;
 }
-.banana-loading svg {
-  transform-origin: 50% 70%;
-  animation: banana-swing 1.4s var(--ease-in-out) infinite alternate;
+.banana-loading .banana-shape {
+  transform-box: view-box;
+  transform-origin: 16.9px 14.6px;
+  animation: banana-spin 1.5s linear infinite;
 }
-.banana-loading .banana-stem {
-  animation: banana-swing 1.4s var(--ease-in-out) 0.1s infinite alternate;
-  transform-origin: 50% 70%;
-}
-@keyframes banana-swing {
-  from {
-    transform: rotate(-10deg);
+@keyframes banana-spin {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   }
-  to {
-    transform: rotate(10deg);
+  58% {
+    transform: rotate(372deg);
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+  70% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 .banana-wiggle {
@@ -439,12 +445,11 @@ nav .nav-item.active {
   .proposal-card,
   .reconciliation-row.reconciled-flash,
   .brief-skeleton i,
-  .banana-loading svg,
-  .banana-loading .banana-stem,
+  .banana-loading .banana-shape,
   .banana-wiggle {
     animation: none;
   }
-  .banana-loading svg {
+  .banana-loading .banana-shape {
     animation: banana-breathe 1.4s ease-in-out infinite alternate;
   }
   @keyframes banana-breathe {
