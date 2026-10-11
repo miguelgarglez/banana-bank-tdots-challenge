@@ -1,0 +1,20 @@
+.not-found {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+}
+.not-found .banana-mark-icon {
+  color: var(--forest);
+  margin-bottom: 22px;
+}
+.not-found h1 {
+  margin-bottom: 10px;
+}
+.not-found p:not(.eyebrow) {
+  max-width: 38ch;
+  margin-bottom: 26px;
+}
