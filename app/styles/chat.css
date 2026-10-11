@@ -176,23 +176,25 @@
 .citation {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  vertical-align: baseline;
+  gap: 5px;
+  vertical-align: 1px;
   margin: 0 2px;
-  padding: 1px 8px;
-  border: 1px solid var(--color-suggestion-border);
-  border-radius: var(--radius-pill);
-  background: var(--color-suggestion-bg);
-  color: var(--color-suggestion-text);
+  padding: 2px 9px;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-secondary-text);
   font: inherit;
   font-size: 10px;
-  line-height: 1.6;
+  font-weight: 600;
+  line-height: 1.5;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color var(--dur-fast) ease;
 }
 .citation span {
-  font-size: 9px;
+  font-size: 8px;
+  font-weight: 400;
 }
 @media (hover: hover) and (pointer: fine) {
   .citation:hover {

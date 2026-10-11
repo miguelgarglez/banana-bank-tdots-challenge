@@ -116,6 +116,7 @@
   --radius-xl: 15px;
   --radius-2xl: 12px;
   --radius-pill: 50%;
+  --radius-full: 999px;
   --ink: var(--color-ink);
   --muted: var(--color-ink-muted);
   --line: var(--color-line);
