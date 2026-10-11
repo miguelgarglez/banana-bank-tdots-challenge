@@ -1,6 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseAmount, transferPhase, expiresIn, isExpired } from '../app/lib/transfer';
+import {
+  parseAmount,
+  transferPhase,
+  expiresIn,
+  isExpired,
+  sanitizeAmountInput,
+} from '../app/lib/transfer';
+
+test('sanitizeAmountInput filters keystrokes to digits and one decimal separator', () => {
+  assert.equal(sanitizeAmountInput('12'), '12');
+  assert.equal(sanitizeAmountInput('12,'), '12.');
+  assert.equal(sanitizeAmountInput('12.345'), null);
+  assert.equal(sanitizeAmountInput('abc'), null);
+  assert.equal(sanitizeAmountInput('1e3'), null);
+  assert.equal(sanitizeAmountInput(''), '');
+  assert.equal(sanitizeAmountInput('1234567'), null);
+  assert.equal(sanitizeAmountInput('0.5'), '0.5');
+});
 
 test('parseAmount parses euros to cents and rejects invalid input', () => {
   assert.equal(parseAmount('50'), 5000);

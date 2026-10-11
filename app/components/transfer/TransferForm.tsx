@@ -6,6 +6,7 @@ import { parseAmount } from '../../lib/transfer';
 import Avatar from '../Avatar';
 import Icon from '../Icon';
 import { TextMorph } from 'torph/react';
+import AmountInput from './AmountInput';
 
 export default function TransferForm({
   dashboard,
@@ -146,17 +147,7 @@ export default function TransferForm({
       <div className="transfer-field">
         <span className="field-label">Amount</span>
         <div className="amount-row">
-          <div className="amount-hero-input">
-            <span>€</span>
-            <input
-              aria-label="Amount in euros"
-              inputMode="decimal"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-            />
-          </div>
+          <AmountInput value={amount} onChange={setAmount} compact={compact} />
           {remaining !== null && (
             <small className={`amount-after${remaining < 0 ? ' negative' : ''}`}>
               Balance after · <TextMorph>{money(remaining)}</TextMorph>

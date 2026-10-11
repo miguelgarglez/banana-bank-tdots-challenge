@@ -1,3 +1,9 @@
+export function sanitizeAmountInput(raw: string): string | null {
+  const v = raw.replace(',', '.');
+  if (v === '') return '';
+  return /^\d{0,6}([.]\d{0,2})?$/.test(v) ? v : null;
+}
+
 export function parseAmount(input: string): number | null {
   const normalized = input.trim().replace(',', '.');
   if (!/^\d+(\.\d{1,2})?$/.test(normalized)) return null;

@@ -133,29 +133,54 @@
   outline-offset: var(--focus-ring-offset);
   border-radius: var(--radius-sm);
 }
-.amount-hero-input input:focus-visible {
+.amount-native:focus-visible {
   outline: none;
 }
-.amount-hero-input > span {
+.amount-hero-input > .amount-currency {
   font-size: 24px;
   color: var(--color-unit);
 }
-.amount-hero-input input {
+.amount-field {
+  position: relative;
   flex: 1;
   min-width: 0;
-  border: 0;
-  background: none;
-  padding: 4px 0;
+}
+.amount-native,
+.amount-morph {
+  font: inherit;
   font-size: 40px;
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--forest);
   font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  padding: 0;
+  margin: 0;
 }
-.transfer-form.compact .amount-hero-input input {
+.amount-native {
+  width: 100%;
+  border: 0;
+  background: none;
+  color: transparent;
+  caret-color: var(--forest);
+  outline: none;
+}
+.amount-morph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: var(--forest);
+  white-space: pre;
+}
+.amount-morph[data-empty] {
+  color: var(--color-unit);
+}
+.amount-hero-input.compact .amount-native,
+.amount-hero-input.compact .amount-morph {
   font-size: 32px;
 }
-.transfer-form.compact .amount-hero-input > span {
+.amount-hero-input.compact > .amount-currency {
   font-size: 20px;
 }
 .amount-after {

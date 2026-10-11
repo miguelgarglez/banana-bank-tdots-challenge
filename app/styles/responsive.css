@@ -265,7 +265,8 @@
   .recipient-chips {
     flex-wrap: wrap;
   }
-  .amount-hero-input input,
+  .amount-hero-input .amount-native,
+  .amount-hero-input .amount-morph,
   .amount-hero {
     font-size: 32px;
   }
