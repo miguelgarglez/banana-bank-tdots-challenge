@@ -56,7 +56,6 @@ export default function Home() {
               )}
               {app.tab === 'chat' && !app.operator && (
                 <ChatTab
-                  name={app.current.name}
                   approvals={app.dashboard.approvals}
                   pendingOperations={app.dashboard.pendingOperations}
                   accountLabel={app.accountLabel}

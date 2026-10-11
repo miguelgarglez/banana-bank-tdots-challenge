@@ -245,9 +245,8 @@
     max-width: 90%;
     font-size: 11px;
   }
-  .composer {
-    margin-left: 12px;
-    margin-right: 12px;
+  .chat-footer {
+    padding: 8px 12px;
   }
   .case-count {
     display: none;

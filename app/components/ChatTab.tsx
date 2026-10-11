@@ -1,4 +1,4 @@
-import { useState, type RefObject } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import BananaMark from './BananaMark';
@@ -7,7 +7,6 @@ import { Markdown } from './Markdown';
 import Select from './Select';
 
 export default function ChatTab({
-  name,
   approvals,
   pendingOperations,
   accountLabel,
@@ -25,7 +24,6 @@ export default function ChatTab({
   onSend,
   onText,
 }: {
-  name: string;
   approvals: AnyRecord[];
   pendingOperations: AnyRecord[];
   accountLabel: (id: string) => string;
@@ -44,6 +42,10 @@ export default function ChatTab({
   onText: (value: string) => void;
 }) {
   const [leaving, setLeaving] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (text === '' && textareaRef.current) textareaRef.current.style.height = 'auto';
+  }, [text]);
   const scoped = approvals?.filter((a) => a.conversationId === conversationId) ?? [];
   const dismiss = (id: string) => {
     setLeaving(id);
@@ -79,13 +81,10 @@ export default function ChatTab({
       <section className="chat-panel">
         <div className="chat-header">
           <span className="assistant-avatar">✧</span>
-          <div>
-            <strong>Banana Bank assistant</strong>
-            <small>
-              <span className="live-dot" /> Here to help
-            </small>
-          </div>
-          <span className="subtle-tag">{name.split(' ')[0]}</span>
+          <strong>Banana Bank assistant</strong>
+          <small>
+            <span className="live-dot" /> Here to help
+          </small>
         </div>
         <div className="messages">
           {!messages.length && (
@@ -175,32 +174,39 @@ export default function ChatTab({
             ))}
           </div>
         )}
-        <form
-          className="composer"
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSend();
-          }}
-        >
-          <textarea
-            aria-label="Message the assistant"
-            placeholder="What can we help with?"
-            value={text}
-            onChange={(e) => onText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                onSend();
-              }
+        <div className="chat-footer">
+          <form
+            className="composer"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSend();
             }}
-            rows={2}
-          />
-          <button aria-label="Send message" disabled={busy || !text.trim()}>
-            <Icon name="arrow" />
-          </button>
-        </form>
-        <div className="chat-footnote">
-          AI assistant · Check important details before taking action.
+          >
+            <textarea
+              ref={textareaRef}
+              aria-label="Message the assistant"
+              placeholder="What can we help with?"
+              value={text}
+              onChange={(e) => {
+                onText(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  onSend();
+                }
+              }}
+              rows={1}
+            />
+            <button aria-label="Send message" disabled={busy || !text.trim()}>
+              <Icon name="arrow" />
+            </button>
+          </form>
+          <div className="chat-footnote">
+            AI assistant · Check important details before taking action.
+          </div>
         </div>
       </section>
     </div>
