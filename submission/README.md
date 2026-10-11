@@ -2,7 +2,7 @@
 
 - Fecha de entrega: 12 de octubre de 2026.
 - Arranque: ver `README.md` en la raíz (`npm ci`, `npm run setup`, editar `.env.local` con `OPENAI_API_KEY`, `npm run doctor`, `npm run dev`, abrir http://127.0.0.1:3000). No hace falta nada más que lo que pide el starter. El índice de documentos incluido (`fixtures/embeddings/index.json.gz`) ya está regenerado con el nuevo chunker, así que no es necesario ejecutar `npm run ingest`.
-- Comprobaciones: `npm test` (55 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
+- Comprobaciones: `npm test` (57 pruebas; el starter traía 13), `npm run typecheck`, `npx prettier --check app src tests`.
 - El simulador (`simulator/`) no se ha tocado. La aplicación sigue hablando con el banco solo por su API HTTP firmada.
 
 ## Cómo probar en dos minutos
@@ -52,7 +52,16 @@ El simulador. Tampoco he cambiado el contrato de la API de la aplicación: todas
 - Tokens de diseño: todos los colores y radios de la hoja de estilos salen de variables con nombre por rol (`app/styles/tokens.css`), sin cambio visual.
 - Vista: `app/page.tsx` (1.200 líneas) partido en componentes por pestaña (`app/components/`), un hook con el estado y las acciones (`app/hooks/useBananaApp.ts`) y una hoja de estilos por componente (`app/styles/`).
 
-Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capturas a 1440 px, comparación píxel a píxel con Pillow): 0 píxeles de diferencia en los tres pasos, además de las 55 pruebas, el typecheck y un flujo funcional automatizado. Evidencias: `submission/evidencias/despues/16-paridad-api.txt` y `17-paridad-tokens-y-componentes.txt`.
+Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capturas a 1440 px, comparación píxel a píxel con Pillow): 0 píxeles de diferencia en los tres pasos, además de las 57 pruebas, el typecheck y un flujo funcional automatizado. Evidencias: `submission/evidencias/despues/16-paridad-api.txt` y `17-paridad-tokens-y-componentes.txt`.
+
+## Pulido de interfaz y movimiento
+
+- Una app bancaria se juzga también por los detalles que no se ven: la respuesta al pulsar, las entradas suaves, un estado de carga con identidad. El bloque añade tokens de movimiento con nombre (`--ease-out`, `--ease-in-out`, `--dur-press` a `--dur-slow`) y una hoja `app/styles/motion.css` con un storyboard que documenta cada micro-interacción y su tiempo.
+- Micro-interacciones: `scale(0.97)` al pulsar, hovers sutiles solo en puntero fino, anillo de foco de 2 px coherente, indicador de navegación deslizante, entrada de pestaña con `@starting-style`, listas con stagger de 30 ms, burbujas que emergen y avisos que entran, salen y se auto-cierran a los 6 s.
+- Marca: el plátano es ahora un componente (`BananaMark`) que se balancea en las pantallas de espera, acompaña al "Checking…" del chat, hace una sacudida al pasar sobre el logo y es el favicon (`app/icon.svg`).
+- La propuesta de transferencia aparece además dentro de la conversación que la creó (importe, origen → destino, código y botón), y el titular puede descartarla con **Not now**: `POST /api/approvals/:id/dismiss` consume la aprobación, marca la intención `cancelled` y deja un evento `transfer.cancelled` auditado.
+- Accesibilidad: con `prefers-reduced-motion` desaparecen todos los movimientos de transformación y quedan solo cambios de opacidad y color.
+- Evidencias: `submission/evidencias/despues/19-ui-*.png`, `19-ui-microinteracciones.webm` y la nota `19-ui-microinteracciones.md`.
 
 ## Método de trabajo y verificación
 
@@ -76,6 +85,6 @@ Cada paso se verificó con una herramienta de paridad visual (Playwright, 8 capt
 
 ## Terminado, verificado y pendiente
 
-- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 55 pruebas, build de producción, vídeo de demostración de 6:12.
+- Terminado y verificado: los tres bloques de la Parte 1, el copiloto de la Parte 2, 57 pruebas, build de producción, vídeo de demostración de 6:12.
 - Límites conocidos: la confirmación por chat exige que el mensaje sea solo el código (con "confirm" o "yes" opcionales); cualquier otra redacción se rechaza y el agente vuelve a pedir el código. El bloqueo de operaciones equivalentes compara cuenta origen, destino e importe mientras exista una operación sin resolver; dos intenciones legítimas idénticas sí pueden ejecutarse una vez resuelta la primera. El copiloto reduce pero no elimina el riesgo de que el modelo califique como hecho algo escrito por el cliente; por eso la interfaz separa lo verificado por el ledger (reconciliación, calculada en código) de lo redactado por el modelo.
 - Pendiente (fuera de alcance por tiempo): búsqueda vectorial fuera de memoria para corpus grandes.

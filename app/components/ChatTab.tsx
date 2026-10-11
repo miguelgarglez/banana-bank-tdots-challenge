@@ -111,10 +111,14 @@ export default function ChatTab({
               <div className="bubble">
                 <div>
                   {String(m.content)
-                    .split(/(\*\*[^*]+\*\*)/g)
+                    .split(/(\*\*[^*]+\*\*|`[^`]+`)/g)
                     .map((part, j) =>
                       part.startsWith('**') && part.endsWith('**') ? (
                         <strong key={j}>{part.slice(2, -2)}</strong>
+                      ) : part.startsWith('`') && part.endsWith('`') ? (
+                        <code key={j} className="inline-code">
+                          {part.slice(1, -1)}
+                        </code>
                       ) : (
                         part
                       ),

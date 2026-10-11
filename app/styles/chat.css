@@ -73,6 +73,13 @@
   margin-top: 8px;
   color: var(--color-bubble-meta);
 }
+.bubble .inline-code {
+  font-family: ui-monospace, Menlo, monospace;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-xs);
+  padding: 0 0.35em;
+  color: var(--forest);
+}
 .message.user {
   justify-content: flex-end;
 }
