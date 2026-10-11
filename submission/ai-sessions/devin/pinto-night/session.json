@@ -1,0 +1,16 @@
+{
+  "id": "pinto-night",
+  "working_directory": "/Users/miguelgarglez/Developer/hackathon-tdots",
+  "backend_type": "windsurf",
+  "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+  "agent_mode": "accept-edits",
+  "created_at": "2026-10-10T13:17:11+00:00",
+  "last_activity_at": "2026-10-10T13:20:53+00:00",
+  "title": "Saludo y consulta sobre el progreso de las tareas",
+  "main_chain_id": 66,
+  "shell_last_seen_index": 0,
+  "workspace_dirs": "[]",
+  "hidden": 0,
+  "metadata": "{\"total_credit_cost\":0,\"total_acu_cost\":0.0,\"client_meta\":{\"cognition.ai/requestingTabId\":\"new-1791638198805-vm44ozjtq\",\"cognition.ai/worktreeFor\":null}}",
+  "subagents": []
+}

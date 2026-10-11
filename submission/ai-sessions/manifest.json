@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-10-10T18:59:15.076303+00:00",
+  "project_roots": [
+    "/Users/miguelgarglez/Developer/hackathon-tdots"
+  ],
+  "since": null,
+  "sessions": [
+    {
+      "agent": "devin",
+      "id": "righteous-nest",
+      "title": "Hackathon t·Dots Banana Bank: setup, arquitectura y fallos candidatos",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-10T10:31:38+00:00",
+      "end": "2026-10-10T18:59:12+00:00",
+      "nodes": 3316,
+      "subagent_branches": 1,
+      "path": "devin/righteous-nest"
+    },
+    {
+      "agent": "devin",
+      "id": "best-account",
+      "title": "Arrancar app y función: agente bancario o UI tradicional",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-10T10:49:02+00:00",
+      "end": "2026-10-10T11:05:04+00:00",
+      "nodes": 76,
+      "subagent_branches": 0,
+      "path": "devin/best-account"
+    },
+    {
+      "agent": "codex",
+      "id": "01a1259c-8e22-7ed2-9353-751b46e3d032",
+      "account_home": ".codex",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T11:39:39.487Z",
+      "end": "2026-10-10T11:43:05.709Z",
+      "lines": 82,
+      "tool_calls": 9,
+      "reasoning_items": 8,
+      "path": "codex/.codex/rollout-2026-10-10T13-39-39-01a1259c-8e22-7ed2-9353-751b46e3d032.jsonl"
+    },
+    {
+      "agent": "cursor",
+      "id": "3263249d-4087-4aa4-866d-705fd32afbb0",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T11:40:20.039000+00:00",
+      "end": "2026-10-10T11:51:59.076000+00:00",
+      "messages": 234,
+      "path": "cursor/3263249d-4087-4aa4-866d-705fd32afbb0"
+    },
+    {
+      "agent": "codex",
+      "id": "01a125b4-5d1e-7111-bf5f-2e1f19be7940",
+      "account_home": ".codex",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T12:05:39.781Z",
+      "end": "2026-10-10T12:07:21.393Z",
+      "lines": 56,
+      "tool_calls": 5,
+      "reasoning_items": 3,
+      "path": "codex/.codex/rollout-2026-10-10T14-05-39-01a125b4-5d1e-7111-bf5f-2e1f19be7940.jsonl"
+    },
+    {
+      "agent": "cursor",
+      "id": "465c0423-f9d0-4852-a164-6573e3992dfd",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T12:05:56.520000+00:00",
+      "end": "2026-10-10T12:15:31.345000+00:00",
+      "messages": 122,
+      "path": "cursor/465c0423-f9d0-4852-a164-6573e3992dfd"
+    },
+    {
+      "agent": "devin",
+      "id": "pinto-night",
+      "title": "Saludo y consulta sobre el progreso de las tareas",
+      "model": "fusion-claude-fable-5-1-medium-sidekick-swe-2-medium",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots",
+      "start": "2026-10-10T13:17:11+00:00",
+      "end": "2026-10-10T13:20:53+00:00",
+      "nodes": 67,
+      "subagent_branches": 0,
+      "path": "devin/pinto-night"
+    },
+    {
+      "agent": "codex",
+      "id": "01a12708-b169-70a2-987d-301ee23b50b6",
+      "account_home": ".codex",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T18:17:23.625Z",
+      "end": "2026-10-10T18:17:28.815Z",
+      "lines": 12,
+      "tool_calls": 0,
+      "reasoning_items": 0,
+      "path": "codex/.codex/rollout-2026-10-10T20-17-23-01a12708-b169-70a2-987d-301ee23b50b6.jsonl"
+    },
+    {
+      "agent": "codex",
+      "id": "01a12708-c8b2-7ef2-8579-28dc0d1e41be",
+      "account_home": ".codex-b",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T18:17:29.565Z",
+      "end": "2026-10-10T18:17:33.243Z",
+      "lines": 12,
+      "tool_calls": 0,
+      "reasoning_items": 0,
+      "path": "codex/.codex-b/rollout-2026-10-10T20-17-29-01a12708-c8b2-7ef2-8579-28dc0d1e41be.jsonl"
+    },
+    {
+      "agent": "cursor",
+      "id": "303aa08e-966e-4010-9a45-7da4ed161f62",
+      "cwd": "/Users/miguelgarglez/Developer/hackathon-tdots/challenge-banana-candidate",
+      "start": "2026-10-10T18:20:34.211000+00:00",
+      "end": "2026-10-10T18:35:04.030000+00:00",
+      "messages": 651,
+      "path": "cursor/303aa08e-966e-4010-9a45-7da4ed161f62"
+    }
+  ],
+  "secret_scan": {
+    "devin/righteous-nest/nodes.jsonl": 2,
+    "cursor/3263249d-4087-4aa4-866d-705fd32afbb0/messages.jsonl": 4,
+    "cursor/303aa08e-966e-4010-9a45-7da4ed161f62/messages.jsonl": 2
+  }
+}
