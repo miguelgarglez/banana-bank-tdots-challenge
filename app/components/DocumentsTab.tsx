@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { AnyRecord } from '../lib/api';
 import Icon from './Icon';
+import { Markdown } from './Markdown';
 
 export default function DocumentsTab({
   operator,
@@ -117,7 +118,7 @@ export default function DocumentsTab({
                 Effective: {document.validFrom}
                 {document.validTo ? ` — ${document.validTo}` : ''}
               </p>
-              <pre>{document.text}</pre>
+              <Markdown text={document.text} skipLeadingTitle={document.title} />
             </>
           ) : (
             <div className="case-empty">

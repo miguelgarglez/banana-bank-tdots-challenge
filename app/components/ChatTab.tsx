@@ -3,6 +3,7 @@ import type { AnyRecord } from '../lib/api';
 import { date, money } from '../lib/format';
 import BananaMark from './BananaMark';
 import Icon from './Icon';
+import { Markdown } from './Markdown';
 import Select from './Select';
 
 export default function ChatTab({
@@ -115,21 +116,7 @@ export default function ChatTab({
             <div className={`message ${m.role}`} key={m.id || i}>
               {m.role === 'assistant' && <span className="message-avatar">✧</span>}
               <div className="bubble">
-                <div>
-                  {String(m.content)
-                    .split(/(\*\*[^*]+\*\*|`[^`]+`)/g)
-                    .map((part, j) =>
-                      part.startsWith('**') && part.endsWith('**') ? (
-                        <strong key={j}>{part.slice(2, -2)}</strong>
-                      ) : part.startsWith('`') && part.endsWith('`') ? (
-                        <code key={j} className="inline-code">
-                          {part.slice(1, -1)}
-                        </code>
-                      ) : (
-                        part
-                      ),
-                    )}
-                </div>
+                <Markdown text={String(m.content)} />
                 <small>{date(m.created_at)}</small>
               </div>
             </div>

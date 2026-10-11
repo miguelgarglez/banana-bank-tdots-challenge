@@ -75,11 +75,33 @@
   max-height: 620px;
   overflow: auto;
 }
-.document-reader pre {
-  font: 12px/1.9 var(--font);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.document-reader .markdown {
+  font: 12px/1.6 var(--font);
   color: var(--color-reader-text);
+}
+.document-reader .markdown p {
+  margin: 0 0 12px;
+}
+.document-reader .markdown h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--color-ink);
+}
+.document-reader .markdown h3,
+.document-reader .markdown h4 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+  color: var(--color-ink);
+}
+.document-reader .markdown ul,
+.document-reader .markdown ol {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+.document-reader .markdown li {
+  margin-bottom: 4px;
 }
 .document-reader h2 {
   font-size: 24px;

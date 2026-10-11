@@ -73,6 +73,27 @@
   margin-top: 8px;
   color: var(--color-bubble-meta);
 }
+.bubble .markdown p {
+  margin: 0;
+}
+.bubble .markdown > * + * {
+  margin-top: 8px;
+}
+.bubble .markdown ul,
+.bubble .markdown ol {
+  margin: 0;
+  padding-left: 18px;
+}
+.bubble .markdown li {
+  margin-bottom: 2px;
+}
+.bubble .markdown h2,
+.bubble .markdown h3,
+.bubble .markdown h4 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+}
 .bubble .inline-code {
   font-family: ui-monospace, Menlo, monospace;
   background: var(--color-accent-soft);
